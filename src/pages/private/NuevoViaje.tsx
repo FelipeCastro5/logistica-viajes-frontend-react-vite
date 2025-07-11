@@ -34,12 +34,18 @@ export default function NuevoViaje() {
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>
   ) => {
-    const { name, value, type, checked } = e.target
+    const target = e.target as HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement
+    const { name, value, type } = target
+
+    const isCheckbox = type === "checkbox"
+    const checked = isCheckbox ? (target as HTMLInputElement).checked : undefined
+
     setForm((prev) => ({
       ...prev,
-      [name]: type === "checkbox" ? checked : value,
+      [name]: isCheckbox ? checked : value,
     }))
   }
+
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
