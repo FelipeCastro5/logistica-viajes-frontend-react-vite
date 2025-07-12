@@ -20,6 +20,7 @@ export default function MenuPrincipal() {
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
         <MenuButton label="NUEVO VIAJE" onClick={() => navigate("/nuevo-viaje")} />
         <MenuButton label="VIAJE ACTUAL" onClick={() => navigate("/menu-viaje")} />
+        <MenuButton label="VIAJE" onClick={() => navigate("/viaje")} />
       </div>
     </div>
   )

@@ -12,6 +12,7 @@ import TablaGastosViaje from "./pages/private/tables/TablaGastos"
 import ChatPage from "./pages/private/Chat/ChatPage"
 import ChatListPage from "./pages/private/Chat/ChatListPage"
 import RecuperarPassword from "./pages/public/RecuperarPassword"
+import Viaje from "./pages/private/pages/Viaje"
 
 export default function App() {
   return (
@@ -25,6 +26,7 @@ export default function App() {
           <Route path="/menu-principal" element={<MenuPrincipal />} />
           <Route path="/menu-viaje" element={<MenuViaje />} />
           <Route path="/nuevo-viaje" element={<NuevoViaje />} />
+          <Route path="/viaje" element={<Viaje />} />
 
           <Route path="/detalles-viaje" element={<DetallesViajeForm />} />
           <Route path="/info-cliente" element={<ClienteForm />} />
