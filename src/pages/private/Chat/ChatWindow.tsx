@@ -2,15 +2,22 @@ import { Card, CardContent } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
 import { Button } from "@/components/ui/button"
 import { ScrollArea } from "@/components/ui/scroll-area"
-import { useState } from "react"
+import { useState, useEffect } from "react"
 
-export default function ChatWindow() {
-  const [messages, setMessages] = useState([
-    { id: 1, from: "user", text: "Hola, ¿cómo estás?" },
-    { id: 2, from: "bot", text: "¡Hola! Todo bien, ¿y tú?" },
-  ])
+interface ChatWindowProps {
+  chatId?: string
+}
 
+export default function ChatWindow({ chatId }: ChatWindowProps) {
+  const [messages, setMessages] = useState<{ id: number; from: string; text: string }[]>([])
   const [input, setInput] = useState("")
+
+  useEffect(() => {
+    // Simula carga de mensajes previos
+    setMessages([
+      { id: 1, from: "bot", text: `Hola, bienvenido al chat de ${chatId}` },
+    ])
+  }, [chatId])
 
   const handleSend = () => {
     if (!input.trim()) return

@@ -10,6 +10,7 @@ import ClienteForm from "./pages/private/forms/ClienteForm"
 import DetallesViajeForm from "./pages/private/forms/DetallesViajeForm"
 import TablaGastosViaje from "./pages/private/forms/TablaGastos"
 import ChatPage from "./pages/private/Chat/ChatPage"
+import ChatListPage from "./pages/private/Chat/ChatListPage"
 
 export default function App() {
   return (
@@ -27,8 +28,9 @@ export default function App() {
           <Route path="/info-cliente" element={<ClienteForm />} />
           <Route path="/manifiesto" element={<ManifiestoForm />} />
           <Route path="/total-gastos" element={<TablaGastosViaje />} />
-          
-          <Route path="/chat-bot" element={<ChatPage />} />
+
+          <Route path="/chat-bot" element={<ChatListPage />} />
+          <Route path="/chat-bot/:chatId" element={<ChatPage />} />
         </Route>
 
         {/* Redirección por defecto */}
