@@ -30,6 +30,12 @@ export default function ChatListPage() {
             </CardContent>
           </Card>
         ))}
+        <Button
+          onClick={() => navigate("/menu-principal")}
+          className="bg-gray-600 hover:bg-gray-700 text-white mt-4"
+        >
+          VOLVER
+        </Button>
       </div>
     </PageContent>
   )

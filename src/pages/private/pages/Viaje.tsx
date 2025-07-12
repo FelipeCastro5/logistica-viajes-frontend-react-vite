@@ -15,7 +15,7 @@ export default function Viaje() {
   const navigate = useNavigate()
 
   useEffect(() => {
-    setTitle("REGISTRO DE NUEVO VIAJE")
+    setTitle("DETALLES DEL VIAJE")
   }, [])
 
   const renderizarComponente = () => {
@@ -34,7 +34,7 @@ export default function Viaje() {
   }
 
   return (
-    <PageContent title="Registrar Nuevo Viaje">
+    <PageContent title="VIAJE# COD-1234">
       {/* Botones de navegación */}
       <div className="flex flex-wrap justify-center gap-3 mb-6">
         <Button
@@ -73,7 +73,13 @@ export default function Viaje() {
       >
         VOLVER
       </Button>
-
+      <Button
+        variant="secondary"
+        onClick={() => navigate("/tabla-viaje")}
+        className="text-sm"
+      >
+        detalles viaje
+      </Button>
     </PageContent>
   )
 }

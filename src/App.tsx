@@ -13,6 +13,7 @@ import ChatPage from "./pages/private/Chat/ChatPage"
 import ChatListPage from "./pages/private/Chat/ChatListPage"
 import RecuperarPassword from "./pages/public/RecuperarPassword"
 import Viaje from "./pages/private/pages/Viaje"
+import TablaDetalleViaje from "./pages/private/tables/TablaDetalleViaje"
 
 export default function App() {
   return (
@@ -32,6 +33,7 @@ export default function App() {
           <Route path="/info-cliente" element={<ClienteForm />} />
           <Route path="/manifiesto" element={<ManifiestoForm />} />
           <Route path="/total-gastos" element={<TablaGastosViaje />} />
+          <Route path="/tabla-viaje" element={<TablaDetalleViaje />} />
 
           <Route path="/chat-bot" element={<ChatListPage />} />
           <Route path="/chat-bot/:chatId" element={<ChatPage />} />

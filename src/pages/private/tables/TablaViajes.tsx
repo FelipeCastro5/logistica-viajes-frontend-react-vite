@@ -34,7 +34,15 @@ export default function TablaViajes() {
   return (
     <Card>
       <CardContent className="p-4">
-        <h2 className="text-lg font-semibold mb-4">Lista de Viajes</h2>
+        <div className="flex items-center justify-between mb-4">
+          <h2 className="text-lg font-semibold mb-4">Lista de Viajes</h2>
+          <Button
+            onClick={() => navigate("/nuevo-viaje")}
+            className="text-sm px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white dark:bg-gray-700 dark:text-white transition duration-150 ease-in-out active:scale-95 rounded-md shadow-sm"
+          >
+            + Nuevo viaje
+          </Button>
+        </div>
         <Table>
           <TableHeader>
             <TableRow>
@@ -57,11 +65,10 @@ export default function TablaViajes() {
                 <TableCell>{viaje.fecha_llegada}</TableCell>
                 <TableCell>
                   <span
-                    className={`text-sm font-medium ${
-                      viaje.estado_viaje === "Activo"
-                        ? "text-green-600"
-                        : "text-red-500"
-                    }`}
+                    className={`text-sm font-medium ${viaje.estado_viaje === "Activo"
+                      ? "text-green-600"
+                      : "text-red-500"
+                      }`}
                   >
                     {viaje.estado_viaje}
                   </span>
@@ -69,7 +76,7 @@ export default function TablaViajes() {
                 <TableCell className="text-center">
                   <Button
                     variant="secondary"
-                    onClick={() => navigate("/menu-viaje")}
+                    onClick={() => navigate("/Viaje")}
                     className="text-sm"
                   >
                     Ver viaje

@@ -1,6 +1,8 @@
+import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card"
-
+import { useNavigate } from "react-router-dom"
 export default function TablaDetalleViaje() {
+  const navigate = useNavigate()
   return (
     <Card className="shadow-md border rounded-lg overflow-x-auto">
       <CardContent className="p-4">
@@ -48,6 +50,12 @@ export default function TablaDetalleViaje() {
             <Row label="Porcentaje conductor" value="40%" />
             <Row label="Ganancia conductor" value="$1,949,720" />
           </tbody>
+          <Button
+            onClick={() => navigate("/viaje")}
+            className="bg-gray-600 hover:bg-gray-700 text-white mt-4"
+          >
+            VOLVER
+          </Button>
         </table>
       </CardContent>
     </Card>
