@@ -33,7 +33,7 @@ export default function NuevoViaje() {
           onClick={() => setComponenteActivo("DetallesViaje")}
           className={`px-4 py-2 rounded-md font-semibold ${componenteActivo === "DetallesViaje"
               ? "bg-blue-600 text-white"
-              : "bg-gray-200 text-gray-800 hover:bg-blue-100"
+              : "bg-gray-200 text-gray-800 hover:bg-blue-900 hover:text-gray-200"
             }`}
         >
           Detalles del Viaje
@@ -42,7 +42,7 @@ export default function NuevoViaje() {
           onClick={() => setComponenteActivo("Manifiesto")}
           className={`px-4 py-2 rounded-md font-semibold ${componenteActivo === "Manifiesto"
               ? "bg-blue-600 text-white"
-              : "bg-gray-200 text-gray-800 hover:bg-blue-100"
+              : "bg-gray-200 text-gray-800 hover:bg-blue-900 hover:text-gray-200"
             }`}
         >
           Manifiesto
@@ -50,7 +50,7 @@ export default function NuevoViaje() {
       </div>
 
       {/* Render dinámico */}
-      <div className="border border-gray-300 rounded-lg p-4 bg-white shadow">
+      <div className="border border-gray-300 dark:border-gray-700 rounded-lg p-4 bg-white dark:bg-gray-900 shadow">
         {renderizarComponente()}
         <Button
           onClick={() => navigate("/menu-principal")}

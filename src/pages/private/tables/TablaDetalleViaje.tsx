@@ -1,19 +1,17 @@
 import { Button } from "@/components/ui/button";
-import { Card, CardContent } from "@/components/ui/card"
-import { useNavigate } from "react-router-dom"
-export default function TablaDetalleViaje() {
-  const navigate = useNavigate()
-  return (
-    <Card className="shadow-md border rounded-lg overflow-x-auto">
-      <CardContent className="p-4">
-        <h2 className="text-xl font-semibold mb-4">Detalle del Viaje</h2>
+import { Card, CardContent } from "@/components/ui/card";
+import { useNavigate } from "react-router-dom";
 
-        <table className="min-w-full text-sm text-left border border-gray-200">
+export default function TablaDetalleViaje() {
+  const navigate = useNavigate();
+
+  return (
+    <Card className="shadow-md border rounded-lg overflow-x-auto bg-white dark:bg-gray-900 text-gray-800 dark:text-gray-100">
+      <CardContent className="p-6">
+        <table className="w-full text-sm border border-gray-300 dark:border-gray-700">
           <tbody>
             {/* VIAJE */}
-            <tr className="bg-gray-100">
-              <th colSpan={2} className="p-2 font-medium text-gray-700">Datos del Viaje</th>
-            </tr>
+            <Section title="Datos del Viaje" />
             <Row label="Código" value="VJ-001" />
             <Row label="Producto" value="Carga general" />
             <Row label="Detalle Producto" value="Cajas con repuestos" />
@@ -24,17 +22,13 @@ export default function TablaDetalleViaje() {
             <Row label="Estado del viaje" value="Activo" />
 
             {/* CLIENTE */}
-            <tr className="bg-gray-100">
-              <th colSpan={2} className="p-2 font-medium text-gray-700">Datos del Cliente</th>
-            </tr>
+            <Section title="Datos del Cliente" />
             <Row label="Nombre" value="Transporte Rápido S.A.S." />
             <Row label="NIT" value="900123456-7" />
             <Row label="Teléfono" value="3101234567" />
 
             {/* MANIFIESTO */}
-            <tr className="bg-gray-100">
-              <th colSpan={2} className="p-2 font-medium text-gray-700">Manifiesto</th>
-            </tr>
+            <Section title="Manifiesto" />
             <Row label="Flete total" value="$5,000,000" />
             <Row label="Retención fuente (%)" value="1.50%" />
             <Row label="Valor retención fuente" value="$75,000" />
@@ -50,23 +44,36 @@ export default function TablaDetalleViaje() {
             <Row label="Porcentaje conductor" value="40%" />
             <Row label="Ganancia conductor" value="$1,949,720" />
           </tbody>
+        </table>
+
+        <div className="mt-6 flex justify-center">
           <Button
             onClick={() => navigate("/viaje")}
-            className="bg-gray-600 hover:bg-gray-700 text-white mt-4"
+            className="bg-gray-700 hover:bg-gray-800 text-white"
           >
             VOLVER
           </Button>
-        </table>
+        </div>
       </CardContent>
     </Card>
-  )
+  );
 }
 
 function Row({ label, value }: { label: string; value: string }) {
   return (
-    <tr className="border-t border-gray-200">
-      <td className="p-2 font-medium text-gray-600 w-1/3">{label}</td>
-      <td className="p-2 text-gray-800">{value}</td>
+    <tr className="border-t border-gray-200 dark:border-gray-700">
+      <td className="p-3 font-medium text-gray-700 dark:text-gray-300 w-1/3">{label}</td>
+      <td className="p-3 text-gray-900 dark:text-gray-100">{value}</td>
     </tr>
-  )
+  );
+}
+
+function Section({ title }: { title: string }) {
+  return (
+    <tr className="bg-gray-100 dark:bg-gray-800">
+      <th colSpan={2} className="p-3 text-left font-semibold text-gray-700 dark:text-gray-200">
+        {title}
+      </th>
+    </tr>
+  );
 }

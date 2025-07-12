@@ -64,22 +64,24 @@ export default function Viaje() {
       </div>
 
       {/* Contenedor dinámico */}
-      <div className="border border-gray-300 rounded-lg p-4 bg-white shadow">
+      <div className="border border-gray-300 dark:border-gray-700 rounded-lg p-4 bg-white dark:bg-gray-900 shadow">
         {renderizarComponente()}
       </div>
-      <Button
-        onClick={() => navigate("/menu-principal")}
-        className="bg-gray-600 hover:bg-gray-700 text-white mt-4"
-      >
-        VOLVER
-      </Button>
-      <Button
-        variant="secondary"
-        onClick={() => navigate("/tabla-viaje")}
-        className="text-sm"
-      >
-        detalles viaje
-      </Button>
+      <div className="flex items-center justify-between mb-4">
+        <Button
+          onClick={() => navigate("/menu-principal")}
+          className="bg-gray-600 hover:bg-gray-700 text-white mt-4"
+        >
+          VOLVER
+        </Button>
+        <Button
+          variant="secondary"
+          onClick={() => navigate("/tabla-viaje")}
+          className="text-sm"
+        >
+          detalles viaje
+        </Button>
+      </div>
     </PageContent>
   )
 }
