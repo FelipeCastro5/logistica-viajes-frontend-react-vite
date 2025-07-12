@@ -1,6 +1,7 @@
 import { Outlet } from "react-router-dom"
 import { LayoutTitleProvider, useLayoutTitle } from "../context/LayoutTitleContext"
 import LogoutButton from "./LogoutButton"
+import ChatBotButton from "@/pages/private/Chat/ChatBotButton"
 
 function LayoutContent() {
     const { title } = useLayoutTitle()
@@ -19,6 +20,7 @@ function LayoutContent() {
                         <Outlet />
                     </div>
                 </div>
+        <ChatBotButton />
             </main>
         </div>
 

@@ -25,10 +25,10 @@ export default function MenuViaje() {
       </h2>
 
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 w-full max-w-3xl">
-        <MenuButton label="INFORMACIÓN BÁSICA" onClick={() => navigate("/info-basica")} />
-        <MenuButton label="INFORMACIÓN EMPRESA" onClick={() => navigate("/info-empresa")} />
+        <MenuButton label="INFORMACIÓN BÁSICA" onClick={() => navigate("/detalles-viaje")} />
+        <MenuButton label="INFORMACIÓN CLIENTE" onClick={() => navigate("/info-cliente")} />
         <MenuButton label="MANIFIESTO" onClick={() => navigate("/manifiesto")} />
-        <MenuButton label="GASTOS" onClick={() => navigate("/gastos")} />
+        <MenuButton label="GASTOS" onClick={() => navigate("/total-gastos")} />
         <MenuButton
           label="FINALIZAR VIAJE"
           onClick={handleFinalizar}

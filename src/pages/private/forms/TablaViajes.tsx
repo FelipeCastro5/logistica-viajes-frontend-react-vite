@@ -1,9 +1,16 @@
 import { useState } from "react"
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
+import { useNavigate } from "react-router-dom"
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
 
-// 🔹 Datos simulados
 const mockViajes = Array.from({ length: 42 }, (_, i) => ({
   id: i + 1,
   codigo: `VJ-${String(i + 1).padStart(3, "0")}`,
@@ -18,6 +25,7 @@ const ITEMS_PER_PAGE = 10
 
 export default function TablaViajes() {
   const [page, setPage] = useState(1)
+  const navigate = useNavigate()
 
   const totalPages = Math.ceil(mockViajes.length / ITEMS_PER_PAGE)
   const startIndex = (page - 1) * ITEMS_PER_PAGE
@@ -36,6 +44,7 @@ export default function TablaViajes() {
               <TableHead>Salida</TableHead>
               <TableHead>Llegada</TableHead>
               <TableHead>Estado</TableHead>
+              <TableHead className="text-center">Acciones</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
@@ -47,24 +56,46 @@ export default function TablaViajes() {
                 <TableCell>{viaje.fecha_salida}</TableCell>
                 <TableCell>{viaje.fecha_llegada}</TableCell>
                 <TableCell>
-                  <span className={`text-sm font-medium ${viaje.estado_viaje === "Activo" ? "text-green-600" : "text-red-500"}`}>
+                  <span
+                    className={`text-sm font-medium ${
+                      viaje.estado_viaje === "Activo"
+                        ? "text-green-600"
+                        : "text-red-500"
+                    }`}
+                  >
                     {viaje.estado_viaje}
                   </span>
+                </TableCell>
+                <TableCell className="text-center">
+                  <Button
+                    variant="secondary"
+                    onClick={() => navigate("/menu-viaje")}
+                    className="text-sm"
+                  >
+                    Ver viaje
+                  </Button>
                 </TableCell>
               </TableRow>
             ))}
           </TableBody>
         </Table>
 
-        {/* Paginación */}
         <div className="flex items-center justify-between mt-4">
-          <Button variant="outline" disabled={page === 1} onClick={() => setPage(p => p - 1)}>
+          <Button
+            variant="outline"
+            disabled={page === 1}
+            onClick={() => setPage((p) => p - 1)}
+          >
             Anterior
           </Button>
           <span className="text-sm text-gray-600">
             Página {page} de {totalPages}
           </span>
-          <Button variant="outline" disabled={page === totalPages} onClick={() => setPage(p => p + 1)}>
+          <Button
+            variant="outline"
+            disabled={page === totalPages}
+            onClick={() => setPage((p) => p + 1)}
+          >
             Siguiente
           </Button>
         </div>
