@@ -1,5 +1,5 @@
 import { Outlet } from "react-router-dom"
-import { LayoutTitleProvider, useLayoutTitle } from "../context/LayoutTitleContext"
+import { LayoutTitleProvider, useLayoutTitle } from "../../context/LayoutTitleContext"
 import LogoutButton from "./LogoutButton"
 import ChatBotButton from "@/pages/private/Chat/ChatBotButton"
 import ThemeToggleButton from "./ThemeToggleButton"

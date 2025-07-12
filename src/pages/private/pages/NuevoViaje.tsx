@@ -1,7 +1,8 @@
 import { useEffect } from "react"
-import PageContent from "../../components/PageContent"
-import { useLayoutTitle } from "../../context/LayoutTitleContext"
-import DetallesViajeForm from "./forms/DetallesViajeForm"
+import PageContent from "../../../components/layout/PageContent"
+import { useLayoutTitle } from "../../../context/LayoutTitleContext"
+import DetallesViajeForm from "../forms/DetallesViajeForm"
+import ManifiestoForm from "../forms/ManifiestoForm"
 
 export default function NuevoViaje() {
   const { setTitle } = useLayoutTitle()
@@ -13,6 +14,7 @@ export default function NuevoViaje() {
   return (
     <PageContent title="Registrar Nuevo Viaje">
       <DetallesViajeForm />
+      <ManifiestoForm/>
     </PageContent>
   )
 }

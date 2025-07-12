@@ -1,8 +1,8 @@
 import { useNavigate } from "react-router-dom"
 import { useEffect } from "react"
-import { useLayoutTitle } from "../../context/LayoutTitleContext"
-import MenuButton from "../../components/MenuButton"
-import TablaViajes from "./forms/TablaViajes"
+import { useLayoutTitle } from "../../../context/LayoutTitleContext"
+import MenuButton from "../../../components/layout/MenuButton"
+import TablaViajes from "../tables/TablaViajes"
 
 export default function MenuPrincipal() {
   const navigate = useNavigate()

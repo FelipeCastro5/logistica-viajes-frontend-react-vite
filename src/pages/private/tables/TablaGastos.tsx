@@ -1,7 +1,7 @@
 import { useState } from "react"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
 import { Card, CardContent } from "@/components/ui/card"
-import NuevoGastoModal from "./NuevoGastoModal"
+import NuevoGastoModal from "../modals/NuevoGastoModal"
 
 // 🔹 Datos simulados: reemplaza esto con tu fetch o props
 const mockGastos = [

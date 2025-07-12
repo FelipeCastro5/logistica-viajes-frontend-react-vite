@@ -1,6 +1,6 @@
 import { useEffect } from "react"
 import { useParams } from "react-router-dom"
-import PageContent from "@/components/PageContent"
+import PageContent from "@/components/layout/PageContent"
 import { useLayoutTitle } from "@/context/LayoutTitleContext"
 import ChatWindow from "./ChatWindow"
 

@@ -2,7 +2,7 @@
 import { useState } from "react"
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog"
 import { Button } from "@/components/ui/button"
-import GastoForm from "./GastoForm"
+import GastoForm from "../forms/GastoForm"
 
 export default function NuevoGastoModal({ viajeId }: { viajeId: number }) {
   const [open, setOpen] = useState(false)

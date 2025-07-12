@@ -1,5 +1,5 @@
 import type { ButtonHTMLAttributes } from "react"
-import { Button } from "./ui/button"
+import { Button } from "../ui/button"
 
 interface MenuButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
   label: string

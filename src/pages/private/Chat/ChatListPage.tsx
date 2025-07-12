@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom"
 import { Card, CardContent } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { useLayoutTitle } from "@/context/LayoutTitleContext"
-import PageContent from "@/components/PageContent"
+import PageContent from "@/components/layout/PageContent"
 
 const mockChats = [
   { id: "soporte", nombre: "Soporte Técnico" },

@@ -1,7 +1,7 @@
 import { useNavigate } from "react-router-dom"
 import { useEffect } from "react"
-import { useLayoutTitle } from "../../context/LayoutTitleContext"
-import MenuButton from "../../components/MenuButton"
+import { useLayoutTitle } from "../../../context/LayoutTitleContext"
+import MenuButton from "../../../components/layout/MenuButton"
 
 export default function MenuViaje() {
   const navigate = useNavigate()
