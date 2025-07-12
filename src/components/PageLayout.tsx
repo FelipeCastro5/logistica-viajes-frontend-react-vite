@@ -10,7 +10,10 @@ function LayoutContent() {
         <div className="min-h-screen bg-white text-gray-800">
             <header className="grid grid-cols-3 items-center p-6 bg-blue-600 text-white shadow relative">
                 <div /> {/* Espacio vacío (col 1) */}
-                <h1 className="text-2xl font-semibold text-center col-start-2 col-end-3">{title}</h1>
+                <div>
+                    <h1 className="text-2xl font-semibold text-center col-start-2 col-end-3">{title}</h1>
+
+                </div>
                 <div className="flex justify-end">
                     <LogoutButton />
                 </div>

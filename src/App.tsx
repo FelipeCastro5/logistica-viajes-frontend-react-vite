@@ -11,12 +11,14 @@ import DetallesViajeForm from "./pages/private/forms/DetallesViajeForm"
 import TablaGastosViaje from "./pages/private/forms/TablaGastos"
 import ChatPage from "./pages/private/Chat/ChatPage"
 import ChatListPage from "./pages/private/Chat/ChatListPage"
+import RecuperarPassword from "./pages/public/RecuperarPassword"
 
 export default function App() {
   return (
     <Router>
       <Routes>
         <Route path="/login" element={<Login />} />
+        <Route path="/recuperar" element={<RecuperarPassword />} />
 
         {/* Rutas privadas dentro de layout */}
         <Route element={<PrivateRoute><PageLayout /></PrivateRoute>}>
