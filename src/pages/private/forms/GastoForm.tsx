@@ -1,15 +1,10 @@
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Button } from "@/components/ui/button"
 import { Textarea } from "@/components/ui/textarea"
-
-// 🔹 Datos simulados de tipos de gasto — reemplázalos por un fetch real si es necesario
-const tiposDeGasto = [
-  { id_gasto: 1, nombre_gasto: "Combustible" },
-  { id_gasto: 2, nombre_gasto: "Peaje" },
-  { id_gasto: 3, nombre_gasto: "Hospedaje" },
-]
+import { getAllGastos } from "@/services/adapters/gastos.adapter" // ⚠️ Asegúrate que el path sea correcto
+import type { Gasto } from "@/services/adapters/gastos.adapter"
 
 export default function GastoForm({
   onCreated,
@@ -18,14 +13,38 @@ export default function GastoForm({
   onCreated?: (data: any) => void
   viajeId: number
 }) {
+  const [tiposDeGasto, setTiposDeGasto] = useState<Gasto[]>([])
+  const [loadingTipos, setLoadingTipos] = useState(true)
+
   const [gasto, setGasto] = useState({
     fk_viaje: viajeId,
-    fk_gasto: "", // id del tipo de gasto
+    fk_gasto: "",
     valor: "",
     detalles: "",
   })
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
+  useEffect(() => {
+    const fetchTiposDeGasto = async () => {
+      try {
+        const response = await getAllGastos()
+        if (response.status) {
+          setTiposDeGasto(response.data)
+        } else {
+          console.error("Error al obtener tipos de gasto:", response.msg)
+        }
+      } catch (error) {
+        console.error("Error inesperado:", error)
+      } finally {
+        setLoadingTipos(false)
+      }
+    }
+
+    fetchTiposDeGasto()
+  }, [])
+
+  const handleChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>
+  ) => {
     const { name, value } = e.target
     setGasto((prev) => ({ ...prev, [name]: value }))
   }
@@ -34,7 +53,7 @@ export default function GastoForm({
     e.preventDefault()
     console.log("Nuevo gasto:", gasto)
     onCreated?.(gasto)
-    // Aquí iría un POST real al backend
+    // Aquí iría el POST real al backend
   }
 
   return (
@@ -49,12 +68,15 @@ export default function GastoForm({
           required
           className="w-full border rounded px-3 py-2"
         >
-          <option value="">Selecciona un tipo</option>
-          {tiposDeGasto.map((tipo) => (
-            <option key={tipo.id_gasto} value={tipo.id_gasto}>
-              {tipo.nombre_gasto}
-            </option>
-          ))}
+          <option value="">
+            {loadingTipos ? "Cargando tipos de gasto..." : "Selecciona un tipo"}
+          </option>
+          {!loadingTipos &&
+            tiposDeGasto.map((tipo) => (
+              <option key={tipo.id_gasto} value={tipo.id_gasto}>
+                {tipo.nombre_gasto}
+              </option>
+            ))}
         </select>
       </div>
 
