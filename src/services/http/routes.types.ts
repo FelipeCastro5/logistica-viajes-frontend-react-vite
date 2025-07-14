@@ -1,4 +1,4 @@
-// src/http/routes.ts
+// src/http/routes.types.ts
 export const routes = {
   viajes: {
     getAll: "/viajes/getAll",
@@ -19,5 +19,9 @@ export const routes = {
     create: "/gastos/create",
     update: "/gastos/update",
     delete: "/gastos/delete/{id}"
+  },
+  auth: {
+    login: "/Auth/login",
+    updatePassword: "/Auth/update-password"
   }
 } as const

@@ -1,6 +1,6 @@
 // src/http/HttpRequest.ts
 import { AxiosRequest } from "./ApiRemote"
-import { routes } from "./routes.types" // 👈 ahora importamos desde el .ts
+import { routes } from "./routes.types"
 
 type Routes = typeof routes
 type Base = keyof Routes
@@ -19,15 +19,27 @@ export const RequestHttp = async <B extends Base>(
   headers: Record<string, string> = {}
 ) => {
   try {
-    const baseRoutes = routes[base]
-    const endpoint = baseRoutes[entry] as string
+    const endpointTemplate = routes[base][entry] as string
 
-    let finalUrl = endpoint
-
-    // Reemplazar variables dinámicas
-    Object.keys(params).forEach((key) => {
-      finalUrl = finalUrl.replace(`{${key}}`, String(params[key]))
+    // Buscar parámetros usados en la ruta (ej: {id})
+    const usedKeys: string[] = []
+    let finalUrl = endpointTemplate.replace(/\{(\w+)\}/g, (_, key) => {
+      usedKeys.push(key)
+      return String(params[key])
     })
+
+    // Los parámetros que no se usaron en el path van al query
+    const queryParams = Object.keys(params)
+      .filter((key) => !usedKeys.includes(key))
+      .reduce((acc, key) => {
+        acc[key] = params[key]
+        return acc
+      }, {} as Record<string, string | number>)
+
+    const queryString = new URLSearchParams(queryParams as any).toString()
+    if (queryString) {
+      finalUrl += `?${queryString}`
+    }
 
     return await new AxiosRequest().request(finalUrl, method, data, headers)
   } catch (error) {

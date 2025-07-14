@@ -3,19 +3,35 @@ import { useState } from "react"
 import { useNavigate, Link } from "react-router-dom"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
+import { loginUser } from "@/services/adapters/auth.adapter" // ✅ Importa el adapter
 
 export default function Login() {
   const [email, setEmail] = useState("")
   const [password, setPassword] = useState("")
+  const [error, setError] = useState("")
   const navigate = useNavigate()
 
-  const handleLogin = (e: React.FormEvent) => {
+  const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault()
+    setError("")
 
-    // Aquí puedes validar o llamar a tu API
-    if (email && password) {
-      localStorage.setItem("auth", "true")
-      navigate("/menu-principal")
+    try {
+      const response = await loginUser(email, password)
+
+      if (response.status === 200) {
+        const userData = response.data
+
+        // ✅ Guarda los datos necesarios en localStorage
+        localStorage.setItem("auth", "true")
+        localStorage.setItem("user", JSON.stringify(userData))
+
+        navigate("/menu-principal")
+      } else {
+        setError("Credenciales incorrectas")
+      }
+    } catch (err) {
+      console.error("Login error:", err)
+      setError("Error al iniciar sesión. Intenta más tarde.")
     }
   }
 
@@ -42,6 +58,14 @@ export default function Login() {
             Entrar
           </Button>
         </form>
+
+        {/* ✅ Mostrar errores si existen */}
+        {error && (
+          <div className="text-red-500 text-sm mt-2 text-center">
+            {error}
+          </div>
+        )}
+
         <div className="mt-4 text-sm text-center">
           <Link to="/recuperar" className="text-blue-600 hover:underline">
             ¿Olvidaste tu contraseña?
