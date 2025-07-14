@@ -5,7 +5,8 @@ export const routes = {
     getById: "/viajes/getById/{id}",
     create: "/viajes/create",
     update: "/viajes/update",
-    delete: "/viajes/delete/{id}"
+    delete: "/viajes/delete/{id}",
+    getPaginatedByUsuario: "/viajes/paginatedByUsuario"
   },
   clientes: {
     getAll: "/clientes"

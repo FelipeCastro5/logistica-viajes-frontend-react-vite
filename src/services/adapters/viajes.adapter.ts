@@ -61,3 +61,19 @@ export const deleteViaje = async (id: number): Promise<any> => {
     method: "DELETE"
   }, { id })
 }
+
+export const getPaginatedViajesByUsuario = async (
+  id_usuario: number,
+  page = 1,
+  limit = 5,
+): Promise<any> => {
+  return await RequestHttp(null, {
+    base: "viajes",
+    entry: "getPaginatedByUsuario",
+    method: "GET"
+  }, {
+    id_usuario,
+    page,
+    limit
+  })
+}

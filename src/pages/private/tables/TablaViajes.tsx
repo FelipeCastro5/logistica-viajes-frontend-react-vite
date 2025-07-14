@@ -1,4 +1,3 @@
-import { useState } from "react"
 import { useNavigate } from "react-router-dom"
 import {
   Table,
@@ -10,26 +9,17 @@ import {
 } from "@/components/ui/table"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
-
-const mockViajes = Array.from({ length: 42 }, (_, i) => ({
-  id: i + 1,
-  codigo: `VJ-${String(i + 1).padStart(3, "0")}`,
-  cliente: `Cliente ${i + 1}`,
-  producto: `Producto ${i + 1}`,
-  fecha_salida: `2025-07-${(i % 28) + 1}`,
-  fecha_llegada: `2025-07-${(i % 28) + 2}`,
-  estado_viaje: i % 2 === 0 ? "Activo" : "Inactivo",
-}))
-
-const ITEMS_PER_PAGE = 10
+import { useViajesTable } from "@/hooks/useViajesTable"
 
 export default function TablaViajes() {
-  const [page, setPage] = useState(1)
   const navigate = useNavigate()
-
-  const totalPages = Math.ceil(mockViajes.length / ITEMS_PER_PAGE)
-  const startIndex = (page - 1) * ITEMS_PER_PAGE
-  const currentViajes = mockViajes.slice(startIndex, startIndex + ITEMS_PER_PAGE)
+  const {
+    viajes,
+    errorMsg,
+    page,
+    totalPages,
+    setPage,
+  } = useViajesTable(10)
 
   return (
     <Card>
@@ -43,6 +33,11 @@ export default function TablaViajes() {
             + Nuevo viaje
           </Button>
         </div>
+
+        {errorMsg && (
+          <p className="text-red-500 font-medium mb-4">{errorMsg}</p>
+        )}
+
         <Table>
           <TableHeader>
             <TableRow>
@@ -56,21 +51,21 @@ export default function TablaViajes() {
             </TableRow>
           </TableHeader>
           <TableBody>
-            {currentViajes.map((viaje) => (
-              <TableRow key={viaje.id}>
+            {viajes.map((viaje) => (
+              <TableRow key={viaje.id_viaje}>
                 <TableCell>{viaje.codigo}</TableCell>
-                <TableCell>{viaje.cliente}</TableCell>
+                <TableCell>{viaje.nombre_cliente}</TableCell>
                 <TableCell>{viaje.producto}</TableCell>
-                <TableCell>{viaje.fecha_salida}</TableCell>
-                <TableCell>{viaje.fecha_llegada}</TableCell>
+                <TableCell>{viaje.fecha_salida.slice(0, 10)}</TableCell>
+                <TableCell>{viaje.fecha_llegada.slice(0, 10)}</TableCell>
                 <TableCell>
                   <span
-                    className={`text-sm font-medium ${viaje.estado_viaje === "Activo"
+                    className={`text-sm font-medium ${viaje.estado_viaje
                       ? "text-green-600"
                       : "text-red-500"
                       }`}
                   >
-                    {viaje.estado_viaje}
+                    {viaje.estado_viaje ? "Activo" : "Inactivo"}
                   </span>
                 </TableCell>
                 <TableCell className="text-center">
