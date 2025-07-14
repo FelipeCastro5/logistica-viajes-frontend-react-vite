@@ -1,10 +1,8 @@
-import { useState, useEffect } from "react"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Button } from "@/components/ui/button"
 import { Textarea } from "@/components/ui/textarea"
-import { getAllGastos } from "@/services/adapters/gastos.adapter" // ⚠️ Asegúrate que el path sea correcto
-import type { Gasto } from "@/services/adapters/gastos.adapter"
+import { useGastoForm } from "./useGastoForm"
 
 export default function GastoForm({
   onCreated,
@@ -13,47 +11,13 @@ export default function GastoForm({
   onCreated?: (data: any) => void
   viajeId: number
 }) {
-  const [tiposDeGasto, setTiposDeGasto] = useState<Gasto[]>([])
-  const [loadingTipos, setLoadingTipos] = useState(true)
-
-  const [gasto, setGasto] = useState({
-    fk_viaje: viajeId,
-    fk_gasto: "",
-    valor: "",
-    detalles: "",
-  })
-
-  useEffect(() => {
-    const fetchTiposDeGasto = async () => {
-      try {
-        const response = await getAllGastos()
-        if (response.status) {
-          setTiposDeGasto(response.data)
-        } else {
-          console.error("Error al obtener tipos de gasto:", response.msg)
-        }
-      } catch (error) {
-        console.error("Error inesperado:", error)
-      } finally {
-        setLoadingTipos(false)
-      }
-    }
-
-    fetchTiposDeGasto()
-  }, [])
-
-  const handleChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>
-  ) => {
-    const { name, value } = e.target
-    setGasto((prev) => ({ ...prev, [name]: value }))
-  }
+  const { gasto, tiposDeGasto, loadingTipos, handleChange } = useGastoForm(viajeId)
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
     console.log("Nuevo gasto:", gasto)
     onCreated?.(gasto)
-    // Aquí iría el POST real al backend
+    // Aquí iría el POST real
   }
 
   return (
@@ -66,7 +30,7 @@ export default function GastoForm({
           value={gasto.fk_gasto}
           onChange={handleChange}
           required
-          className="w-full border rounded px-3 py-2"
+          className="w-full rounded-md border border-gray-300 bg-white px-3 py-2 text-sm shadow-sm focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-800 dark:text-white dark:placeholder-gray-900"
         >
           <option value="">
             {loadingTipos ? "Cargando tipos de gasto..." : "Selecciona un tipo"}
