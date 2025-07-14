@@ -27,7 +27,7 @@ export default function Login() {
 
         navigate("/menu-principal")
       } else {
-        setError("Credenciales incorrectas")
+        setError(response.msg)
       }
     } catch (err) {
       console.error("Login error:", err)
