@@ -1,8 +1,8 @@
 import { Outlet } from "react-router-dom"
 import { LayoutTitleProvider, useLayoutTitle } from "../../context/LayoutTitleContext"
-import LogoutButton from "./LogoutButton"
 import ChatBotButton from "@/pages/private/Chat/ChatBotButton"
 import ThemeToggleButton from "./ThemeToggleButton"
+import UserMenu from "./UserMenu"
 
 function LayoutContent() {
     const { title } = useLayoutTitle()
@@ -16,7 +16,7 @@ function LayoutContent() {
 
                 </div>
                 <div className="flex justify-end">
-                    <LogoutButton />
+                    <UserMenu />
                     <ThemeToggleButton/>
                 </div>
             </header>
