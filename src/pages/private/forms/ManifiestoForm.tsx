@@ -14,40 +14,69 @@ const formatNumber = (num: number): string => {
   }).format(num)
 }
 
+type ManifiestoFormData = {
+  id_manifiesto: number
+
+  // Entradas del usuario
+  flete_total: number
+  porcentaje_retencion_fuente: number
+  porcentaje_ica: number
+  anticipo: number
+  total_gastos: number
+  porcentaje_conductor: number
+
+  // Calculados
+  valor_retencion_fuente: number
+  valor_ica: number
+  deduccion_fiscal: number
+  neto_a_pagar: number
+  saldo_a_pagar: number
+  queda_al_carro: number
+  a_favor_del_carro: number
+  ganacia_conductor: number
+}
 
 
-export default function ManifiestoForm() {
-  const [form, setForm] = useState({
-    // Oculto
-    id_manifiesto: 1,
+export default function ManifiestoForm({
+  onFormChange,
+  initialData,
+}: {
+  onFormChange: (data: ManifiestoFormData) => void
+  initialData?: ManifiestoFormData
+}) {
+  const [formData, setForm] = useState<ManifiestoFormData>(() =>
+    initialData || {
+      id_manifiesto: 1,
+      flete_total: 0,
+      porcentaje_retencion_fuente: 0,
+      porcentaje_ica: 0,
+      anticipo: 0,
+      total_gastos: 0,
+      porcentaje_conductor: 0,
+      valor_retencion_fuente: 0,
+      valor_ica: 0,
+      deduccion_fiscal: 0,
+      neto_a_pagar: 0,
+      saldo_a_pagar: 0,
+      queda_al_carro: 0,
+      a_favor_del_carro: 0,
+      ganacia_conductor: 0,
+    }
+  )
 
-    // Entradas del usuario
-    flete_total: 0,
-    porcentaje_retencion_fuente: 0,
-    porcentaje_ica: 0,
-    anticipo: 0,
-    total_gastos: 0,
-    porcentaje_conductor: 0,
+  useEffect(() => {
+    onFormChange(formData)
+  }, [formData])
 
-    // Calculados
-    valor_retencion_fuente: 0,
-    valor_ica: 0,
-    deduccion_fiscal: 0,
-    neto_a_pagar: 0,
-    saldo_a_pagar: 0,
-    queda_al_carro: 0,
-    a_favor_del_carro: 0,
-    ganacia_conductor: 0,
-  })
 
   // Recalcular valores cuando cambian los campos base
   useEffect(() => {
-    const flete = parseFloat(form.flete_total.toString()) || 0
-    const retPorc = parseFloat(form.porcentaje_retencion_fuente.toString()) || 0
-    const icaPorc = parseFloat(form.porcentaje_ica.toString()) || 0
-    const anticipo = parseFloat(form.anticipo.toString()) || 0
-    const gastos = parseFloat(form.total_gastos.toString()) || 0
-    const porcCond = parseFloat(form.porcentaje_conductor.toString()) || 0
+    const flete = formData.flete_total || 0
+    const retPorc = formData.porcentaje_retencion_fuente || 0
+    const icaPorc = formData.porcentaje_ica || 0
+    const anticipo = formData.anticipo || 0
+    const gastos = formData.total_gastos || 0
+    const porcCond = formData.porcentaje_conductor || 0
 
     const valor_retencion_fuente = flete * (retPorc / 100)
     const valor_ica = flete * (icaPorc / 100)
@@ -58,7 +87,7 @@ export default function ManifiestoForm() {
     const a_favor_del_carro = anticipo - gastos
     const ganacia_conductor = flete * porcCond
 
-    setForm(prev => ({
+    setForm((prev: ManifiestoFormData) => ({
       ...prev,
       valor_retencion_fuente,
       valor_ica,
@@ -70,22 +99,25 @@ export default function ManifiestoForm() {
       ganacia_conductor,
     }))
   }, [
-    form.flete_total,
-    form.porcentaje_retencion_fuente,
-    form.porcentaje_ica,
-    form.anticipo,
-    form.total_gastos,
-    form.porcentaje_conductor,
+    formData.flete_total,
+    formData.porcentaje_retencion_fuente,
+    formData.porcentaje_ica,
+    formData.anticipo,
+    formData.total_gastos,
+    formData.porcentaje_conductor,
   ])
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target
-    setForm(prev => ({ ...prev, [name]: parseFloat(value) || 0 }))
+    setForm((prev: ManifiestoFormData) => ({
+      ...prev,
+      [name]: parseFloat(value) || 0,
+    }))
   }
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
-    console.log("Formulario enviado:", form)
+    console.log("Formulario enviado:", formData)
   }
 
   return (
@@ -97,19 +129,19 @@ export default function ManifiestoForm() {
           <Label>Flete Total</Label>
           <Input
             name="flete_total"
-            value={form.flete_total}
+            value={formData.flete_total}
             onChange={handleChange}
             type="number"
             step="0.01"
           />
-          <div className="text-sm text-gray-500 mt-1">{formatNumber(form.flete_total)}</div>
+          <div className="text-sm text-gray-500 mt-1">{formatNumber(formData.flete_total)}</div>
         </div>
 
         <div>
           <Label>% Retención Fuente</Label>
           <Input
             name="porcentaje_retencion_fuente"
-            value={form.porcentaje_retencion_fuente}
+            value={formData.porcentaje_retencion_fuente}
             onChange={handleChange}
             type="number"
             step="0.0001"
@@ -118,69 +150,69 @@ export default function ManifiestoForm() {
             {new Intl.NumberFormat("es-CO", {
               minimumFractionDigits: 0,
               maximumFractionDigits: 4,
-            }).format(form.porcentaje_retencion_fuente)}%
+            }).format(formData.porcentaje_retencion_fuente)}%
           </div>
         </div>
 
         <div>
           <Label>% ICA</Label>
-          <Input name="porcentaje_ica" value={form.porcentaje_ica} onChange={handleChange} type="number" step="0.0001" />
+          <Input name="porcentaje_ica" value={formData.porcentaje_ica} onChange={handleChange} type="number" step="0.0001" />
         </div>
 
         <div>
           <Label>Anticipo</Label>
-          <Input name="anticipo" value={form.anticipo} onChange={handleChange} type="number" step="0.01" />
+          <Input name="anticipo" value={formData.anticipo} onChange={handleChange} type="number" step="0.01" />
         </div>
 
         <div>
           <Label>Total Gastos</Label>
-          <Input name="total_gastos" value={form.total_gastos} onChange={handleChange} type="number" step="0.01" />
+          <Input name="total_gastos" value={formData.total_gastos} onChange={handleChange} type="number" step="0.01" />
         </div>
 
         <div>
           <Label>% Conductor</Label>
-          <Input name="porcentaje_conductor" value={form.porcentaje_conductor} onChange={handleChange} type="number" step="0.0001" />
+          <Input name="porcentaje_conductor" value={formData.porcentaje_conductor} onChange={handleChange} type="number" step="0.0001" />
         </div>
 
         {/* Calculados automáticamente */}
         <div>
           <Label>Valor Retención Fuente</Label>
-          <Input value={formatNumber(form.valor_retencion_fuente)} readOnly />
+          <Input value={formatNumber(formData.valor_retencion_fuente)} readOnly />
         </div>
 
         <div>
           <Label>Valor ICA</Label>
-          <Input value={formatNumber(form.valor_ica)} readOnly />
+          <Input value={formatNumber(formData.valor_ica)} readOnly />
         </div>
 
         <div>
           <Label>Deducción Fiscal</Label>
-          <Input value={formatNumber(form.deduccion_fiscal)} readOnly />
+          <Input value={formatNumber(formData.deduccion_fiscal)} readOnly />
         </div>
 
         <div>
           <Label>Neto a Pagar</Label>
-          <Input value={formatNumber(form.neto_a_pagar)} readOnly />
+          <Input value={formatNumber(formData.neto_a_pagar)} readOnly />
         </div>
 
         <div>
           <Label>Saldo a Pagar</Label>
-          <Input value={formatNumber(form.saldo_a_pagar)} readOnly />
+          <Input value={formatNumber(formData.saldo_a_pagar)} readOnly />
         </div>
 
         <div>
           <Label>Queda al Carro</Label>
-          <Input value={formatNumber(form.queda_al_carro)} readOnly />
+          <Input value={formatNumber(formData.queda_al_carro)} readOnly />
         </div>
 
         <div>
           <Label>A favor del Carro</Label>
-          <Input value={formatNumber(form.a_favor_del_carro)} readOnly />
+          <Input value={formatNumber(formData.a_favor_del_carro)} readOnly />
         </div>
 
         <div>
           <Label>Ganancia del Conductor</Label>
-          <Input value={formatNumber(form.ganacia_conductor)} readOnly />
+          <Input value={formatNumber(formData.ganacia_conductor)} readOnly />
         </div>
 
       </div>
