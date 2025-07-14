@@ -1,18 +1,18 @@
 // src/http/routes.types.ts
 export const routes = {
-  viajes: {
-    getAll: "/viajes/getAll",
-    getById: "/viajes/getById/{id}",
-    create: "/viajes/create",
-    update: "/viajes/update",
-    delete: "/viajes/delete/{id}",
-    getPaginatedByUsuario: "/viajes/paginatedByUsuario"
+  usuarios: {
+    getAll: "/usuarios/getAll",
+    getById: "/usuarios/getById/{id}",
+    create: "/usuarios/create",
+    update: "/usuarios/update",
+    delete: "/usuarios/delete/{id}"
   },
   clientes: {
-    getAll: "/clientes"
-  },
-  manifiestos: {
-    getAll: "/manifiestos"
+    getAll: "/clientes/getAll",
+    getById: "/clientes/getById/{id}",
+    create: "/clientes/create",
+    update: "/clientes/update",
+    delete: "/clientes/delete/{id}"
   },
   gastos: {
     getAll: "/gastos/getAll",
@@ -20,6 +20,43 @@ export const routes = {
     create: "/gastos/create",
     update: "/gastos/update",
     delete: "/gastos/delete/{id}"
+  },
+  lugares: {
+    getAll: "/lugares/getAll",
+    getById: "/lugares/getById/{id}",
+    create: "/lugares/create",
+    update: "/lugares/update",
+    delete: "/lugares/delete/{id}"
+  },
+  manifiestos: {
+    getAll: "/manifiestos/getAll",
+    getById: "/manifiestos/getById/{id}",
+    create: "/manifiestos/create",
+    update: "/manifiestos/update",
+    delete: "/manifiestos/delete/{id}"
+  },
+  viajes: {
+    getAll: "/viajes/getAll",
+    getById: "/viajes/getById/{id}",
+    create: "/viajes/create",
+    update: "/viajes/update",
+    delete: "/viajes/delete/{id}",
+    getPaginatedByUsuario: "/viajes/paginatedByUsuario",
+    createNewViaje: "/viajes/createNewViaje"
+  },
+  roles: {
+    getAll: "/roles/getAll",
+    getById: "/roles/getById/{id}",
+    create: "/roles/create",
+    update: "/roles/update",
+    delete: "/roles/delete/{id}"
+  },
+  gastoxviaje: {
+    getAll: "/gastoxviaje/getAll",
+    getById: "/gastoxviaje/getById/{id}",
+    create: "/gastoxviaje/create",
+    update: "/gastoxviaje/update",
+    delete: "/gastoxviaje/delete/{id}"
   },
   auth: {
     login: "/Auth/login",
