@@ -43,12 +43,12 @@ export default function Viaje() {
         >
           Detalles del Viaje
         </Button>
-        <Button
+        {/* <Button
           variant={componenteActivo === "ClienteForm" ? "default" : "outline"}
           onClick={() => setComponenteActivo("ClienteForm")}
         >
           Cliente
-        </Button>
+        </Button> */}
         <Button
           variant={componenteActivo === "Manifiesto" ? "default" : "outline"}
           onClick={() => setComponenteActivo("Manifiesto")}

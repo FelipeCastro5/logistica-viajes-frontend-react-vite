@@ -12,7 +12,8 @@ export const routes = {
     getById: "/clientes/getById/{id}",
     create: "/clientes/create",
     update: "/clientes/update",
-    delete: "/clientes/delete/{id}"
+    delete: "/clientes/delete/{id}",
+    getClientesByUsuario: "/clientes/getClientesByUsuario"
   },
   gastos: {
     getAll: "/gastos/getAll",

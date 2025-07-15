@@ -26,7 +26,6 @@ export default function TablaGastosViaje() {
                             <TableHead>Nombre del Gasto</TableHead>
                             <TableHead>Valor</TableHead>
                             <TableHead>Detalles</TableHead>
-                            <TableHead>Otro</TableHead>
                         </TableRow>
                     </TableHeader>
                     <TableBody>
