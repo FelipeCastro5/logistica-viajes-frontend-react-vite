@@ -8,9 +8,11 @@ import ManifiestoForm from "../../components/forms/ManifiestoForm"
 import TablaGastosViaje from "../../components/tables/TablaGastos"
 import { Button } from "@/components/ui/button"
 
-import { getViajeById } from "@/services/adapters/viajes.adapter"
+import { getViajeById, updateViaje } from "@/services/adapters/viajes.adapter"
 import { getManifiestoById } from "@/services/adapters/manifiestos.adapter"
 import { getGastosPorViajeByViajeId } from "@/services/adapters/gastoxviaje.adapter"
+
+import { toast } from "sonner"
 
 export default function Viaje() {
   const { setTitle } = useLayoutTitle()
@@ -24,6 +26,8 @@ export default function Viaje() {
   const [detallesViaje, setDetallesViaje] = useState<any>(null)
   const [manifiesto, setManifiesto] = useState<any>(null)
   const [gastos, setGastos] = useState<any[]>([])
+
+  const [viajeEditado, setViajeEditado] = useState<any>(null)
 
   useEffect(() => {
     setTitle("DETALLES DEL VIAJE")
@@ -52,18 +56,45 @@ export default function Viaje() {
     }
   }
 
-  const renderizarComponente = () => {
-    switch (componenteActivo) {
-      case "DetallesViaje":
-        return <DetallesViajeForm id_viaje={id_viaje} initialData={detallesViaje} />
-      case "Manifiesto":
-        return <ManifiestoForm id_viaje={id_viaje} initialData={manifiesto} />
-      case "GastosViaje":
-        return <TablaGastosViaje id_viaje={id_viaje} gastos={gastos} />
-      default:
-        return <p className="text-center">Selecciona una sección.</p>
+  const handleGuardar = async () => {
+    if (!viajeEditado) {
+      toast.warning("No hay cambios para guardar")
+      return
+    }
+
+    try {
+      // Asegurarse de que el ID esté incluido en el body
+      const body = {
+        ...viajeEditado,
+        id_viaje: id_viaje,
+      }
+
+      await updateViaje(body)
+
+      toast.success("Viaje actualizado correctamente ✅")
+
+      // Refrescar los datos actualizados
+      fetchData(id_viaje)
+      setViajeEditado(null)
+    } catch (error) {
+      console.error("Error al guardar viaje:", error)
+      toast.error("Error al guardar el viaje ❌")
     }
   }
+
+
+  // const renderizarComponente = () => {
+  //   switch (componenteActivo) {
+  //     case "DetallesViaje":
+  //       return <DetallesViajeForm id_viaje={id_viaje} initialData={detallesViaje} onChange={setViajeEditado}/>
+  //     case "Manifiesto":
+  //       return <ManifiestoForm id_viaje={id_viaje} initialData={manifiesto} />
+  //     case "GastosViaje":
+  //       return <TablaGastosViaje id_viaje={id_viaje} gastos={gastos} />
+  //     default:
+  //       return <p className="text-center">Selecciona una sección.</p>
+  //   }
+  // }
 
   return (
     <PageContent title={`VIAJE# COD-${id_viaje}`}>
@@ -93,24 +124,53 @@ export default function Viaje() {
 
       {/* Contenedor dinámico */}
       <div className="border border-gray-300 dark:border-gray-700 rounded-lg p-4 bg-white dark:bg-gray-900 shadow">
-        {renderizarComponente()}
+        {/* {renderizarComponente()} */}
+        <div className="relative space-y-6">
+          <div className={componenteActivo === "DetallesViaje" ? "block" : "hidden"}>
+            <DetallesViajeForm
+              id_viaje={id_viaje}
+              initialData={detallesViaje}
+              onChange={setViajeEditado}
+            />
+          </div>
+
+          <div className={componenteActivo === "Manifiesto" ? "block" : "hidden"}>
+            <ManifiestoForm id_viaje={id_viaje} initialData={manifiesto} />
+          </div>
+
+          <div className={componenteActivo === "GastosViaje" ? "block" : "hidden"}>
+            <TablaGastosViaje id_viaje={id_viaje} gastos={gastos} />
+          </div>
+        </div>
+
       </div>
 
-      <div className="flex items-center justify-between mb-4">
+      <div className="flex items-center justify-between mb-4 flex-wrap gap-2">
         <Button
           onClick={() => navigate("/menu-principal")}
           className="bg-gray-600 hover:bg-gray-700 text-white mt-4"
         >
           VOLVER
         </Button>
+
+        {viajeEditado && (
+          <Button
+            onClick={handleGuardar}
+            className="bg-green-600 hover:bg-green-700 text-white mt-4"
+          >
+            GUARDAR CAMBIOS
+          </Button>
+        )}
+
         <Button
           variant="secondary"
           onClick={() => navigate("/tabla-viaje")}
-          className="text-sm"
+          className="text-sm mt-4"
         >
           detalles viaje
         </Button>
       </div>
+
     </PageContent>
   )
 }

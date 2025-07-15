@@ -13,10 +13,12 @@ import ChatListPage from "./components/chat/ChatListPage"
 import RecuperarPassword from "./pages/public/RecuperarPassword"
 import Viaje from "./pages/private/Viaje"
 import TablaDetalleViaje from "./components/tables/TablaDetalleViaje"
+import { Toaster } from "sonner"
 
 export default function App() {
   return (
     <Router>
+      <Toaster richColors position="top-right" />
       <Routes>
         <Route path="/login" element={<Login />} />
         <Route path="/recuperar" element={<RecuperarPassword />} />

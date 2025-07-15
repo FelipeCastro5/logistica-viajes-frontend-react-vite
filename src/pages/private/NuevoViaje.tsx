@@ -17,7 +17,7 @@ export default function NuevoViaje() {
   const renderizarComponente = () => {
     switch (componenteActivo) {
       case "DetallesViaje":
-        return <DetallesViajeForm />
+        return <DetallesViajeForm id_viaje={null} initialData={null}/>
       case "Manifiesto":
         return <ManifiestoForm />
       default:

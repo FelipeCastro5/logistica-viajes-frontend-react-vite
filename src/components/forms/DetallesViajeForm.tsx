@@ -6,31 +6,51 @@ import NuevoClienteModal from "../modals/NuevoClienteModal"
 import { useDetallesViajeForm } from "@/hooks/forms/useDetallesViajeForm"
 import { useEffect } from "react"
 
+type ViajeData = {
+  fk_cliente?: number
+  fk_origen?: number
+  fk_destino?: number
+  codigo?: string
+  producto?: string
+  detalle_producto?: string
+  direccion_llegada?: string
+  fecha_salida?: string
+  fecha_llegada?: string
+  observaciones?: string
+  // agrega más campos según tu modelo
+}
+
 type DetallesViajeFormProps = {
   id_viaje: number
   initialData: any
+  onChange?: (newData: ViajeData) => void
 }
 
-export default function DetallesViajeForm({ id_viaje, initialData }: DetallesViajeFormProps) {
+export default function DetallesViajeForm({ id_viaje, initialData, onChange }: DetallesViajeFormProps) {
   const {
     form, setForm, clientes, noClientes, lugaresOrigen, lugaresDestino, noLugares, clienteSeleccionado,
     setClienteSeleccionado, fetchClientes, handleChange, handleSelectChange, handleSubmit,
-  } = useDetallesViajeForm()
+  } = useDetallesViajeForm(onChange)
 
-useEffect(() => {
-  if (initialData) {
-    setForm((prev) => ({
-      ...prev,
-      ...initialData,
-      fecha_salida: initialData.fecha_salida?.split("T")[0] || "",
-      fecha_llegada: initialData.fecha_llegada?.split("T")[0] || "",
-    }))
+  useEffect(() => {
+    if (initialData) {
+      const parsedData = {
+        ...initialData,
+        fecha_salida: initialData.fecha_salida?.split("T")[0] || "",
+        fecha_llegada: initialData.fecha_llegada?.split("T")[0] || "",
+      }
 
-    // Buscar y setear el cliente según el fk_cliente recibido
-    const cliente = clientes.find(c => c.id_cliente === initialData.fk_cliente)
-    setClienteSeleccionado(cliente ?? null)
-  }
-}, [initialData, clientes])
+      setForm((prev) => ({ ...prev, ...parsedData }))
+
+      const cliente = clientes.find(c => c.id_cliente === initialData.fk_cliente)
+      setClienteSeleccionado(cliente ?? null)
+
+      if (onChange) {
+        onChange(parsedData)
+      }
+    }
+  }, [initialData, clientes])
+
 
 
   return (

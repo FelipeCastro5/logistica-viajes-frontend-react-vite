@@ -15,7 +15,7 @@ type Lugar = {
   nombre_lugar: string
 }
 
-export const useDetallesViajeForm = () => {
+export const useDetallesViajeForm = (onChange?: (newData: any) => void) => {
   const { user } = useAuth()
 
   const [clientes, setClientes] = useState<ClienteAdaptado[]>([])
@@ -80,14 +80,23 @@ export const useDetallesViajeForm = () => {
     fetchLugares()
   }, [])
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-    const { name, value } = e.target
-    setForm(prev => ({ ...prev, [name]: value }))
-  }
+const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+  const { name, value } = e.target
+  setForm(prev => {
+    const newForm = { ...prev, [name]: value }
+    if (onChange) onChange(newForm)
+    return newForm
+  })
+}
 
-  const handleSelectChange = (field: string, value: string) => {
-    setForm(prev => ({ ...prev, [field]: parseInt(value) }))
-  }
+const handleSelectChange = (field: string, value: string) => {
+  setForm(prev => {
+    const newForm = { ...prev, [field]: parseInt(value) }
+    if (onChange) onChange(newForm)
+    return newForm
+  })
+}
+
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
