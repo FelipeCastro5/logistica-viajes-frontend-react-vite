@@ -13,13 +13,12 @@ import ClienteForm from "../forms/ClienteForm"
 export default function NuevoClienteModal({
   onClienteCreado,
 }: {
-  onClienteCreado?: (data: any) => void
+  onClienteCreado?: () => void
 }) {
   const [open, setOpen] = useState(false)
 
-  const handleClienteCreado = (data: any) => {
-    console.log("Cliente creado desde modal:", data)
-    onClienteCreado?.(data) // opcional para que el padre pueda recibirlo
+  const handleClienteCreado = () => {
+    onClienteCreado?.() // solo recarga, sin pasar cliente
     setOpen(false)
   }
 

@@ -5,10 +5,10 @@ import { RequestHttp } from "../http/HttpRequest"
 
 export interface Cliente {
     id_cliente?: number
-    nombre: string
-    direccion?: string
+    fk_usuario: number
+    nit?: string
+    nombre_cliente?: string
     telefono?: string
-    email?: string
     // Agrega más campos según tu modelo real
 }
 

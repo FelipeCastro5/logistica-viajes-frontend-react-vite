@@ -11,14 +11,15 @@ export default function GastoForm({
   onCreated?: (data: any) => void
   viajeId: number
 }) {
-  const { gasto, tiposDeGasto, loadingTipos, handleChange } = useGastoForm(viajeId)
-
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault()
-    console.log("Nuevo gasto:", gasto)
-    onCreated?.(gasto)
-    // Aquí iría el POST real
-  }
+  const {
+    gasto,
+    tiposDeGasto,
+    loadingTipos,
+    handleChange,
+    handleValorChange,
+    handleSubmit,
+    formatNumber,
+  } = useGastoForm(viajeId, onCreated)
 
   return (
     <form onSubmit={handleSubmit} className="grid gap-4 mt-4">
@@ -49,11 +50,11 @@ export default function GastoForm({
         <Input
           id="valor"
           name="valor"
-          type="number"
-          step="0.01"
+          type="text"
+          inputMode="numeric"
           placeholder="Valor del gasto"
-          value={gasto.valor}
-          onChange={handleChange}
+          value={formatNumber(Number(gasto.valor))}
+          onChange={handleValorChange}
           required
         />
       </div>

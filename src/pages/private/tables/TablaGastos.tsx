@@ -42,7 +42,7 @@ export default function TablaGastosViaje() {
                 <div className="text-right mt-4 text-base font-semibold">
                     Total: <span className="text-blue-700">${total.toFixed(2)}</span>
                 </div>
-                <NuevoGastoModal viajeId={123} /> {/* ← Reemplaza 123 por el ID real del viaje si lo tienes */}
+                <NuevoGastoModal viajeId={1} /> {/* ← Reemplaza 123 por el ID real del viaje si lo tienes */}
             </CardContent>
         </Card>
     )

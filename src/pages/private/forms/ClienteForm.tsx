@@ -2,11 +2,16 @@ import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Button } from "@/components/ui/button"
 import { useState } from "react"
+import { useAuth } from "@/hooks/useAuth"
+import { createCliente, type Cliente } from "@/services/adapters/clientes.adapter"
 
 export default function ClienteForm({ onCreated }: { onCreated?: (data: any) => void }) {
-  const [cliente, setCliente] = useState({
-    nombre: "",
-    direccion: "",
+  const { user } = useAuth()
+
+  const [cliente, setCliente] = useState<Cliente>({
+    fk_usuario: user?.id_usuario || 0, // asegura que esté presente
+    nit: "",
+    nombre_cliente: "",
     telefono: "",
   })
 
@@ -15,26 +20,50 @@ export default function ClienteForm({ onCreated }: { onCreated?: (data: any) => 
     setCliente(prev => ({ ...prev, [name]: value }))
   }
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
-    console.log("Cliente creado:", cliente)
-    onCreated?.(cliente) // ← devuelve el cliente al padre si se desea
-    // lógica de guardado real aquí (fetch/post)
+
+    try {
+      const response = await createCliente(cliente)
+      console.log("Cliente creado:", response)
+      onCreated?.(response.data)
+    } catch (error) {
+      console.error("Error al crear cliente:", error)
+    }
   }
 
   return (
     <form onSubmit={handleSubmit} className="grid gap-4 mt-2">
       <div>
-        <Label htmlFor="nombre">Nombre</Label>
-        <Input id="nombre" name="nombre" placeholder="Nombre del cliente" value={cliente.nombre} onChange={handleChange} required />
+        <Label htmlFor="nombre_cliente">Nombre</Label>
+        <Input
+          id="nombre_cliente"
+          name="nombre_cliente"
+          placeholder="Nombre del cliente"
+          value={cliente.nombre_cliente}
+          onChange={handleChange}
+          required
+        />
       </div>
       <div>
-        <Label htmlFor="direccion">Dirección</Label>
-        <Input id="direccion" name="direccion" placeholder="Dirección" value={cliente.direccion} onChange={handleChange} />
+        <Label htmlFor="nit">Nit Cliente</Label>
+        <Input
+          id="nit"
+          name="nit"
+          placeholder="Nit del Cliente"
+          value={cliente.nit}
+          onChange={handleChange}
+        />
       </div>
       <div>
-        <Label htmlFor="telefono">Teléfono</Label>
-        <Input id="telefono" name="telefono" placeholder="Teléfono" value={cliente.telefono} onChange={handleChange} />
+        <Label htmlFor="telefono">Teléfono Cliente</Label>
+        <Input
+          id="telefono"
+          name="telefono"
+          placeholder="Teléfono del Cliente"
+          value={cliente.telefono}
+          onChange={handleChange}
+        />
       </div>
       <Button type="submit">Guardar cliente</Button>
     </form>

@@ -12,19 +12,16 @@ export default function DetallesViajeForm() {
   const { user } = useAuth()
 
   const [clientes, setClientes] = useState<{ id_cliente: number; nombre_cliente: string, nit_cliente: number, telefono_cliente: number }[]>([])
-  const [noClientes, setNoClientes] = useState(false) // NUEVO
+  const [noClientes, setNoClientes] = useState(false)
 
   const [lugares, setLugares] = useState<{ id_lugar: number; nombre_lugar: string }[]>([])
   const [noLugares, setNoLugares] = useState(false)
 
   const [form, setForm] = useState({
-    // Campos ocultos
     id_viaje: 1,
     fk_usuario: user?.id_usuario ?? 0,
     fk_manifiesto: 456,
     estado_viaje: true,
-
-    // Campos visibles
     fk_cliente: 0,
     fk_origen: 0,
     fk_destino: 0,
@@ -44,27 +41,26 @@ export default function DetallesViajeForm() {
     telefono_cliente: number
   }>(null)
 
-  useEffect(() => {
+  const fetchClientes = async () => {
     if (!user?.id_usuario) return
 
-    const fetchClientes = async () => {
-      const res = await getClientesByUsuario(user.id_usuario)
-      if (res.status === 200) {
-        const adaptados = res.data.map((cliente: any) => ({
-          id_cliente: cliente.id_cliente,
-          nombre_cliente: cliente.nombre_cliente,
-          nit_cliente: cliente.nit,
-          telefono_cliente: cliente.telefono,
-        }))
-        setClientes(adaptados)
-        setNoClientes(false)
-      } else if (res.status === 404) {
-        setClientes([])
-        setNoClientes(true)
-      }
+    const res = await getClientesByUsuario(user.id_usuario)
+    if (res.status === 200) {
+      const adaptados = res.data.map((cliente: any) => ({
+        id_cliente: cliente.id_cliente,
+        nombre_cliente: cliente.nombre_cliente,
+        nit_cliente: cliente.nit,
+        telefono_cliente: cliente.telefono,
+      }))
+      setClientes(adaptados)
+      setNoClientes(false)
+    } else if (res.status === 404) {
+      setClientes([])
+      setNoClientes(true)
     }
+  }
 
-
+  useEffect(() => {
     fetchClientes()
   }, [user?.id_usuario])
 
@@ -134,27 +130,15 @@ export default function DetallesViajeForm() {
         </div>
         <div>
           <Label>Crear un nuevo Cliente (opcional)</Label>
-          <NuevoClienteModal />
+          <NuevoClienteModal onClienteCreado={fetchClientes} />
         </div>
         <div>
           <Label htmlFor="nit_cliente">NIT Cliente</Label>
-          <Input
-            id="nit_cliente"
-            name="nit_cliente"
-            placeholder="NIT Cliente"
-            value={clienteSeleccionado?.nit_cliente ?? ""}
-            readOnly
-          />
+          <Input id="nit_cliente" name="nit_cliente" placeholder="NIT Cliente" value={clienteSeleccionado?.nit_cliente ?? ""} readOnly />
         </div>
         <div>
           <Label htmlFor="telefono">Teléfono Cliente</Label>
-          <Input
-            id="telefono"
-            name="telefono"
-            placeholder="Teléfono"
-            value={clienteSeleccionado?.telefono_cliente ?? ""}
-            readOnly
-          />
+          <Input id="telefono" name="telefono" placeholder="Teléfono" value={clienteSeleccionado?.telefono_cliente ?? ""} readOnly />
         </div>
 
 
