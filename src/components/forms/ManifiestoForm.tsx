@@ -7,6 +7,7 @@ import { useManifiestoForm } from "@/hooks/forms/useManifiestoForm"
 type ManifiestoFormProps = {
   id_viaje?: number
   initialData?: any // O idealmente `Partial<ManifiestoFormData>` si ya tienes ese tipo
+  onChange?: (data: any) => void
 }
 
 const formatNumber = (num: number): string => {
@@ -19,8 +20,8 @@ const formatNumber = (num: number): string => {
   }).format(num)
 }
 
-export default function ManifiestoForm({ initialData }: ManifiestoFormProps) {
-  const { form, handleChange, handleSubmit } = useManifiestoForm(initialData)
+export default function ManifiestoForm({ initialData, onChange  }: ManifiestoFormProps) {
+  const { form, handleChange, handleSubmit } = useManifiestoForm(initialData, onChange)
 
   return (
     <form onSubmit={handleSubmit} className="grid gap-4 max-w-4xl mx-auto">

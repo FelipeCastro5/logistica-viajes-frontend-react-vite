@@ -19,7 +19,7 @@ type ManifiestoFormData = {
   ganacia_conductor: number
 }
 
-export function useManifiestoForm(initialData?: any) {
+export function useManifiestoForm(initialData?: any, onChange?: (data: any) => void) {
   const [form, setForm] = useState<ManifiestoFormData>({
     id_manifiesto: 1,
     flete_total: 0,
@@ -39,6 +39,12 @@ export function useManifiestoForm(initialData?: any) {
   })
 
   const initialized = useRef(false)
+  
+  useEffect(() => {
+    if (onChange) {
+      onChange(form)
+    }
+  }, [form])
 
   useEffect(() => {
     if (initialData && !initialized.current) {
@@ -74,7 +80,7 @@ export function useManifiestoForm(initialData?: any) {
     const saldo_a_pagar = neto_a_pagar - anticipo
     const queda_al_carro = saldo_a_pagar - gastos
     const a_favor_del_carro = anticipo - gastos
-    const ganacia_conductor = flete * porcCond
+    const ganacia_conductor = flete * (porcCond / 100)
 
     setForm(prev => ({
       ...prev,

@@ -9,7 +9,7 @@ import TablaGastosViaje from "../../components/tables/TablaGastos"
 import { Button } from "@/components/ui/button"
 
 import { getViajeById, updateViaje } from "@/services/adapters/viajes.adapter"
-import { getManifiestoById } from "@/services/adapters/manifiestos.adapter"
+import { getManifiestoById, updateManifiesto } from "@/services/adapters/manifiestos.adapter"
 import { getGastosPorViajeByViajeId } from "@/services/adapters/gastoxviaje.adapter"
 
 import { toast } from "sonner"
@@ -28,6 +28,7 @@ export default function Viaje() {
   const [gastos, setGastos] = useState<any[]>([])
 
   const [viajeEditado, setViajeEditado] = useState<any>(null)
+  const [manifiestoEditado, setManifiestoEditado] = useState<any>(null)
 
   useEffect(() => {
     setTitle("DETALLES DEL VIAJE")
@@ -57,31 +58,36 @@ export default function Viaje() {
   }
 
   const handleGuardar = async () => {
-    if (!viajeEditado) {
+    if (!viajeEditado && !manifiestoEditado) {
       toast.warning("No hay cambios para guardar")
       return
     }
 
     try {
-      // Asegurarse de que el ID esté incluido en el body
-      const body = {
-        ...viajeEditado,
-        id_viaje: id_viaje,
+      if (viajeEditado) {
+        await updateViaje({
+          ...viajeEditado,
+          id_viaje,
+        })
       }
 
-      await updateViaje(body)
+      if (manifiestoEditado) {
+        await updateManifiesto({
+          ...manifiestoEditado,
+          id_manifiesto: manifiestoEditado.id_manifiesto,
+          id_viaje,
+        })
+      }
 
-      toast.success("Viaje actualizado correctamente ✅")
-
-      // Refrescar los datos actualizados
+      toast.success("Datos actualizados correctamente ✅")
       fetchData(id_viaje)
       setViajeEditado(null)
+      setManifiestoEditado(null)
     } catch (error) {
-      console.error("Error al guardar viaje:", error)
-      toast.error("Error al guardar el viaje ❌")
+      console.error("Error al guardar:", error)
+      toast.error("Error al guardar los datos ❌")
     }
   }
-
 
   // const renderizarComponente = () => {
   //   switch (componenteActivo) {
@@ -135,7 +141,11 @@ export default function Viaje() {
           </div>
 
           <div className={componenteActivo === "Manifiesto" ? "block" : "hidden"}>
-            <ManifiestoForm id_viaje={id_viaje} initialData={manifiesto} />
+            <ManifiestoForm
+              id_viaje={id_viaje}
+              initialData={manifiesto}
+              onChange={setManifiestoEditado}
+            />
           </div>
 
           <div className={componenteActivo === "GastosViaje" ? "block" : "hidden"}>
