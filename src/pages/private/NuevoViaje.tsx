@@ -1,8 +1,8 @@
 import { useEffect, useState } from "react"
-import PageContent from "../../../components/layout/PageContent"
-import { useLayoutTitle } from "../../../context/LayoutTitleContext"
-import DetallesViajeForm from "../forms/DetallesViajeForm"
-import ManifiestoForm from "../forms/ManifiestoForm"
+import PageContent from "../../components/layout/PageContent"
+import { useLayoutTitle } from "../../context/LayoutTitleContext"
+import DetallesViajeForm from "../../components/forms/DetallesViajeForm"
+import ManifiestoForm from "../../components/forms/ManifiestoForm"
 import { Button } from "@/components/ui/button"
 import { useNavigate } from "react-router-dom"
 

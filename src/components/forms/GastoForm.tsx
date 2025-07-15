@@ -2,7 +2,7 @@ import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Button } from "@/components/ui/button"
 import { Textarea } from "@/components/ui/textarea"
-import { useGastoForm } from "./useGastoForm"
+import { useGastoForm } from "../../hooks/forms/useGastoForm"
 
 export default function GastoForm({
   onCreated,

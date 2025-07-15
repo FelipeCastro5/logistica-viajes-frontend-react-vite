@@ -1,11 +1,11 @@
 // import { useNavigate } from "react-router-dom"
 // import MenuButton from "../../../components/layout/MenuButton"
 import { useEffect } from "react"
-import { useLayoutTitle } from "../../../context/LayoutTitleContext"
-import TablaViajes from "../tables/TablaViajes"
-import GraficaGastosPorTipo from "../../../components/graphics/GraficaGastosPorTipo"
-import GraficaGastosPorViaje from "../../../components/graphics/GraficaGastosPorViaje"
-import GraficaIngresosVsGastos from "../../../components/graphics/GraficaIngresosVsGastos"
+import { useLayoutTitle } from "../../context/LayoutTitleContext"
+import TablaViajes from "../../components/tables/TablaViajes"
+import GraficaGastosPorTipo from "../../components/graphics/GraficaGastosPorTipo"
+import GraficaGastosPorViaje from "../../components/graphics/GraficaGastosPorViaje"
+import GraficaIngresosVsGastos from "../../components/graphics/GraficaIngresosVsGastos"
 
 export default function MenuPrincipal() {
   // const navigate = useNavigate()

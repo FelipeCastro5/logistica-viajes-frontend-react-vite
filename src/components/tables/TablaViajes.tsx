@@ -9,7 +9,7 @@ import {
 } from "@/components/ui/table"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
-import { useViajesTable } from "@/hooks/useViajesTable"
+import { useViajesTable } from "@/hooks/tables/useViajesTable"
 
 export default function TablaViajes() {
   const navigate = useNavigate()

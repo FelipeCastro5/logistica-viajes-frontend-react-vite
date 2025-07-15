@@ -1,6 +1,6 @@
 import { Outlet } from "react-router-dom"
 import { LayoutTitleProvider, useLayoutTitle } from "../../context/LayoutTitleContext"
-import ChatBotButton from "@/pages/private/Chat/ChatBotButton"
+import ChatBotButton from "@/components/chat/ChatBotButton"
 import ThemeToggleButton from "./ThemeToggleButton"
 import UserMenu from "./UserMenu"
 
