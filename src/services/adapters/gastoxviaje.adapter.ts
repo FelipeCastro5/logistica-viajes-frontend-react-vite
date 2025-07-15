@@ -53,3 +53,12 @@ export const deleteGastoPorViaje = async (id: number): Promise<ApiResponse<any>>
     method: "DELETE",
   }, { id })
 }
+
+// ✅ Obtener todos los gastos de un viaje por ID
+export const getGastosPorViajeByViajeId = async (fk_viaje: number): Promise<ApiResponse<any>> => {
+  return await RequestHttp(null, {
+    base: "gastoxviaje",
+    entry: "getByViaje",
+    method: "GET",
+  }, { fk_viaje }) // 🔍 Lo enviás como query param
+}
