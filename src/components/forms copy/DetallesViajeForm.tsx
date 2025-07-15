@@ -4,34 +4,12 @@ import { Label } from "@/components/ui/label"
 import { Select, SelectTrigger, SelectValue, SelectContent, SelectItem } from "@/components/ui/select"
 import NuevoClienteModal from "../modals/NuevoClienteModal"
 import { useDetallesViajeForm } from "@/hooks/forms/useDetallesViajeForm"
-import { useEffect } from "react"
 
-type DetallesViajeFormProps = {
-  id_viaje: number
-  initialData: any
-}
-
-export default function DetallesViajeForm({ id_viaje, initialData }: DetallesViajeFormProps) {
+export default function DetallesViajeForm() {
   const {
-    form, setForm, clientes, noClientes, lugaresOrigen, lugaresDestino, noLugares, clienteSeleccionado,
+    form, clientes, noClientes, lugaresOrigen, lugaresDestino, noLugares, clienteSeleccionado,
     setClienteSeleccionado, fetchClientes, handleChange, handleSelectChange, handleSubmit,
   } = useDetallesViajeForm()
-
-useEffect(() => {
-  if (initialData) {
-    setForm((prev) => ({
-      ...prev,
-      ...initialData,
-      fecha_salida: initialData.fecha_salida?.split("T")[0] || "",
-      fecha_llegada: initialData.fecha_llegada?.split("T")[0] || "",
-    }))
-
-    // Buscar y setear el cliente según el fk_cliente recibido
-    const cliente = clientes.find(c => c.id_cliente === initialData.fk_cliente)
-    setClienteSeleccionado(cliente ?? null)
-  }
-}, [initialData, clientes])
-
 
   return (
     <form onSubmit={handleSubmit} className="grid gap-4">
@@ -45,7 +23,6 @@ useEffect(() => {
               const cliente = clientes.find(c => c.id_cliente === parseInt(val))
               setClienteSeleccionado(cliente ?? null)
             }}
-            value={form.fk_cliente?.toString() || ""} // ← para que se seleccione automáticamente
           >
             <SelectTrigger>
               <SelectValue placeholder="Selecciona un cliente" />
@@ -81,8 +58,7 @@ useEffect(() => {
 
         <div>
           <Label>Origen</Label>
-          <Select onValueChange={val => handleSelectChange("fk_origen", val)}
-            value={form.fk_origen?.toString() || ""}>
+          <Select onValueChange={val => handleSelectChange("fk_origen", val)}>
             <SelectTrigger>
               <SelectValue placeholder="Selecciona origen" />
             </SelectTrigger>
@@ -102,8 +78,7 @@ useEffect(() => {
 
         <div>
           <Label>Destino</Label>
-          <Select onValueChange={val => handleSelectChange("fk_destino", val)}
-            value={form.fk_destino?.toString() || ""}>
+          <Select onValueChange={val => handleSelectChange("fk_destino", val)}>
             <SelectTrigger>
               <SelectValue placeholder="Selecciona destino" />
             </SelectTrigger>

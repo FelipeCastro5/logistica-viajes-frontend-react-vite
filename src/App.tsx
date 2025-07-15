@@ -6,8 +6,8 @@ import PageLayout from "./components/layout/PageLayout"
 import NuevoViaje from "./pages/private/NuevoViaje"
 import ManifiestoForm from "./components/forms/ManifiestoForm"
 import ClienteForm from "./components/forms/ClienteForm"
-import DetallesViajeForm from "./components/forms/DetallesViajeForm"
-import TablaGastosViaje from "./components/tables/TablaGastos"
+// import DetallesViajeForm from "./components/forms/DetallesViajeForm"
+// import TablaGastosViaje from "./components/tables/TablaGastos"
 import ChatPage from "./components/chat/ChatPage"
 import ChatListPage from "./components/chat/ChatListPage"
 import RecuperarPassword from "./pages/public/RecuperarPassword"
@@ -25,12 +25,12 @@ export default function App() {
         <Route element={<PrivateRoute><PageLayout /></PrivateRoute>}>
           <Route path="/menu-principal" element={<MenuPrincipal />} />
           <Route path="/nuevo-viaje" element={<NuevoViaje />} />
-          <Route path="/viaje" element={<Viaje />} />
+          <Route path="/viaje/:id" element={<Viaje />} />
 
-          <Route path="/detalles-viaje" element={<DetallesViajeForm />} />
+          {/* <Route path="/detalles-viaje" element={<DetallesViajeForm />} />
+          <Route path="/total-gastos" element={<TablaGastosViaje />} /> */}
           <Route path="/info-cliente" element={<ClienteForm />} />
           <Route path="/manifiesto" element={<ManifiestoForm />} />
-          <Route path="/total-gastos" element={<TablaGastosViaje />} />
           <Route path="/tabla-viaje" element={<TablaDetalleViaje />} />
 
           <Route path="/chat-bot" element={<ChatListPage />} />

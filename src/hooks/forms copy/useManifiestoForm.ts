@@ -1,26 +1,8 @@
-import { useEffect, useRef, useState } from "react"
+// hooks/useManifiestoForm.ts
+import { useEffect, useState } from "react"
 
-// 1. Define el tipo del formulario
-type ManifiestoFormData = {
-  id_manifiesto: number
-  flete_total: number
-  porcentaje_retencion_fuente: number
-  porcentaje_ica: number
-  anticipo: number
-  total_gastos: number
-  porcentaje_conductor: number
-  valor_retencion_fuente: number
-  valor_ica: number
-  deduccion_fiscal: number
-  neto_a_pagar: number
-  saldo_a_pagar: number
-  queda_al_carro: number
-  a_favor_del_carro: number
-  ganacia_conductor: number
-}
-
-export function useManifiestoForm(initialData?: any) {
-  const [form, setForm] = useState<ManifiestoFormData>({
+export function useManifiestoForm() {
+  const [form, setForm] = useState({
     id_manifiesto: 1,
     flete_total: 0,
     porcentaje_retencion_fuente: 0,
@@ -37,27 +19,6 @@ export function useManifiestoForm(initialData?: any) {
     a_favor_del_carro: 0,
     ganacia_conductor: 0,
   })
-
-  const initialized = useRef(false)
-
-  useEffect(() => {
-    if (initialData && !initialized.current) {
-      const parsedData: Partial<ManifiestoFormData> = {}
-
-      for (const [key, value] of Object.entries(initialData)) {
-        if (typeof value === "string" || typeof value === "number") {
-          parsedData[key as keyof ManifiestoFormData] = parseFloat(value as string) || 0
-        }
-      }
-
-      setForm(prev => ({
-        ...prev,
-        ...parsedData,
-      }))
-
-      initialized.current = true
-    }
-  }, [initialData])
 
   useEffect(() => {
     const flete = form.flete_total || 0

@@ -4,11 +4,6 @@ import { Label } from "@/components/ui/label"
 //import { Button } from "@/components/ui/button"
 import { useManifiestoForm } from "@/hooks/forms/useManifiestoForm"
 
-type ManifiestoFormProps = {
-  id_viaje?: number
-  initialData?: any // O idealmente `Partial<ManifiestoFormData>` si ya tienes ese tipo
-}
-
 const formatNumber = (num: number): string => {
   if (isNaN(num)) return ""
   return new Intl.NumberFormat("es-CO", {
@@ -19,8 +14,8 @@ const formatNumber = (num: number): string => {
   }).format(num)
 }
 
-export default function ManifiestoForm({ initialData }: ManifiestoFormProps) {
-  const { form, handleChange, handleSubmit } = useManifiestoForm(initialData)
+export default function ManifiestoForm() {
+  const { form, handleChange, handleSubmit } = useManifiestoForm()
 
   return (
     <form onSubmit={handleSubmit} className="grid gap-4 max-w-4xl mx-auto">

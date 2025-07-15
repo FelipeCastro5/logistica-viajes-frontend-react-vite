@@ -71,7 +71,7 @@ export default function TablaViajes() {
                 <TableCell className="text-center">
                   <Button
                     variant="secondary"
-                    onClick={() => navigate("/Viaje")}
+                    onClick={() => navigate(`/viaje/${viaje.id_viaje}`)}
                     className="text-sm"
                   >
                     Ver viaje

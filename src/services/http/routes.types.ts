@@ -31,14 +31,14 @@ export const routes = {
   },
   manifiestos: {
     getAll: "/manifiestos/getAll",
-    getById: "/manifiestos/getById/{id}",
+    getById: "/manifiestos/getById",
     create: "/manifiestos/create",
     update: "/manifiestos/update",
     delete: "/manifiestos/delete/{id}"
   },
   viajes: {
     getAll: "/viajes/getAll",
-    getById: "/viajes/getById/{id}",
+    getById: "/viajes/getById",
     create: "/viajes/create",
     update: "/viajes/update",
     delete: "/viajes/delete/{id}",

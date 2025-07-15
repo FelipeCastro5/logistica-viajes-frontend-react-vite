@@ -1,49 +1,55 @@
-import { useState } from "react"
+// src/components/tables/TablaGastos.tsx
+
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
 import { Card, CardContent } from "@/components/ui/card"
 import NuevoGastoModal from "../modals/NuevoGastoModal"
 
-// 🔹 Datos simulados: reemplaza esto con tu fetch o props
-const mockGastos = [
-    { id_gastoxviaje: 1, nombre_gasto: "Combustible", valor: 1500.25, detalles: "Gasolinera Shell" },
-    { id_gastoxviaje: 2, nombre_gasto: "Peaje", valor: 300.75, detalles: "Ruta Norte" },
-    { id_gastoxviaje: 3, nombre_gasto: "Hotel", valor: 900.0, detalles: "Parada en Ciudad A" },
-]
+interface Gasto {
+  id_gastoxviaje: number
+  nombre_gasto: string
+  valor: number | string
+  detalles: string
+}
 
-export default function TablaGastosViaje() {
-    const [gastos] = useState(mockGastos)
+interface Props {
+  gastos: Gasto[]
+  id_viaje: number
+}
 
-    const total = gastos.reduce((acc, gasto) => acc + Number(gasto.valor), 0)
+export default function TablaGastosViaje({ gastos, id_viaje }: Props) {
+  const total = gastos.reduce((acc, gasto) => acc + parseFloat(gasto.valor as string), 0)
 
-    return (
-        <Card>
-            <CardContent className="p-4">
-                <h2 className="text-lg font-semibold mb-4">Gastos del Viaje</h2>
+  return (
+    <Card>
+      <CardContent className="p-4">
+        <h2 className="text-lg font-semibold mb-4">Gastos del Viaje</h2>
 
-                <Table>
-                    <TableHeader>
-                        <TableRow>
-                            <TableHead>Nombre del Gasto</TableHead>
-                            <TableHead>Valor</TableHead>
-                            <TableHead>Detalles</TableHead>
-                        </TableRow>
-                    </TableHeader>
-                    <TableBody>
-                        {gastos.map((gasto) => (
-                            <TableRow key={gasto.id_gastoxviaje}>
-                                <TableCell>{gasto.nombre_gasto}</TableCell>
-                                <TableCell>${Number(gasto.valor).toFixed(2)}</TableCell>
-                                <TableCell>{gasto.detalles}</TableCell>
-                            </TableRow>
-                        ))}
-                    </TableBody>
-                </Table>
+        <Table>
+          <TableHeader>
+            <TableRow>
+              <TableHead>Nombre del Gasto</TableHead>
+              <TableHead>Valor</TableHead>
+              <TableHead>Detalles</TableHead>
+            </TableRow>
+          </TableHeader>
+          <TableBody>
+            {gastos.map((gasto) => (
+              <TableRow key={gasto.id_gastoxviaje}>
+                <TableCell>{gasto.nombre_gasto}</TableCell>
+                <TableCell>${parseFloat(gasto.valor as string).toFixed(2)}</TableCell>
+                <TableCell>{gasto.detalles}</TableCell>
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
 
-                <div className="text-right mt-4 text-base font-semibold">
-                    Total: <span className="text-blue-700">${total.toFixed(2)}</span>
-                </div>
-                <NuevoGastoModal viajeId={1} /> {/* ← Reemplaza 123 por el ID real del viaje si lo tienes */}
-            </CardContent>
-        </Card>
-    )
+        <div className="text-right mt-4 text-base font-semibold">
+          Total: <span className="text-blue-700">${total.toFixed(2)}</span>
+        </div>
+
+        {/* Modal con el id del viaje real */}
+        <NuevoGastoModal viajeId={id_viaje} />
+      </CardContent>
+    </Card>
+  )
 }

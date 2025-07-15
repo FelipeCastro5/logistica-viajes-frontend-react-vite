@@ -99,7 +99,6 @@ export const useDetallesViajeForm = () => {
 
   return {
     form,
-    setForm,
     clientes,
     noClientes,
     lugaresOrigen,
