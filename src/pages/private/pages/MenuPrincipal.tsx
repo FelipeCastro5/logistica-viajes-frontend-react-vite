@@ -3,6 +3,9 @@
 import { useEffect } from "react"
 import { useLayoutTitle } from "../../../context/LayoutTitleContext"
 import TablaViajes from "../tables/TablaViajes"
+import GraficaGastosPorTipo from "../../../components/graphics/GraficaGastosPorTipo"
+import GraficaGastosPorViaje from "../../../components/graphics/GraficaGastosPorViaje"
+import GraficaIngresosVsGastos from "../../../components/graphics/GraficaIngresosVsGastos"
 
 export default function MenuPrincipal() {
   // const navigate = useNavigate()
@@ -16,6 +19,11 @@ export default function MenuPrincipal() {
     <div className="w-full max-w-3xl mx-auto px-4">
       <div>
         <TablaViajes />
+      </div>
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6 p-6">
+        <GraficaGastosPorTipo />
+        <GraficaGastosPorViaje />
+        <GraficaIngresosVsGastos />
       </div>
       {/* <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
         <MenuButton label="NUEVO VIAJE" onClick={() => navigate("/nuevo-viaje")} />

@@ -1,0 +1,103 @@
+POSIBLES GRÁFICAS PARA EL USUARIO LOGEADO
+1. Distribución de gastos por tipo
+Gráfico: Torta / barras horizontales.
+
+Query sugerida:
+
+sql
+Copiar código
+SELECT g.nombre_gasto, SUM(gxv.valor) AS total
+FROM gastosxviaje gxv
+JOIN gasto g ON gxv.fk_gasto = g.id_gasto
+JOIN viaje v ON gxv.fk_viaje = v.id_viaje
+WHERE v.fk_usuario = :userId
+GROUP BY g.nombre_gasto
+ORDER BY total DESC;
+2. Gastos por viaje
+Gráfico: Barras verticales.
+
+Query sugerida:
+
+sql
+Copiar código
+SELECT v.codigo, SUM(gxv.valor) AS total_gastos
+FROM viaje v
+JOIN gastosxviaje gxv ON v.id_viaje = gxv.fk_viaje
+WHERE v.fk_usuario = :userId
+GROUP BY v.codigo
+ORDER BY v.fecha_salida;
+3. Ganancia del conductor por manifiesto
+Gráfico: Línea temporal.
+
+Query sugerida:
+
+sql
+Copiar código
+SELECT m.id_manifiesto, m.ganacia_conductor, v.fecha_salida
+FROM manifiesto m
+JOIN viaje v ON v.fk_manifiesto = m.id_manifiesto
+WHERE v.fk_usuario = :userId
+ORDER BY v.fecha_salida;
+4. Ingresos netos vs gastos totales (por viaje o mes)
+Gráfico: Línea comparativa o área apilada.
+
+Query sugerida (mensual):
+
+sql
+Copiar código
+SELECT 
+  DATE_TRUNC('month', v.fecha_salida) AS mes,
+  SUM(m.neto_a_pagar) AS ingresos,
+  SUM(m.total_gastos) AS gastos
+FROM viaje v
+JOIN manifiesto m ON v.fk_manifiesto = m.id_manifiesto
+WHERE v.fk_usuario = :userId
+GROUP BY mes
+ORDER BY mes;
+5. Comparación de flete total vs queda al carro
+Gráfico: Barras agrupadas por viaje.
+
+Query:
+
+sql
+Copiar código
+SELECT v.codigo, m.flete_total, m.queda_al_carro
+FROM viaje v
+JOIN manifiesto m ON v.fk_manifiesto = m.id_manifiesto
+WHERE v.fk_usuario = :userId;
+6. Cantidad de viajes por destino
+Gráfico: Torta / barras.
+
+Query:
+
+sql
+Copiar código
+SELECT l.nombre_lugar, COUNT(*) AS cantidad
+FROM viaje v
+JOIN lugar l ON v.fk_destino = l.id_lugar
+WHERE v.fk_usuario = :userId
+GROUP BY l.nombre_lugar
+ORDER BY cantidad DESC;
+7. Promedio de anticipo por cliente
+Gráfico: Barras.
+
+Query:
+
+sql
+Copiar código
+SELECT c.nombre_cliente, AVG(m.anticipo) AS anticipo_promedio
+FROM viaje v
+JOIN cliente c ON v.fk_cliente = c.id_cliente
+JOIN manifiesto m ON v.fk_manifiesto = m.id_manifiesto
+WHERE v.fk_usuario = :userId
+GROUP BY c.nombre_cliente
+ORDER BY anticipo_promedio DESC;
+🧠 OTRAS IDEAS
+Mapa de calor: frecuencia de viajes por día/mes.
+
+Tabla interactiva: top 10 gastos con más valor.
+
+Gráfico de radar: comparar % de retención, ICA, conductor, etc.
+
+Gráfico de timeline: evolución de saldo a pagar vs pagos.
+
