@@ -57,7 +57,7 @@ export const routes = {
     getById: "/gastoxviaje/getById/{id}",
     create: "/gastoxviaje/create",
     update: "/gastoxviaje/update",
-    delete: "/gastoxviaje/delete/{id}",
+    delete: "/gastoxviaje/delete",
     getByViaje: "/gastoxviaje/getGastosByViaje"
   },
   auth: {

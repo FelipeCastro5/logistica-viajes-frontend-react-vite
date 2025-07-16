@@ -26,6 +26,17 @@ export default function NuevoGastoModal({ viajeId, onGastoCreado }: Props) {
   const handleRegistrar = async () => {
     const body = gastoHook.getFormattedBody()
 
+    // ⚠️ Validaciones personalizadas
+    if (!body.fk_gasto) {
+      toast.warning("⚠️ Debes seleccionar un tipo de gasto")
+      return
+    }
+
+    if (!body.valor || isNaN(body.valor)) {
+      toast.warning("⚠️ El valor del gasto debe ser un número válido mayor a 0")
+      return
+    }
+
     try {
       setLoading(true)
       const response = await createGastoPorViaje(body)

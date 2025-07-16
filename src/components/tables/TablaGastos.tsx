@@ -28,11 +28,17 @@ interface Props {
 
 export default function TablaGastosViaje({ id_viaje }: Props) {
   const [gastos, setGastos] = useState<Gasto[]>([])
+  const [total, setTotal] = useState(0)
 
   const fetchGastos = async () => {
     try {
       const res = await getGastosPorViajeByViajeId(id_viaje)
-      setGastos(res.data || [])
+      const data = res.data || []
+      setGastos(data)
+
+      // 👇 Calcular total inmediatamente después de traer los datos
+      const suma = data.reduce((acc: number, gasto: Gasto) => acc + parseFloat(gasto.valor as string), 0)
+      setTotal(suma)
     } catch (error) {
       console.error("Error al cargar gastos:", error)
       toast.error("Error al cargar los gastos del viaje ❌")
@@ -44,8 +50,6 @@ export default function TablaGastosViaje({ id_viaje }: Props) {
       fetchGastos()
     }
   }, [id_viaje])
-
-  const total = gastos.reduce((acc, gasto) => acc + parseFloat(gasto.valor as string), 0)
 
   return (
     <Card>
@@ -69,7 +73,7 @@ export default function TablaGastosViaje({ id_viaje }: Props) {
                 <TableCell>{gasto.detalles}</TableCell>
                 <TableCell>
                   <EditarGastoModal viajeId={id_viaje} />
-                  <EliminarGastoModal viajeId={id_viaje} />
+                  <EliminarGastoModal gastoId={gasto.id_gastoxviaje} onGastoEliminado={fetchGastos} />
                 </TableCell>
               </TableRow>
             ))}
