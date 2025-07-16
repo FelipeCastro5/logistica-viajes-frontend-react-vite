@@ -1,6 +1,5 @@
 import { useEffect, useState } from "react"
 import { getAllGastos } from "@/services/adapters/gastos.adapter"
-import { createGastoPorViaje } from "@/services/adapters/gastoxviaje.adapter"
 import type { Gasto } from "@/services/adapters/gastos.adapter"
 
 const formatNumber = (num: number): string => {
@@ -13,7 +12,7 @@ const formatNumber = (num: number): string => {
   }).format(num)
 }
 
-export function useGastoForm(viajeId: number, onCreated?: (data: any) => void) {
+export function useGastoForm(viajeId: number) {
   const [tiposDeGasto, setTiposDeGasto] = useState<Gasto[]>([])
   const [loadingTipos, setLoadingTipos] = useState(true)
 
@@ -59,29 +58,11 @@ export function useGastoForm(viajeId: number, onCreated?: (data: any) => void) {
     }))
   }
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault()
-
-    try {
-      const formattedGasto = {
-        ...gasto,
-        fk_gasto: parseInt(gasto.fk_gasto),
-        valor: parseFloat(gasto.valor),
-      }
-
-      const response = await createGastoPorViaje(formattedGasto)
-
-      if (response.status) {
-        onCreated?.(response.data)
-      } else {
-        console.error("Error al crear gasto:", response.msg)
-        alert("No se pudo registrar el gasto. Intenta de nuevo.")
-      }
-    } catch (error) {
-      console.error("Error inesperado:", error)
-      alert("Ocurrió un error al registrar el gasto.")
-    }
-  }
+  const getFormattedBody = () => ({
+    ...gasto,
+    fk_gasto: parseInt(gasto.fk_gasto),
+    valor: parseFloat(gasto.valor),
+  })
 
   return {
     gasto,
@@ -89,7 +70,7 @@ export function useGastoForm(viajeId: number, onCreated?: (data: any) => void) {
     loadingTipos,
     handleChange,
     handleValorChange,
-    handleSubmit,
     formatNumber,
+    getFormattedBody,
   }
 }

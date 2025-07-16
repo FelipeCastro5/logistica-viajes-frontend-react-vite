@@ -1,28 +1,20 @@
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
-import { Button } from "@/components/ui/button"
 import { Textarea } from "@/components/ui/textarea"
 import { useGastoForm } from "../../hooks/forms/useGastoForm"
 
-export default function GastoForm({
-  onCreated,
-  viajeId,
-}: {
-  onCreated?: (data: any) => void
-  viajeId: number
-}) {
+export default function GastoForm({ viajeId, hook }: { viajeId: number, hook: ReturnType<typeof useGastoForm> }) {
   const {
     gasto,
     tiposDeGasto,
     loadingTipos,
     handleChange,
     handleValorChange,
-    handleSubmit,
     formatNumber,
-  } = useGastoForm(viajeId, onCreated)
+  } = hook
 
   return (
-    <form onSubmit={handleSubmit} className="grid gap-4 mt-4">
+    <div className="grid gap-4 mt-4">
       <div>
         <Label htmlFor="fk_gasto">Tipo de Gasto</Label>
         <select
@@ -31,7 +23,7 @@ export default function GastoForm({
           value={gasto.fk_gasto}
           onChange={handleChange}
           required
-          className="w-full rounded-md border border-gray-300 bg-white px-3 py-2 text-sm shadow-sm focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-800 dark:text-white dark:placeholder-gray-900"
+          className="w-full rounded-md border border-gray-300 bg-white px-3 py-2 text-sm shadow-sm focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-900 dark:text-white dark:placeholder-gray-900"
         >
           <option value="">
             {loadingTipos ? "Cargando tipos de gasto..." : "Selecciona un tipo"}
@@ -70,10 +62,6 @@ export default function GastoForm({
           className="min-h-[80px]"
         />
       </div>
-
-      <Button type="submit" className="bg-blue-600 hover:bg-blue-700 text-white">
-        Registrar gasto
-      </Button>
-    </form>
+    </div>
   )
 }

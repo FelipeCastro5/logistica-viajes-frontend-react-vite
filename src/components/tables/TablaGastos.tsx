@@ -5,7 +5,6 @@ import { Card, CardContent } from "@/components/ui/card"
 import NuevoGastoModal from "../modals/NuevoGastoModal"
 import { getGastosPorViajeByViajeId } from "@/services/adapters/gastoxviaje.adapter"
 import { toast } from "sonner"
-import { Button } from "../ui/button"
 import EditarGastoModal from "../modals/EditarGastoModal"
 import EliminarGastoModal from "../modals/EliminarGasto"
 
