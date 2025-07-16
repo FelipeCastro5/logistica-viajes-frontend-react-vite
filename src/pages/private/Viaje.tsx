@@ -10,7 +10,6 @@ import { Button } from "@/components/ui/button"
 
 import { getViajeById, updateViaje } from "@/services/adapters/viajes.adapter"
 import { getManifiestoById, updateManifiesto } from "@/services/adapters/manifiestos.adapter"
-import { getGastosPorViajeByViajeId } from "@/services/adapters/gastoxviaje.adapter"
 
 import { toast } from "sonner"
 
@@ -25,7 +24,6 @@ export default function Viaje() {
 
   const [detallesViaje, setDetallesViaje] = useState<any>(null)
   const [manifiesto, setManifiesto] = useState<any>(null)
-  const [gastos, setGastos] = useState<any[]>([])
 
   const [viajeEditado, setViajeEditado] = useState<any>(null)
   const [manifiestoEditado, setManifiestoEditado] = useState<any>(null)
@@ -42,16 +40,13 @@ export default function Viaje() {
     try {
       const detalles = await getViajeById(id)
       const manifiestoRes = await getManifiestoById(id)
-      const gastosRes = await getGastosPorViajeByViajeId(id)
 
       console.log("📦 Detalles del viaje:", detalles?.data)
       console.log("📦 Manifiesto:", manifiestoRes?.data)
-      console.log("📦 Gastos por viaje:", gastosRes?.data)
-
 
       setDetallesViaje(detalles?.data)
       setManifiesto(manifiestoRes?.data)
-      setGastos(gastosRes?.data || [])
+      
     } catch (error) {
       console.error("Error al cargar datos del viaje:", error)
     }
@@ -149,7 +144,7 @@ export default function Viaje() {
           </div>
 
           <div className={componenteActivo === "GastosViaje" ? "block" : "hidden"}>
-            <TablaGastosViaje id_viaje={id_viaje} gastos={gastos} />
+            <TablaGastosViaje id_viaje={id_viaje} />
           </div>
         </div>
 
