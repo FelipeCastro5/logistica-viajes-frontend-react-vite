@@ -6,11 +6,16 @@ import ManifiestoForm from "../../components/forms/ManifiestoForm"
 import { Button } from "@/components/ui/button"
 import { useNavigate } from "react-router-dom"
 import type { ViajeData } from "@/hooks/forms/viaje"
-
+import { createNewViaje } from "@/services/adapters/viajes.adapter"
+import { useAuth } from "@/hooks/useAuth"
 
 export default function NuevoViaje() {
 
+  const { user } = useAuth()
+  const id_usuario = user?.id_usuario
+
   const [nuevoViajeBody, setNuevoViajeBody] = useState<Partial<ViajeData> | null>(null)
+  const [manifiestoBody, setManifiestoBody] = useState<any>(null)
 
   const { setTitle } = useLayoutTitle()
   const [componenteActivo, setComponenteActivo] = useState("DetallesViaje")
@@ -68,8 +73,11 @@ export default function NuevoViaje() {
           </div>
 
           <div className={componenteActivo === "Manifiesto" ? "block" : "hidden"}>
-            <ManifiestoForm />
+            <ManifiestoForm
+              onChange={(data) => setManifiestoBody(data)} // ← así capturas el body
+            />
           </div>
+
         </div>
 
         <Button
@@ -78,6 +86,39 @@ export default function NuevoViaje() {
         >
           VOLVER
         </Button>
+        <Button
+          onClick={async () => {
+            if (!nuevoViajeBody || !manifiestoBody) {
+              alert("Por favor, completa ambos formularios antes de continuar.")
+              return
+            }
+
+            // Combinar ambos bodies
+            const bodyFinal = {
+              fk_usuario: id_usuario,
+              ...nuevoViajeBody,
+              ...manifiestoBody,
+            }
+
+            try {
+              const response = await createNewViaje(bodyFinal)
+
+              if (response.status === 201) {
+                navigate("/menu-principal")
+              } else {
+                alert("Ocurrió un error al registrar el viaje.")
+                console.error(response)
+              }
+            } catch (error) {
+              alert("Error de red o del servidor.")
+              console.error(error)
+            }
+          }}
+          className="bg-green-600 hover:bg-green-700 text-white mt-4 ml-4"
+        >
+          CREAR VIAJE
+        </Button>
+
       </div>
     </PageContent>
   )
