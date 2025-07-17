@@ -46,7 +46,7 @@ export default function Viaje() {
 
       setDetallesViaje(detalles?.data)
       setManifiesto(manifiestoRes?.data)
-      
+
     } catch (error) {
       console.error("Error al cargar datos del viaje:", error)
     }
@@ -130,7 +130,7 @@ export default function Viaje() {
           <div className={componenteActivo === "DetallesViaje" ? "block" : "hidden"}>
             <DetallesViajeForm
               id_viaje={id_viaje}
-              initialData={detallesViaje}
+              initialData={detallesViaje || undefined}
               onChange={setViajeEditado}
             />
           </div>

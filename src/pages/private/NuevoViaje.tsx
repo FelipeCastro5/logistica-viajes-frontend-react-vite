@@ -5,8 +5,13 @@ import DetallesViajeForm from "../../components/forms/DetallesViajeForm"
 import ManifiestoForm from "../../components/forms/ManifiestoForm"
 import { Button } from "@/components/ui/button"
 import { useNavigate } from "react-router-dom"
+import type { ViajeData } from "@/hooks/forms/viaje"
+
 
 export default function NuevoViaje() {
+
+  const [nuevoViajeBody, setNuevoViajeBody] = useState<Partial<ViajeData> | null>(null)
+
   const { setTitle } = useLayoutTitle()
   const [componenteActivo, setComponenteActivo] = useState("DetallesViaje")
   const navigate = useNavigate()
@@ -32,9 +37,9 @@ export default function NuevoViaje() {
         <button
           onClick={() => setComponenteActivo("DetallesViaje")}
           className={`px-4 py-2 rounded-md font-semibold ${componenteActivo === "DetallesViaje"
-              ? "bg-blue-600 text-white"
-              : "bg-gray-200 text-gray-800 hover:bg-blue-900 hover:text-gray-200"
-          }`}
+            ? "bg-blue-600 text-white"
+            : "bg-gray-200 text-gray-800 hover:bg-blue-900 hover:text-gray-200"
+            }`}
         >
           Detalles del Viaje
         </button>
@@ -42,9 +47,9 @@ export default function NuevoViaje() {
         <button
           onClick={() => setComponenteActivo("Manifiesto")}
           className={`px-4 py-2 rounded-md font-semibold ${componenteActivo === "Manifiesto"
-              ? "bg-blue-600 text-white"
-              : "bg-gray-200 text-gray-800 hover:bg-blue-900 hover:text-gray-200"
-          }`}
+            ? "bg-blue-600 text-white"
+            : "bg-gray-200 text-gray-800 hover:bg-blue-900 hover:text-gray-200"
+            }`}
         >
           Manifiesto
         </button>
@@ -55,7 +60,11 @@ export default function NuevoViaje() {
         {/* {renderizarComponente()} */}
         <div className="relative space-y-6">
           <div className={componenteActivo === "DetallesViaje" ? "block" : "hidden"}>
-            <DetallesViajeForm id_viaje={null} initialData={null} />
+            <DetallesViajeForm
+              modo="crear"
+              onChange={(data) => setNuevoViajeBody(data)} // ← importante para recolectar el body
+            />
+
           </div>
 
           <div className={componenteActivo === "Manifiesto" ? "block" : "hidden"}>
