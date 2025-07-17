@@ -114,5 +114,5 @@ export interface CreateNewViajeDto {
   queda_al_carro: number
   a_favor_del_carro: number
   porcentaje_conductor: number
-  ganacia_conductor: number
+  ganancia_conductor: number
 }

@@ -17,7 +17,7 @@ export function useManifiestoForm() {
     saldo_a_pagar: 0,
     queda_al_carro: 0,
     a_favor_del_carro: 0,
-    ganacia_conductor: 0,
+    ganancia_conductor: 0,
   })
 
   useEffect(() => {
@@ -35,7 +35,7 @@ export function useManifiestoForm() {
     const saldo_a_pagar = neto_a_pagar - anticipo
     const queda_al_carro = saldo_a_pagar - gastos
     const a_favor_del_carro = anticipo - gastos
-    const ganacia_conductor = flete * porcCond
+    const ganancia_conductor = flete * porcCond
 
     setForm(prev => ({
       ...prev,
@@ -46,7 +46,7 @@ export function useManifiestoForm() {
       saldo_a_pagar,
       queda_al_carro,
       a_favor_del_carro,
-      ganacia_conductor,
+      ganancia_conductor,
     }))
   }, [
     form.flete_total,

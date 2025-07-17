@@ -16,7 +16,7 @@ type ManifiestoFormData = {
   saldo_a_pagar: number
   queda_al_carro: number
   a_favor_del_carro: number
-  ganacia_conductor: number
+  ganancia_conductor: number
 }
 
 export function useManifiestoForm(initialData?: any, onChange?: (data: any) => void) {
@@ -35,7 +35,7 @@ export function useManifiestoForm(initialData?: any, onChange?: (data: any) => v
     saldo_a_pagar: 0,
     queda_al_carro: 0,
     a_favor_del_carro: 0,
-    ganacia_conductor: 0,
+    ganancia_conductor: 0,
   })
 
   const initialized = useRef(false)
@@ -80,7 +80,7 @@ export function useManifiestoForm(initialData?: any, onChange?: (data: any) => v
     const saldo_a_pagar = neto_a_pagar - anticipo
     const queda_al_carro = saldo_a_pagar - gastos
     const a_favor_del_carro = anticipo - gastos
-    const ganacia_conductor = flete * (porcCond / 100)
+    const ganancia_conductor = flete * (porcCond / 100)
 
     setForm(prev => ({
       ...prev,
@@ -91,7 +91,7 @@ export function useManifiestoForm(initialData?: any, onChange?: (data: any) => v
       saldo_a_pagar,
       queda_al_carro,
       a_favor_del_carro,
-      ganacia_conductor,
+      ganancia_conductor,
     }))
   }, [
     form.flete_total,

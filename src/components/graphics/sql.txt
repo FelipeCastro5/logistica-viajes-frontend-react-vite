@@ -33,7 +33,7 @@ Query sugerida:
 
 sql
 Copiar código
-SELECT m.id_manifiesto, m.ganacia_conductor, v.fecha_salida
+SELECT m.id_manifiesto, m.ganancia_conductor, v.fecha_salida
 FROM manifiesto m
 JOIN viaje v ON v.fk_manifiesto = m.id_manifiesto
 WHERE v.fk_usuario = :userId

@@ -69,7 +69,7 @@ export default function ManifiestoForm({ initialData, onChange  }: ManifiestoFor
         <div><Label>Saldo a Pagar</Label><Input value={formatNumber(form.saldo_a_pagar)} readOnly /></div>
         <div><Label>Queda al Carro</Label><Input value={formatNumber(form.queda_al_carro)} readOnly /></div>
         <div><Label>A favor del Carro</Label><Input value={formatNumber(form.a_favor_del_carro)} readOnly /></div>
-        <div><Label>Ganancia del Conductor</Label><Input value={formatNumber(form.ganacia_conductor)} readOnly /></div>
+        <div><Label>Ganancia del Conductor</Label><Input value={formatNumber(form.ganancia_conductor)} readOnly /></div>
       </div>
 
       {/* <div className="flex justify-end">
