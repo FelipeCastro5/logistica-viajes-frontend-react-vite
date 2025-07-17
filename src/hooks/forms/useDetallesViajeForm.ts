@@ -15,7 +15,12 @@ type Lugar = {
   nombre_lugar: string
 }
 
-export const useDetallesViajeForm = (onChange?: (newData: any) => void) => {
+type UseDetallesViajeFormProps = {
+  initialData?: any
+  onChange?: (data: any) => void
+}
+
+export const useDetallesViajeForm = ({ initialData, onChange }: UseDetallesViajeFormProps) => {
   const { user } = useAuth()
 
   const [clientes, setClientes] = useState<ClienteAdaptado[]>([])
@@ -80,27 +85,49 @@ export const useDetallesViajeForm = (onChange?: (newData: any) => void) => {
     fetchLugares()
   }, [])
 
-const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-  const { name, value } = e.target
-  setForm(prev => {
-    const newForm = { ...prev, [name]: value }
-    if (onChange) onChange(newForm)
-    return newForm
-  })
-}
+  useEffect(() => {
+    if (initialData) {
+      const parsedData = {
+        ...initialData,
+        fecha_salida: initialData.fecha_salida?.split("T")[0] || "",
+        fecha_llegada: initialData.fecha_llegada?.split("T")[0] || "",
+      }
 
-const handleSelectChange = (field: string, value: string) => {
-  setForm(prev => {
-    const newForm = { ...prev, [field]: parseInt(value) }
-    if (onChange) onChange(newForm)
-    return newForm
-  })
-}
+      setForm(prev => ({ ...prev, ...parsedData }))
 
+      const cliente = clientes.find(c => c.id_cliente === initialData.fk_cliente)
+      setClienteSeleccionado(cliente ?? null)
+
+      if (onChange) {
+        onChange(parsedData)
+      }
+    }
+  }, [initialData, clientes])
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    const { name, value } = e.target
+    setForm(prev => {
+      const newForm = { ...prev, [name]: value }
+      if (onChange) onChange(newForm)
+      return newForm
+    })
+  }
+
+  const handleSelectChange = (field: string, value: string) => {
+    setForm(prev => {
+      const newForm = { ...prev, [field]: parseInt(value) }
+      if (onChange) onChange(newForm)
+      return newForm
+    })
+  }
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
     console.log("Datos enviados:", form)
+  }
+
+  const handleClienteCreado = async () => {
+    await fetchClientes()
   }
 
   const lugaresOrigen = lugares.filter(lugar => lugar.id_lugar !== form.fk_destino)
@@ -120,5 +147,6 @@ const handleSelectChange = (field: string, value: string) => {
     handleChange,
     handleSelectChange,
     handleSubmit,
+    handleClienteCreado,
   }
 }

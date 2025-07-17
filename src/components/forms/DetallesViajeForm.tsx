@@ -17,7 +17,6 @@ type ViajeData = {
   fecha_salida?: string
   fecha_llegada?: string
   observaciones?: string
-  // agrega más campos según tu modelo
 }
 
 type DetallesViajeFormProps = {
@@ -27,10 +26,7 @@ type DetallesViajeFormProps = {
 }
 
 export default function DetallesViajeForm({ id_viaje, initialData, onChange }: DetallesViajeFormProps) {
-  const {
-    form, setForm, clientes, noClientes, lugaresOrigen, lugaresDestino, noLugares, clienteSeleccionado,
-    setClienteSeleccionado, fetchClientes, handleChange, handleSelectChange, handleSubmit,
-  } = useDetallesViajeForm(onChange)
+  const { form, setForm, clientes, noClientes, lugaresOrigen, lugaresDestino, noLugares, clienteSeleccionado, setClienteSeleccionado, handleChange, handleSelectChange, handleSubmit, handleClienteCreado, } = useDetallesViajeForm({ initialData, onChange })
 
   useEffect(() => {
     if (initialData) {
@@ -42,7 +38,7 @@ export default function DetallesViajeForm({ id_viaje, initialData, onChange }: D
 
       setForm((prev) => ({ ...prev, ...parsedData }))
 
-      const cliente = clientes.find(c => c.id_cliente === initialData.fk_cliente)
+      const cliente = clientes.find((c) => c.id_cliente === initialData.fk_cliente)
       setClienteSeleccionado(cliente ?? null)
 
       if (onChange) {
@@ -51,31 +47,36 @@ export default function DetallesViajeForm({ id_viaje, initialData, onChange }: D
     }
   }, [initialData, clientes])
 
-
-
   return (
-    <form onSubmit={handleSubmit} className="grid gap-4">
+    <form onSubmit={handleSubmit} className="grid gap-6">
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         {/* Cliente */}
         <div>
-          <Label>Cliente</Label>
+          <Label htmlFor="fk_cliente">Cliente</Label>
           <Select
             onValueChange={(val) => {
               handleSelectChange("fk_cliente", val)
-              const cliente = clientes.find(c => c.id_cliente === parseInt(val))
+              const cliente = clientes.find(
+                (c) => c.id_cliente === parseInt(val)
+              )
               setClienteSeleccionado(cliente ?? null)
             }}
-            value={form.fk_cliente?.toString() || ""} // ← para que se seleccione automáticamente
+            value={form.fk_cliente?.toString() || ""}
           >
-            <SelectTrigger>
+            <SelectTrigger id="fk_cliente">
               <SelectValue placeholder="Selecciona un cliente" />
             </SelectTrigger>
             <SelectContent>
               {noClientes ? (
-                <div className="px-4 py-2 text-sm text-muted-foreground">No hay clientes disponibles</div>
+                <div className="px-4 py-2 text-sm text-muted-foreground">
+                  No hay clientes disponibles
+                </div>
               ) : (
-                clientes.map(cliente => (
-                  <SelectItem key={cliente.id_cliente} value={cliente.id_cliente.toString()}>
+                clientes.map((cliente) => (
+                  <SelectItem
+                    key={cliente.id_cliente}
+                    value={cliente.id_cliente.toString()}
+                  >
                     {cliente.nombre_cliente}
                   </SelectItem>
                 ))
@@ -84,34 +85,54 @@ export default function DetallesViajeForm({ id_viaje, initialData, onChange }: D
           </Select>
         </div>
 
+        {/* Crear cliente */}
         <div>
-          <Label>Crear un nuevo Cliente (opcional)</Label>
-          <NuevoClienteModal onClienteCreado={fetchClientes} />
+          <Label>Crear nuevo cliente</Label>
+          <NuevoClienteModal onClienteCreado={handleClienteCreado} />
         </div>
 
+        {/* Info cliente */}
         <div>
           <Label htmlFor="nit_cliente">NIT Cliente</Label>
-          <Input id="nit_cliente" name="nit_cliente" readOnly value={clienteSeleccionado?.nit_cliente ?? ""} />
+          <Input
+            id="nit_cliente"
+            name="nit_cliente"
+            readOnly
+            value={clienteSeleccionado?.nit_cliente ?? ""}
+          />
         </div>
 
         <div>
-          <Label htmlFor="telefono">Teléfono Cliente</Label>
-          <Input id="telefono" name="telefono" readOnly value={clienteSeleccionado?.telefono_cliente ?? ""} />
+          <Label htmlFor="telefono_cliente">Teléfono Cliente</Label>
+          <Input
+            id="telefono_cliente"
+            name="telefono_cliente"
+            readOnly
+            value={clienteSeleccionado?.telefono_cliente ?? ""}
+          />
         </div>
 
+        {/* Origen */}
         <div>
-          <Label>Origen</Label>
-          <Select onValueChange={val => handleSelectChange("fk_origen", val)}
-            value={form.fk_origen?.toString() || ""}>
-            <SelectTrigger>
+          <Label htmlFor="fk_origen">Origen</Label>
+          <Select
+            onValueChange={(val) => handleSelectChange("fk_origen", val)}
+            value={form.fk_origen?.toString() || ""}
+          >
+            <SelectTrigger id="fk_origen">
               <SelectValue placeholder="Selecciona origen" />
             </SelectTrigger>
             <SelectContent>
               {noLugares ? (
-                <div className="px-4 py-2 text-sm text-muted-foreground">No hay lugares disponibles</div>
+                <div className="px-4 py-2 text-sm text-muted-foreground">
+                  No hay lugares disponibles
+                </div>
               ) : (
-                lugaresOrigen.map(lugar => (
-                  <SelectItem key={lugar.id_lugar} value={lugar.id_lugar.toString()}>
+                lugaresOrigen.map((lugar) => (
+                  <SelectItem
+                    key={lugar.id_lugar}
+                    value={lugar.id_lugar.toString()}
+                  >
                     {lugar.nombre_lugar}
                   </SelectItem>
                 ))
@@ -120,19 +141,27 @@ export default function DetallesViajeForm({ id_viaje, initialData, onChange }: D
           </Select>
         </div>
 
+        {/* Destino */}
         <div>
-          <Label>Destino</Label>
-          <Select onValueChange={val => handleSelectChange("fk_destino", val)}
-            value={form.fk_destino?.toString() || ""}>
-            <SelectTrigger>
+          <Label htmlFor="fk_destino">Destino</Label>
+          <Select
+            onValueChange={(val) => handleSelectChange("fk_destino", val)}
+            value={form.fk_destino?.toString() || ""}
+          >
+            <SelectTrigger id="fk_destino">
               <SelectValue placeholder="Selecciona destino" />
             </SelectTrigger>
             <SelectContent>
               {noLugares ? (
-                <div className="px-4 py-2 text-sm text-muted-foreground">No hay lugares disponibles</div>
+                <div className="px-4 py-2 text-sm text-muted-foreground">
+                  No hay lugares disponibles
+                </div>
               ) : (
-                lugaresDestino.map(lugar => (
-                  <SelectItem key={lugar.id_lugar} value={lugar.id_lugar.toString()}>
+                lugaresDestino.map((lugar) => (
+                  <SelectItem
+                    key={lugar.id_lugar}
+                    value={lugar.id_lugar.toString()}
+                  >
                     {lugar.nombre_lugar}
                   </SelectItem>
                 ))
@@ -141,45 +170,71 @@ export default function DetallesViajeForm({ id_viaje, initialData, onChange }: D
           </Select>
         </div>
 
+        {/* Código */}
         <div>
           <Label htmlFor="codigo">Código de viaje</Label>
           <Input name="codigo" value={form.codigo} onChange={handleChange} />
         </div>
 
+        {/* Producto */}
         <div>
           <Label htmlFor="producto">Nombre del Producto</Label>
           <Input name="producto" value={form.producto} onChange={handleChange} />
         </div>
 
+        {/* Detalle producto */}
         <div>
           <Label htmlFor="detalle_producto">Detalle del producto</Label>
-          <Input name="detalle_producto" value={form.detalle_producto} onChange={handleChange} />
+          <Input
+            name="detalle_producto"
+            value={form.detalle_producto}
+            onChange={handleChange}
+          />
         </div>
 
+        {/* Dirección llegada */}
         <div>
           <Label htmlFor="direccion_llegada">Dirección de llegada</Label>
-          <Input name="direccion_llegada" value={form.direccion_llegada} onChange={handleChange} />
+          <Input
+            name="direccion_llegada"
+            value={form.direccion_llegada}
+            onChange={handleChange}
+          />
         </div>
 
+        {/* Fechas */}
         <div>
           <Label htmlFor="fecha_salida">Fecha de salida</Label>
-          <Input type="date" name="fecha_salida" value={form.fecha_salida} onChange={handleChange} />
+          <Input
+            type="date"
+            name="fecha_salida"
+            value={form.fecha_salida}
+            onChange={handleChange}
+          />
         </div>
 
         <div>
           <Label htmlFor="fecha_llegada">Fecha de llegada</Label>
-          <Input type="date" name="fecha_llegada" value={form.fecha_llegada} onChange={handleChange} />
+          <Input
+            type="date"
+            name="fecha_llegada"
+            value={form.fecha_llegada}
+            onChange={handleChange}
+          />
         </div>
       </div>
 
-      <Label htmlFor="observaciones">Observaciones</Label>
-      <Textarea
-        name="observaciones"
-        value={form.observaciones}
-        onChange={handleChange}
-        placeholder="Observaciones"
-        className="min-h-[80px]"
-      />
+      {/* Observaciones */}
+      <div>
+        <Label htmlFor="observaciones">Observaciones</Label>
+        <Textarea
+          name="observaciones"
+          value={form.observaciones}
+          onChange={handleChange}
+          placeholder="Observaciones del viaje"
+          className="min-h-[80px]"
+        />
+      </div>
     </form>
   )
 }
