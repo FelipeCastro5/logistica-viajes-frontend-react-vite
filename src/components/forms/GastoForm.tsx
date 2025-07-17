@@ -2,19 +2,28 @@ import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Textarea } from "@/components/ui/textarea"
 import { useGastoForm } from "../../hooks/forms/useGastoForm"
+import type { Gasto } from "@/services/adapters/gastos.adapter"
 
-export default function GastoForm({ viajeId, hook }: { viajeId: number, hook: ReturnType<typeof useGastoForm> }) {
+interface GastoFormProps {
+  hook: ReturnType<typeof useGastoForm>
+}
+
+export default function GastoForm({ hook }: GastoFormProps) {
   const {
     gasto,
     tiposDeGasto,
     loadingTipos,
     handleChange,
     handleValorChange,
-    formatNumber,
+    modo,
   } = hook
 
   return (
     <div className="grid gap-4 mt-4">
+      <h3 className="text-lg font-bold mb-2">
+        {modo === "editar" ? "Editar Gasto" : "Nuevo Gasto"}
+      </h3>
+
       <div>
         <Label htmlFor="fk_gasto">Tipo de Gasto</Label>
         <select
@@ -23,13 +32,13 @@ export default function GastoForm({ viajeId, hook }: { viajeId: number, hook: Re
           value={gasto.fk_gasto}
           onChange={handleChange}
           required
-          className="w-full rounded-md border border-gray-300 bg-white px-3 py-2 text-sm shadow-sm focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-900 dark:text-white dark:placeholder-gray-900"
+          className="w-full rounded-md border border-gray-300 bg-white px-3 py-2 text-sm shadow-sm focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-900 dark:text-white"
         >
           <option value="">
             {loadingTipos ? "Cargando tipos de gasto..." : "Selecciona un tipo"}
           </option>
           {!loadingTipos &&
-            tiposDeGasto.map((tipo) => (
+            tiposDeGasto.map((tipo: Gasto) => (
               <option key={tipo.id_gasto} value={tipo.id_gasto}>
                 {tipo.nombre_gasto}
               </option>
@@ -45,7 +54,7 @@ export default function GastoForm({ viajeId, hook }: { viajeId: number, hook: Re
           type="text"
           inputMode="numeric"
           placeholder="Valor del gasto"
-          value={formatNumber(Number(gasto.valor))}
+          value={gasto.valor}
           onChange={handleValorChange}
           required
         />

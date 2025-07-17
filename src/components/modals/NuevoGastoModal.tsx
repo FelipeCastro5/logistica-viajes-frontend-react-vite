@@ -1,4 +1,4 @@
-// src/components/modals/NuevoGastoModal.tsx
+// src/components/modals/GastoModal.tsx
 import { useState } from "react"
 import {
   Dialog,
@@ -10,23 +10,33 @@ import {
 import { Button } from "@/components/ui/button"
 import GastoForm from "../forms/GastoForm"
 import { useGastoForm } from "@/hooks/forms/useGastoForm"
-import { createGastoPorViaje } from "@/services/adapters/gastoxviaje.adapter"
+import { createGastoPorViaje, updateGastoPorViaje } from "@/services/adapters/gastoxviaje.adapter"
 import { toast } from "sonner"
+
+type Modo = "crear" | "editar"
 
 interface Props {
   viajeId: number
-  onGastoCreado?: () => void
+  modo?: Modo
+  trigger?: React.ReactNode
+  initialData?: Partial<ReturnType<typeof useGastoForm>["gasto"]>
+  onGastoGuardado?: () => void
 }
 
-export default function NuevoGastoModal({ viajeId, onGastoCreado }: Props) {
+export default function GastoModal({
+  viajeId,
+  modo = "crear",
+  trigger,
+  initialData,
+  onGastoGuardado,
+}: Props) {
   const [open, setOpen] = useState(false)
-  const gastoHook = useGastoForm(viajeId)
+  const gastoHook = useGastoForm({ viajeId, initialData, modo })
   const [loading, setLoading] = useState(false)
 
-  const handleRegistrar = async () => {
+  const handleGuardar = async () => {
     const body = gastoHook.getFormattedBody()
 
-    // ⚠️ Validaciones personalizadas
     if (!body.fk_gasto) {
       toast.warning("⚠️ Debes seleccionar un tipo de gasto")
       return
@@ -37,19 +47,30 @@ export default function NuevoGastoModal({ viajeId, onGastoCreado }: Props) {
       return
     }
 
+    if (modo === "editar" && initialData?.id_gastoxviaje) {
+      body.id_gastoxviaje = initialData.id_gastoxviaje
+    }
+
     try {
       setLoading(true)
-      const response = await createGastoPorViaje(body)
+      let response
+
+      if (modo === "crear") {
+        response = await createGastoPorViaje(body)
+      } else {
+        response = await updateGastoPorViaje(body)
+      }
+
       if (response.status) {
-        toast.success("✅ Gasto registrado correctamente")
+        toast.success(`✅ Gasto ${modo === "crear" ? "registrado" : "actualizado"} correctamente`)
         gastoHook.resetForm()
         setOpen(false)
-        onGastoCreado?.() // 👈 Se vuelve a cargar la tabla
+        onGastoGuardado?.()
       } else {
-        toast.error("❌ No se pudo registrar el gasto")
+        toast.error(`❌ No se pudo ${modo === "crear" ? "registrar" : "actualizar"} el gasto`)
       }
     } catch (err) {
-      toast.error("⚠️ Error al registrar gasto")
+      toast.error("⚠️ Error al guardar gasto")
       console.error(err)
     } finally {
       setLoading(false)
@@ -59,22 +80,28 @@ export default function NuevoGastoModal({ viajeId, onGastoCreado }: Props) {
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        <Button variant="outline">+ Nuevo Gasto</Button>
+        {trigger ?? <Button variant="outline">{modo === "crear" ? "+ Nuevo Gasto" : "Editar"}</Button>}
       </DialogTrigger>
       <DialogContent className="max-w-lg">
         <DialogHeader>
-          <DialogTitle>Registrar nuevo gasto</DialogTitle>
+          <DialogTitle>{modo === "crear" ? "Registrar nuevo gasto" : "Editar gasto"}</DialogTitle>
         </DialogHeader>
 
-        <GastoForm viajeId={viajeId} hook={gastoHook} />
+        <GastoForm hook={gastoHook} />
 
         <div className="flex justify-end mt-4">
           <Button
-            onClick={handleRegistrar}
+            onClick={handleGuardar}
             disabled={loading}
             className="bg-blue-600 text-white"
           >
-            {loading ? "Registrando..." : "Registrar gasto"}
+            {loading
+              ? modo === "crear"
+                ? "Registrando..."
+                : "Guardando..."
+              : modo === "crear"
+                ? "Registrar gasto"
+                : "Guardar cambios"}
           </Button>
         </div>
       </DialogContent>

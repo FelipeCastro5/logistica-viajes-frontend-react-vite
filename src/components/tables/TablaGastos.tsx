@@ -9,11 +9,10 @@ import {
   TableRow,
 } from "@/components/ui/table"
 import { Card, CardContent } from "@/components/ui/card"
-import NuevoGastoModal from "../modals/NuevoGastoModal"
 import { getGastosPorViajeByViajeId } from "@/services/adapters/gastoxviaje.adapter"
 import { toast } from "sonner"
-import EditarGastoModal from "../modals/EditarGastoModal"
 import EliminarGastoModal from "../modals/EliminarGasto"
+import GastoModal from "../modals/NuevoGastoModal"
 
 interface Gasto {
   id_gastoxviaje: number
@@ -72,7 +71,18 @@ export default function TablaGastosViaje({ id_viaje }: Props) {
                 <TableCell>${parseFloat(gasto.valor as string).toFixed(2)}</TableCell>
                 <TableCell>{gasto.detalles}</TableCell>
                 <TableCell>
-                  <EditarGastoModal viajeId={id_viaje} />
+                  <GastoModal
+                    viajeId={id_viaje}
+                    modo="editar"
+                    initialData={{
+                      id_gastoxviaje: gasto.id_gastoxviaje,
+                      fk_gasto: gasto.id_gastoxviaje.toString(), // ⚠️ Esto depende de tu backend
+                      valor: gasto.valor.toString(),
+                      detalles: gasto.detalles,
+                    }}
+                    onGastoGuardado={fetchGastos}
+                  />
+
                   <EliminarGastoModal gastoId={gasto.id_gastoxviaje} onGastoEliminado={fetchGastos} />
                 </TableCell>
               </TableRow>
@@ -85,7 +95,8 @@ export default function TablaGastosViaje({ id_viaje }: Props) {
         </div>
 
         <div className="text-right mt-4 text-base font-semibold">
-          <NuevoGastoModal viajeId={id_viaje} onGastoCreado={fetchGastos} />
+          <GastoModal viajeId={id_viaje} modo="crear" onGastoGuardado={fetchGastos} />
+
         </div>
       </CardContent>
     </Card>

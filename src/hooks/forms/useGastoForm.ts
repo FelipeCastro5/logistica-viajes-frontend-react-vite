@@ -1,68 +1,71 @@
-import { useEffect, useState } from "react"
+import { useState, useEffect } from "react"
 import { getAllGastos } from "@/services/adapters/gastos.adapter"
 import type { Gasto } from "@/services/adapters/gastos.adapter"
 
-const formatNumber = (num: number): string => {
-  if (isNaN(num)) return ""
-  return new Intl.NumberFormat("es-CO", {
-    style: "currency",
-    currency: "COP",
-    minimumFractionDigits: 0,
-    maximumFractionDigits: 5,
-  }).format(num)
+type GastoFormMode = "crear" | "editar"
+
+interface GastoFormBody {
+  id_gastoxviaje?: number
+  fk_viaje: number
+  fk_gasto: string
+  valor: string
+  detalles: string
 }
 
-export function useGastoForm(viajeId: number) {
+interface UseGastoFormOptions {
+  viajeId: number
+  initialData?: Partial<GastoFormBody>
+  modo?: GastoFormMode
+}
+
+export function useGastoForm({
+  viajeId,
+  initialData = {},
+  modo = "crear",
+}: UseGastoFormOptions) {
   const [tiposDeGasto, setTiposDeGasto] = useState<Gasto[]>([])
   const [loadingTipos, setLoadingTipos] = useState(true)
 
-  const [gasto, setGasto] = useState({
+  const [gasto, setGasto] = useState<GastoFormBody>({
+    id_gastoxviaje: initialData.id_gastoxviaje,
     fk_viaje: viajeId,
-    fk_gasto: "",
-    valor: "",
-    detalles: "",
+    fk_gasto: initialData.fk_gasto ?? "",
+    valor: initialData.valor ?? "",
+    detalles: initialData.detalles ?? "",
   })
 
   useEffect(() => {
-    const fetchTiposDeGasto = async () => {
-      try {
-        const response = await getAllGastos()
-        if (response.status) {
-          setTiposDeGasto(response.data)
-        } else {
-          console.error("Error al obtener tipos de gasto:", response.msg)
-        }
-      } catch (error) {
-        console.error("Error inesperado:", error)
-      } finally {
-        setLoadingTipos(false)
-      }
-    }
-
-    fetchTiposDeGasto()
+    getAllGastos()
+      .then(response => {
+        if (response.status) setTiposDeGasto(response.data)
+        else console.error("Error:", response.msg)
+      })
+      .catch(console.error)
+      .finally(() => setLoadingTipos(false))
   }, [])
 
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>
   ) => {
     const { name, value } = e.target
-    setGasto((prev) => ({ ...prev, [name]: value }))
+    setGasto(prev => ({ ...prev, [name]: value }))
   }
 
   const handleValorChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const rawValue = e.target.value.replace(/\D/g, "")
-    const parsed = parseFloat(rawValue)
-    setGasto((prev) => ({
-      ...prev,
-      valor: isNaN(parsed) ? "" : parsed.toString(),
-    }))
+    const raw = e.target.value.replace(/[^\d.]/g, "")
+    setGasto(prev => ({ ...prev, valor: raw }))
   }
 
-  const getFormattedBody = () => ({
-    ...gasto,
-    fk_gasto: parseInt(gasto.fk_gasto),
-    valor: parseFloat(gasto.valor),
-  })
+  const getFormattedBody = () => {
+    const body: any = {
+      fk_viaje: gasto.fk_viaje,
+      fk_gasto: parseInt(gasto.fk_gasto),
+      valor: parseFloat(gasto.valor),
+      detalles: gasto.detalles,
+    }
+    if (gasto.id_gastoxviaje) body.id = gasto.id_gastoxviaje
+    return body
+  }
 
   const resetForm = () => {
     setGasto({
@@ -79,8 +82,8 @@ export function useGastoForm(viajeId: number) {
     loadingTipos,
     handleChange,
     handleValorChange,
-    formatNumber,
     getFormattedBody,
     resetForm,
+    modo,
   }
 }
