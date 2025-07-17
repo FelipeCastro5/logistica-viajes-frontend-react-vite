@@ -52,12 +52,14 @@ export default function GastoForm({ hook }: GastoFormProps) {
           id="valor"
           name="valor"
           type="text"
-          inputMode="numeric"
+          inputMode="decimal"
           placeholder="Valor del gasto"
           value={gasto.valor}
           onChange={handleValorChange}
           required
+          className="font-mono"
         />
+
       </div>
 
       <div>

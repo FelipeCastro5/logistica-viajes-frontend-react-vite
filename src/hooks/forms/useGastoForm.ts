@@ -18,6 +18,14 @@ interface UseGastoFormOptions {
   modo?: GastoFormMode
 }
 
+// Utilidad para dar formato con separadores de miles (estilo colombiano)
+const formatWithThousands = (value: string): string => {
+  if (!value) return ""
+  const [integerPart, decimalPart] = value.split(",")
+  const formattedInt = integerPart.replace(/\B(?=(\d{3})+(?!\d))/g, ".")
+  return decimalPart !== undefined ? `${formattedInt},${decimalPart}` : formattedInt
+}
+
 export function useGastoForm({
   viajeId,
   initialData = {},
@@ -30,7 +38,7 @@ export function useGastoForm({
     id_gastoxviaje: initialData.id_gastoxviaje,
     fk_viaje: viajeId,
     fk_gasto: initialData.fk_gasto ?? "",
-    valor: initialData.valor ?? "",
+    valor: initialData.valor ? formatWithThousands(initialData.valor.replace(".", ",")) : "",
     detalles: initialData.detalles ?? "",
   })
 
@@ -52,15 +60,27 @@ export function useGastoForm({
   }
 
   const handleValorChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const raw = e.target.value.replace(/[^\d.]/g, "")
-    setGasto(prev => ({ ...prev, valor: raw }))
+    let raw = e.target.value
+
+    // Solo permitir números, punto y coma
+    raw = raw.replace(/[^\d,]/g, "")
+
+    // Reemplazar múltiples comas por una sola
+    const parts = raw.split(",")
+    if (parts.length > 2) {
+      raw = `${parts[0]},${parts[1]}`
+    }
+
+    const formatted = formatWithThousands(raw)
+    setGasto(prev => ({ ...prev, valor: formatted }))
   }
 
   const getFormattedBody = () => {
+    const raw = gasto.valor.replace(/\./g, "").replace(",", ".") // Convertir a formato numérico válido
     const body: any = {
       fk_viaje: gasto.fk_viaje,
       fk_gasto: parseInt(gasto.fk_gasto),
-      valor: parseFloat(gasto.valor),
+      valor: parseFloat(raw),
       detalles: gasto.detalles,
     }
     if (gasto.id_gastoxviaje) body.id = gasto.id_gastoxviaje
