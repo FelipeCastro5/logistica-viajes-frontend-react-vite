@@ -14,16 +14,16 @@ export default function NuevoViaje() {
     setTitle("REGISTRO DE NUEVO VIAJE")
   }, [])
 
-  const renderizarComponente = () => {
-    switch (componenteActivo) {
-      case "DetallesViaje":
-        return <DetallesViajeForm id_viaje={null} initialData={null}/>
-      case "Manifiesto":
-        return <ManifiestoForm />
-      default:
-        return <p className="text-center">Selecciona una sección del viaje.</p>
-    }
-  }
+  // const renderizarComponente = () => {
+  //   switch (componenteActivo) {
+  //     case "DetallesViaje":
+  //       return <DetallesViajeForm id_viaje={null} initialData={null}/>
+  //     case "Manifiesto":
+  //       return <ManifiestoForm />
+  //     default:
+  //       return <p className="text-center">Selecciona una sección del viaje.</p>
+  //   }
+  // }
 
   return (
     <PageContent title="Registrar Nuevo Viaje">
@@ -34,24 +34,35 @@ export default function NuevoViaje() {
           className={`px-4 py-2 rounded-md font-semibold ${componenteActivo === "DetallesViaje"
               ? "bg-blue-600 text-white"
               : "bg-gray-200 text-gray-800 hover:bg-blue-900 hover:text-gray-200"
-            }`}
+          }`}
         >
           Detalles del Viaje
         </button>
+
         <button
           onClick={() => setComponenteActivo("Manifiesto")}
           className={`px-4 py-2 rounded-md font-semibold ${componenteActivo === "Manifiesto"
               ? "bg-blue-600 text-white"
               : "bg-gray-200 text-gray-800 hover:bg-blue-900 hover:text-gray-200"
-            }`}
+          }`}
         >
           Manifiesto
         </button>
       </div>
 
-      {/* Render dinámico */}
+      {/* Render persistente */}
       <div className="border border-gray-300 dark:border-gray-700 rounded-lg p-4 bg-white dark:bg-gray-900 shadow">
-        {renderizarComponente()}
+        {/* {renderizarComponente()} */}
+        <div className="relative space-y-6">
+          <div className={componenteActivo === "DetallesViaje" ? "block" : "hidden"}>
+            <DetallesViajeForm id_viaje={null} initialData={null} />
+          </div>
+
+          <div className={componenteActivo === "Manifiesto" ? "block" : "hidden"}>
+            <ManifiestoForm />
+          </div>
+        </div>
+
         <Button
           onClick={() => navigate("/menu-principal")}
           className="bg-gray-600 hover:bg-gray-700 text-white mt-4"

@@ -18,42 +18,19 @@ interface UseGastoFormOptions {
   modo?: GastoFormMode
 }
 
-//
-// 📦 Utilidades
-//
-
-/**
- * Formatea un valor numérico (con coma como decimal) con separadores de miles estilo colombiano.
- * Ej: "1000000,5" → "1.000.000,5"
- * Además, elimina ceros innecesarios en la parte decimal.
- */
+// Utilidad para dar formato con separadores de miles (estilo colombiano)
 const formatWithThousands = (value: string): string => {
   if (!value) return ""
-
-  const [intPart, decimalPartRaw] = value.split(",")
-
-  const formattedInt = intPart.replace(/\B(?=(\d{3})+(?!\d))/g, ".")
-
-  if (!decimalPartRaw) return formattedInt
-
-  // Eliminar ceros a la derecha del decimal
-  const cleanedDecimal = decimalPartRaw.replace(/0+$/, "")
-  return cleanedDecimal ? `${formattedInt},${cleanedDecimal}` : formattedInt
+  const [integerPart, decimalPart] = value.split(",")
+  const formattedInt = integerPart.replace(/\B(?=(\d{3})+(?!\d))/g, ".")
+  return decimalPart !== undefined ? `${formattedInt},${decimalPart}` : formattedInt
 }
-
-//
-// 🧠 Hook principal
-//
 
 export function useGastoForm({
   viajeId,
   initialData = {},
   modo = "crear",
 }: UseGastoFormOptions) {
-  //
-  // 🛠️ Estado: datos del gasto y tipos disponibles
-  //
-
   const [tiposDeGasto, setTiposDeGasto] = useState<Gasto[]>([])
   const [loadingTipos, setLoadingTipos] = useState(true)
 
@@ -61,15 +38,9 @@ export function useGastoForm({
     id_gastoxviaje: initialData.id_gastoxviaje,
     fk_viaje: viajeId,
     fk_gasto: initialData.fk_gasto ?? "",
-    valor: initialData.valor
-      ? formatWithThousands(initialData.valor.replace(".", ","))
-      : "",
+    valor: initialData.valor ? formatWithThousands(initialData.valor.replace(".", ",")) : "",
     detalles: initialData.detalles ?? "",
   })
-
-  //
-  // 📥 Cargar tipos de gasto desde la API al montar el componente
-  //
 
   useEffect(() => {
     getAllGastos()
@@ -81,28 +52,20 @@ export function useGastoForm({
       .finally(() => setLoadingTipos(false))
   }, [])
 
-  //
-  // 🖊️ Manejadores de cambios en los inputs
-  //
-
-  // Manejador general (detalles, tipo de gasto)
   const handleChange = (
-    e: React.ChangeEvent<
-      HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement
-    >
+    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>
   ) => {
     const { name, value } = e.target
     setGasto(prev => ({ ...prev, [name]: value }))
   }
 
-  // Manejador específico para el input de "valor"
   const handleValorChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     let raw = e.target.value
 
-    // Solo permitir números y una coma
+    // Solo permitir números, punto y coma
     raw = raw.replace(/[^\d,]/g, "")
 
-    // Si hay más de una coma, tomar solo la primera parte válida
+    // Reemplazar múltiples comas por una sola
     const parts = raw.split(",")
     if (parts.length > 2) {
       raw = `${parts[0]},${parts[1]}`
@@ -112,12 +75,23 @@ export function useGastoForm({
     setGasto(prev => ({ ...prev, valor: formatted }))
   }
 
-  //
-  // 📤 Preparar los datos para enviar (POST/PUT)
-  //
+  useEffect(() => {
+    if (modo === "editar" && initialData?.id_gastoxviaje) {
+      setGasto({
+        id_gastoxviaje: initialData.id_gastoxviaje,
+        fk_viaje: viajeId,
+        fk_gasto: initialData.fk_gasto ?? "",
+        valor: initialData.valor
+          ? formatWithThousands(initialData.valor.replace(".", ","))
+          : "",
+        detalles: initialData.detalles ?? "",
+      })
+    }
+  }, [initialData, modo, viajeId])
+
 
   const getFormattedBody = () => {
-    const raw = gasto.valor.replace(/\./g, "").replace(",", ".")
+    const raw = gasto.valor.replace(/\./g, "").replace(",", ".") // Convertir a formato numérico válido
     const body: any = {
       fk_viaje: gasto.fk_viaje,
       fk_gasto: parseInt(gasto.fk_gasto),
@@ -128,10 +102,6 @@ export function useGastoForm({
     return body
   }
 
-  //
-  // ♻️ Resetear el formulario
-  //
-
   const resetForm = () => {
     setGasto({
       fk_viaje: viajeId,
@@ -141,13 +111,14 @@ export function useGastoForm({
     })
   }
 
-  //
-  // 📦 API del hook
-  //
-
   return {
-    gasto, tiposDeGasto, loadingTipos,
-    handleChange, handleValorChange, getFormattedBody, resetForm,
+    gasto,
+    tiposDeGasto,
+    loadingTipos,
+    handleChange,
+    handleValorChange,
+    getFormattedBody,
+    resetForm,
     modo,
   }
 }

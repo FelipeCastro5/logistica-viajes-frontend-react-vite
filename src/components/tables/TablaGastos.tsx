@@ -5,10 +5,11 @@ import { Card, CardContent } from "@/components/ui/card"
 import { getGastosPorViajeByViajeId } from "@/services/adapters/gastoxviaje.adapter"
 import { toast } from "sonner"
 import EliminarGastoModal from "../modals/EliminarGasto"
-import GastoModal from "../modals/NuevoGastoModal"
+import GastoModal from "../modals/GastoModal"
 
 interface Gasto {
   id_gastoxviaje: number
+  fk_gasto: number
   nombre_gasto: string
   valor: number | string
   detalles: string
@@ -69,7 +70,7 @@ export default function TablaGastosViaje({ id_viaje }: Props) {
                     modo="editar"
                     initialData={{
                       id_gastoxviaje: gasto.id_gastoxviaje,
-                      fk_gasto: gasto.id_gastoxviaje.toString(), // ⚠️ Esto depende de tu backend
+                      fk_gasto: gasto.fk_gasto.toString(), // ⚠️ Esto depende de tu backend
                       valor: gasto.valor.toString(),
                       detalles: gasto.detalles,
                     }}
