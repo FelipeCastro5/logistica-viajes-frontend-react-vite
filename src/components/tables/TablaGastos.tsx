@@ -1,13 +1,6 @@
 // src/components/tables/TablaGastos.tsx
 import { useEffect, useState } from "react"
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table"
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow, } from "@/components/ui/table"
 import { Card, CardContent } from "@/components/ui/card"
 import { getGastosPorViajeByViajeId } from "@/services/adapters/gastoxviaje.adapter"
 import { toast } from "sonner"

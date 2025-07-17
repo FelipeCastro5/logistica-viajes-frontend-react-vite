@@ -1,12 +1,6 @@
 // src/components/modals/GastoModal.tsx
 import { useState } from "react"
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from "@/components/ui/dialog"
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger, } from "@/components/ui/dialog"
 import { Button } from "@/components/ui/button"
 import GastoForm from "../forms/GastoForm"
 import { useGastoForm } from "@/hooks/forms/useGastoForm"
@@ -96,12 +90,8 @@ export default function GastoModal({
             className="bg-blue-600 text-white"
           >
             {loading
-              ? modo === "crear"
-                ? "Registrando..."
-                : "Guardando..."
-              : modo === "crear"
-                ? "Registrar gasto"
-                : "Guardar cambios"}
+              ? modo === "crear" ? "Registrando..." : "Guardando..."
+              : modo === "crear" ? "Registrar gasto" : "Guardar cambios"}
           </Button>
         </div>
       </DialogContent>
