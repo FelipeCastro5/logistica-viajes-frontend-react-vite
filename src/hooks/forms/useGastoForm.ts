@@ -64,6 +64,15 @@ export function useGastoForm(viajeId: number) {
     valor: parseFloat(gasto.valor),
   })
 
+  const resetForm = () => {
+    setGasto({
+      fk_viaje: viajeId,
+      fk_gasto: "",
+      valor: "",
+      detalles: "",
+    })
+  }
+
   return {
     gasto,
     tiposDeGasto,
@@ -72,5 +81,6 @@ export function useGastoForm(viajeId: number) {
     handleValorChange,
     formatNumber,
     getFormattedBody,
+    resetForm,
   }
 }

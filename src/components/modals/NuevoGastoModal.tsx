@@ -42,6 +42,7 @@ export default function NuevoGastoModal({ viajeId, onGastoCreado }: Props) {
       const response = await createGastoPorViaje(body)
       if (response.status) {
         toast.success("✅ Gasto registrado correctamente")
+        gastoHook.resetForm()
         setOpen(false)
         onGastoCreado?.() // 👈 Se vuelve a cargar la tabla
       } else {
