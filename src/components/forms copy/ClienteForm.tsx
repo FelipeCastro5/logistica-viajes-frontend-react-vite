@@ -1,7 +1,7 @@
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Button } from "@/components/ui/button"
-import { useClienteForm } from "@/hooks/forms/useClienteForm"
+import { useClienteForm } from "@/hooks/forms copy/useClienteForm"
 
 export default function ClienteForm({ onCreated }: { onCreated?: (data: any) => void }) {
   const { cliente, handleChange, handleSubmit } = useClienteForm({ onCreated })

@@ -3,7 +3,7 @@ import { Textarea } from "@/components/ui/textarea"
 import { Label } from "@/components/ui/label"
 import { Select, SelectTrigger, SelectValue, SelectContent, SelectItem } from "@/components/ui/select"
 import NuevoClienteModal from "../modals/NuevoClienteModal"
-import { useDetallesViajeForm } from "@/hooks/forms/useDetallesViajeForm"
+import { useDetallesViajeForm } from "@/hooks/forms copy/useDetallesViajeForm"
 
 export default function DetallesViajeForm() {
   const {
