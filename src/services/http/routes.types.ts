@@ -63,5 +63,12 @@ export const routes = {
   auth: {
     login: "/Auth/login",
     updatePassword: "/Auth/update-password"
-  }
+  },
+  chats: {
+    getByUsuario: "/chats/getByUsuario",
+    create: "/chats/create",
+    update: "/chats/update",
+    delete: "/chats/delete"
+  },
+
 } as const
