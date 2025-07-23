@@ -70,5 +70,9 @@ export const routes = {
     update: "/chats/update",
     delete: "/chats/delete"
   },
+  mensajes: {
+    getAll: "/mensajes/getAll",
+    getByChat: "/mensajes/getByChat"
+  },
 
 } as const

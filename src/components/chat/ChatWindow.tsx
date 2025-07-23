@@ -4,6 +4,15 @@ import { Button } from "@/components/ui/button"
 import { ScrollArea } from "@/components/ui/scroll-area"
 import { useState, useEffect } from "react"
 import { useNavigate } from "react-router-dom"
+import { getMensajesByChat } from "@/services/adapters/mensajes.adapter"
+
+interface Mensaje {
+  id_mensaje: number
+  fk_chat: number
+  pregunta: string
+  respuesta: string
+  fecha: string
+}
 
 interface ChatWindowProps {
   chatId?: string
@@ -14,17 +23,48 @@ export default function ChatWindow({ chatId }: ChatWindowProps) {
   const [input, setInput] = useState("")
   const navigate = useNavigate()
 
-useEffect(() => {
-  setMessages([
-    {
-      id: 1,
-      from: "bot",
-      text: chatId
-        ? `Hola, bienvenido al chat de ${chatId}`
-        : "Hola, este es un nuevo chat",
-    },
-  ])
-}, [chatId])
+  useEffect(() => {
+    const fetchMensajes = async () => {
+      if (!chatId) {
+        setMessages([
+          {
+            id: 1,
+            from: "bot",
+            text: "Hola, este es un nuevo chat",
+          },
+        ])
+        return
+      }
+
+      const res = await getMensajesByChat(Number(chatId))
+      if (res.status === 200) {
+        const mappedMessages = res.data.flatMap((mensaje: Mensaje) => [
+          {
+            id: mensaje.id_mensaje * 2 - 1,
+            from: "user",
+            text: mensaje.pregunta,
+          },
+          {
+            id: mensaje.id_mensaje * 2,
+            from: "bot",
+            text: mensaje.respuesta,
+          },
+        ])
+        setMessages(mappedMessages)
+      } else {
+        setMessages([
+          {
+            id: 1,
+            from: "bot",
+            text: "No se pudieron cargar los mensajes.",
+          },
+        ])
+      }
+    }
+
+    fetchMensajes()
+  }, [chatId])
+
 
 
   const handleSend = () => {
@@ -35,20 +75,24 @@ useEffect(() => {
 
   return (
     <Card className="w-full max-w-2xl h-[600px] flex flex-col">
-      <CardContent className="flex flex-col flex-1 p-4">
-        <ScrollArea className="flex-1 overflow-y-auto pr-2 space-y-4">
-          {messages.map((msg) => (
-            <div
-              key={msg.id}
-              className={`max-w-[75%] px-4 py-2 rounded-xl text-sm ${msg.from === "user"
-                  ? "bg-blue-600 text-white self-end"
-                  : "bg-gray-200 text-black self-start"
-                }`}
-            >
-              {msg.text}
+      <CardContent className="flex flex-col p-4 h-full">
+        <div className="flex-1 overflow-hidden">
+          <ScrollArea className="h-full pr-2">
+            <div className="flex flex-col space-y-4">
+              {messages.map((msg) => (
+                <div
+                  key={msg.id}
+                  className={`max-w-[75%] px-4 py-2 rounded-xl text-sm ${msg.from === "user"
+                      ? "bg-blue-600 text-white self-end text-right"
+                      : "bg-gray-200 text-black self-start"
+                    }`}
+                >
+                  {msg.text}
+                </div>
+              ))}
             </div>
-          ))}
-        </ScrollArea>
+          </ScrollArea>
+        </div>
 
         <form
           onSubmit={(e) => {
