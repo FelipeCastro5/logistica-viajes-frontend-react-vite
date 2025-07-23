@@ -2,11 +2,11 @@ import { Card, CardContent } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
 import { Button } from "@/components/ui/button"
 import { ScrollArea } from "@/components/ui/scroll-area"
-import { useState, useEffect } from "react"
+import { useState, useEffect, useRef } from "react"
 import { useNavigate } from "react-router-dom"
 import { getMensajesByChat } from "@/services/adapters/mensajes.adapter"
 import { iaConversacionSimple } from "@/services/adapters/ia.adapter"
-import { useAuth } from "@/hooks/useAuth" // ✅ importar el hook
+import { useAuth } from "@/hooks/useAuth"
 
 interface Mensaje {
   id_mensaje: number
@@ -21,11 +21,13 @@ interface ChatWindowProps {
 }
 
 export default function ChatWindow({ chatId }: ChatWindowProps) {
-  const { user } = useAuth() // ✅ obtener user desde el hook
+  const { user } = useAuth()
   const [messages, setMessages] = useState<{ id: number; from: string; text: string }[]>([])
   const [input, setInput] = useState("")
   const [loading, setLoading] = useState(false)
   const navigate = useNavigate()
+
+  const scrollRef = useRef<HTMLDivElement | null>(null)
 
   useEffect(() => {
     const fetchMensajes = async () => {
@@ -69,6 +71,11 @@ export default function ChatWindow({ chatId }: ChatWindowProps) {
     fetchMensajes()
   }, [chatId])
 
+  // Scroll automático al final cuando cambia messages
+  useEffect(() => {
+    scrollRef.current?.scrollIntoView({ behavior: "smooth" })
+  }, [messages])
+
   const handleSend = async () => {
     if (!input.trim() || loading) return
 
@@ -85,7 +92,6 @@ export default function ChatWindow({ chatId }: ChatWindowProps) {
     setMessages((prev) => [...prev, userMsg])
 
     try {
-      // AQUI CAMBIAR EL ENPOINT DE TURNO
       const res = await iaConversacionSimple(user.id_usuario, pregunta, Number(chatId) || 0)
 
       if (res.status === 200) {
@@ -121,14 +127,16 @@ export default function ChatWindow({ chatId }: ChatWindowProps) {
               {messages.map((msg) => (
                 <div
                   key={msg.id}
-                  className={`max-w-[75%] px-4 py-2 rounded-xl text-sm ${msg.from === "user"
+                  className={`max-w-[75%] px-4 py-2 rounded-xl text-sm ${
+                    msg.from === "user"
                       ? "bg-blue-600 text-white self-end text-right"
                       : "bg-gray-200 text-black self-start"
-                    }`}
+                  }`}
                 >
                   {msg.text}
                 </div>
               ))}
+              <div ref={scrollRef} />
             </div>
           </ScrollArea>
         </div>
