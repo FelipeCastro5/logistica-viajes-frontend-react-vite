@@ -5,6 +5,8 @@ import { ScrollArea } from "@/components/ui/scroll-area"
 import { useState, useEffect } from "react"
 import { useNavigate } from "react-router-dom"
 import { getMensajesByChat } from "@/services/adapters/mensajes.adapter"
+import { iaConversacionSimple } from "@/services/adapters/ia.adapter"
+import { useAuth } from "@/hooks/useAuth" // ✅ importar el hook
 
 interface Mensaje {
   id_mensaje: number
@@ -19,8 +21,10 @@ interface ChatWindowProps {
 }
 
 export default function ChatWindow({ chatId }: ChatWindowProps) {
+  const { user } = useAuth() // ✅ obtener user desde el hook
   const [messages, setMessages] = useState<{ id: number; from: string; text: string }[]>([])
   const [input, setInput] = useState("")
+  const [loading, setLoading] = useState(false)
   const navigate = useNavigate()
 
   useEffect(() => {
@@ -65,12 +69,47 @@ export default function ChatWindow({ chatId }: ChatWindowProps) {
     fetchMensajes()
   }, [chatId])
 
+  const handleSend = async () => {
+    if (!input.trim() || loading) return
 
-
-  const handleSend = () => {
-    if (!input.trim()) return
-    setMessages([...messages, { id: Date.now(), from: "user", text: input }])
+    const pregunta = input.trim()
     setInput("")
+    setLoading(true)
+
+    const userMsg = {
+      id: Date.now(),
+      from: "user",
+      text: pregunta,
+    }
+
+    setMessages((prev) => [...prev, userMsg])
+
+    try {
+      // AQUI CAMBIAR EL ENPOINT DE TURNO
+      const res = await iaConversacionSimple(user.id_usuario, pregunta, Number(chatId) || 0)
+
+      if (res.status === 200) {
+        const respuesta = res.data.respuesta
+        const botMsg = {
+          id: Date.now() + 1,
+          from: "bot",
+          text: respuesta,
+        }
+        setMessages((prev) => [...prev, botMsg])
+      } else {
+        setMessages((prev) => [
+          ...prev,
+          { id: Date.now() + 1, from: "bot", text: "Ocurrió un error con la IA." },
+        ])
+      }
+    } catch (err) {
+      setMessages((prev) => [
+        ...prev,
+        { id: Date.now() + 1, from: "bot", text: "Error de red o del servidor." },
+      ])
+    } finally {
+      setLoading(false)
+    }
   }
 
   return (
@@ -106,9 +145,13 @@ export default function ChatWindow({ chatId }: ChatWindowProps) {
             value={input}
             onChange={(e) => setInput(e.target.value)}
             className="flex-1"
+            disabled={loading}
           />
-          <Button type="submit">Enviar</Button>
+          <Button type="submit" disabled={loading}>
+            {loading ? "..." : "Enviar"}
+          </Button>
         </form>
+
         <Button
           onClick={() => navigate("/chat-bot")}
           className="bg-gray-600 hover:bg-gray-700 text-white mt-4"

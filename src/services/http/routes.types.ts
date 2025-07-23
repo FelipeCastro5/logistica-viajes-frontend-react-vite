@@ -73,6 +73,11 @@ export const routes = {
   mensajes: {
     getAll: "/mensajes/getAll",
     getByChat: "/mensajes/getByChat"
+  }, ia: {
+    conversacionSimple: "/ia/conversacion-simple",
+    generarSQL: "/ia/generar-sql",
+    mixto: "/ia/mixto",
+    inteligente: "/ia/inteligente"
   },
 
 } as const

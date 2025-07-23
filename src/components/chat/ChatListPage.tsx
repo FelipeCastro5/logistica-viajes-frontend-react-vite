@@ -52,7 +52,11 @@ export default function ChatListPage() {
                 <Button
                   size="sm"
                   variant="secondary"
-                  onClick={() => navigate(`/chat-bot/${chat.id_chat}`)}
+                  onClick={() =>
+                    navigate(`/chat-bot/${chat.id_chat}`, {
+                      state: { nombre_chat: chat.nombre_chat },
+                    })
+                  }
                 >
                   Entrar
                 </Button>
