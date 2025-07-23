@@ -9,14 +9,16 @@ export default function ChatPage() {
   const { setTitle } = useLayoutTitle()
 
   useEffect(() => {
-    setTitle(`Chat: ${chatId}`)
+    setTitle(chatId ? `Chat: ${chatId}` : "Nuevo Chat")
   }, [chatId])
 
   return (
-    <PageContent title={`Conversación: ${chatId}`}>
+    // <PageContent title={chatId ? `Conversación: ${chatId}` : "Nuevo Chat"}>
+    <PageContent>
       <div className="flex justify-center mt-6">
         <ChatWindow chatId={chatId} />
       </div>
     </PageContent>
   )
+
 }

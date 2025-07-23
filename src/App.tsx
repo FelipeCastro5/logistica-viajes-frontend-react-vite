@@ -36,7 +36,9 @@ export default function App() {
           <Route path="/tabla-viaje" element={<TablaDetalleViaje />} />
 
           <Route path="/chat-bot" element={<ChatListPage />} />
+          <Route path="/chat-bot/nuevo" element={<ChatPage />} />
           <Route path="/chat-bot/:chatId" element={<ChatPage />} />
+
         </Route>
 
         {/* Redirección por defecto */}

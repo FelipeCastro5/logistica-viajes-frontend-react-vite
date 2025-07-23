@@ -1,68 +1,53 @@
-// src/pages/ChatListPage.tsx
-import { useEffect, useState } from "react"
 import { useNavigate } from "react-router-dom"
 import { Card, CardContent } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
-import { useLayoutTitle } from "@/context/LayoutTitleContext"
+import { Plus, Trash2 } from "lucide-react"
 import PageContent from "@/components/layout/PageContent"
-import { useAuth } from "@/hooks/useAuth"
-import { deleteChat, getChatsByUsuario, type Chat } from "@/services/adapters/chats.adapter"
-import { toast } from "sonner"
-import { Trash2 } from "lucide-react"
+import { useChatListPage } from "@/hooks/chat/useChatListPage"
 
 export default function ChatListPage() {
-  const { setTitle } = useLayoutTitle()
   const navigate = useNavigate()
-  const { user } = useAuth()
-  const [chats, setChats] = useState<Chat[]>([])
-
-  useEffect(() => {
-    setTitle("Chats Disponibles")
-  }, [])
-
-  useEffect(() => {
-    const fetchChats = async () => {
-      try {
-        if (!user?.id_usuario) return
-        const res = await getChatsByUsuario(user.id_usuario)
-        if (res.status) {
-          setChats(res.data || [])
-        } else {
-          toast.warning("No se encontraron chats.")
-        }
-      } catch (error) {
-        console.error("Error al obtener los chats:", error)
-        toast.error("Error al cargar los chats.")
-      }
-    }
-
-    fetchChats()
-  }, [user?.id_usuario])
-
-  const handleDelete = async (chatId: number) => {
-    if (!confirm("¿Estás seguro que deseas eliminar este chat?")) return
-
-    try {
-      const res = await deleteChat(chatId)
-      if (res.status) {
-        toast.success("✅ Chat eliminado correctamente")
-        setChats((prev) => prev.filter((chat) => chat.id_chat !== chatId))
-      } else {
-        toast.error("❌ No se pudo eliminar el chat")
-      }
-    } catch (err) {
-      console.error(err)
-      toast.error("⚠️ Error al eliminar el chat")
-    }
-  }
+  const {
+    chats,
+    editChatId,
+    editChatName,
+    setEditChatId,
+    setEditChatName,
+    startEditing,
+    handleDelete,
+    handleUpdate,
+  } = useChatListPage()
 
   return (
-    <PageContent title="Selecciona un Chat">
+    <PageContent>
+      <div className="max-w-md mx-auto mt-4">
+        <Button
+          variant="default"
+          size="sm"
+          className="w-full flex items-center justify-center gap-2"
+          onClick={() => navigate("/chat-bot/nuevo")}
+        >
+          <Plus className="w-4 h-4" />
+          Nuevo Chat
+        </Button>
+      </div>
+
       <div className="grid gap-4 max-w-md mx-auto mt-6">
         {chats.map((chat) => (
           <Card key={chat.id_chat}>
             <CardContent className="p-4 flex justify-between items-center">
-              <span className="font-medium">{chat.nombre_chat}</span>
+              {editChatId === chat.id_chat ? (
+                <input
+                  type="text"
+                  className="border px-2 py-1 rounded"
+                  value={editChatName}
+                  onChange={(e) => setEditChatName(e.target.value)}
+                  onKeyDown={(e) => e.key === "Enter" && handleUpdate()}
+                />
+              ) : (
+                <span className="font-medium">{chat.nombre_chat}</span>
+              )}
+
               <div className="flex gap-2">
                 <Button
                   size="sm"
@@ -71,6 +56,33 @@ export default function ChatListPage() {
                 >
                   Entrar
                 </Button>
+
+                {editChatId === chat.id_chat ? (
+                  <>
+                    <Button size="sm" variant="default" onClick={handleUpdate}>
+                      Guardar
+                    </Button>
+                    <Button
+                      size="sm"
+                      variant="ghost"
+                      onClick={() => {
+                        setEditChatId(null)
+                        setEditChatName("")
+                      }}
+                    >
+                      Cancelar
+                    </Button>
+                  </>
+                ) : (
+                  <Button
+                    size="sm"
+                    variant="outline"
+                    onClick={() => startEditing(chat)}
+                  >
+                    Editar
+                  </Button>
+                )}
+
                 <Button
                   size="sm"
                   variant="destructive"
@@ -81,7 +93,6 @@ export default function ChatListPage() {
               </div>
             </CardContent>
           </Card>
-
         ))}
 
         <Button

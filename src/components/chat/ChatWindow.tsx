@@ -14,12 +14,18 @@ export default function ChatWindow({ chatId }: ChatWindowProps) {
   const [input, setInput] = useState("")
   const navigate = useNavigate()
 
-  useEffect(() => {
-    // Simula carga de mensajes previos
-    setMessages([
-      { id: 1, from: "bot", text: `Hola, bienvenido al chat de ${chatId}` },
-    ])
-  }, [chatId])
+useEffect(() => {
+  setMessages([
+    {
+      id: 1,
+      from: "bot",
+      text: chatId
+        ? `Hola, bienvenido al chat de ${chatId}`
+        : "Hola, este es un nuevo chat",
+    },
+  ])
+}, [chatId])
+
 
   const handleSend = () => {
     if (!input.trim()) return
