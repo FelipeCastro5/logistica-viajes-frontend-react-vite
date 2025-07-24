@@ -25,8 +25,9 @@ export default function ChatWindow({ chatId }: ChatWindowProps) {
   const [messages, setMessages] = useState<{ id: number; from: string; text: string }[]>([])
   const [input, setInput] = useState("")
   const [loading, setLoading] = useState(false)
-  const navigate = useNavigate()
+  const [chatIdState, setChatIdState] = useState<number | null>(chatId ? Number(chatId) : null)
 
+  const navigate = useNavigate()
   const scrollRef = useRef<HTMLDivElement | null>(null)
 
   useEffect(() => {
@@ -36,7 +37,7 @@ export default function ChatWindow({ chatId }: ChatWindowProps) {
           {
             id: 1,
             from: "bot",
-            text: "Hola, este es un nuevo chat",
+            text: "Hola, este es un nuevo chat. ¿En que te puedo ayudar hoy?",
           },
         ])
         return
@@ -92,10 +93,16 @@ export default function ChatWindow({ chatId }: ChatWindowProps) {
     setMessages((prev) => [...prev, userMsg])
 
     try {
-      const res = await iaConversacionSimple(user.id_usuario, pregunta, Number(chatId) || 0)
+      const res = await iaConversacionSimple(user.id_usuario, pregunta, chatIdState || 0)
 
       if (res.status === 200) {
-        const respuesta = res.data.respuesta
+        const { respuesta, chatId: newChatId } = res.data
+
+        // Si es un nuevo chat, actualizamos el chatId local
+        if (!chatIdState && newChatId) {
+          setChatIdState(newChatId)
+        }
+
         const botMsg = {
           id: Date.now() + 1,
           from: "bot",
