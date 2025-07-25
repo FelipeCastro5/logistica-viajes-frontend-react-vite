@@ -10,6 +10,7 @@ import {
 import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
 import { useViajesTable } from "@/hooks/tables/useViajesTable"
+import { ScrollArea } from "@/components/ui/scroll-area"
 
 export default function TablaViajes() {
   const navigate = useNavigate()
@@ -39,47 +40,49 @@ export default function TablaViajes() {
         )}
 
         <Table>
-          <TableHeader>
-            <TableRow>
-              <TableHead>Código</TableHead>
-              <TableHead>Cliente</TableHead>
-              <TableHead>Producto</TableHead>
-              <TableHead>Salida</TableHead>
-              <TableHead>Llegada</TableHead>
-              <TableHead>Estado</TableHead>
-              <TableHead className="text-center">Acciones</TableHead>
-            </TableRow>
-          </TableHeader>
-          <TableBody>
-            {viajes.map((viaje) => (
-              <TableRow key={viaje.id_viaje}>
-                <TableCell>{viaje.codigo}</TableCell>
-                <TableCell>{viaje.nombre_cliente}</TableCell>
-                <TableCell>{viaje.producto}</TableCell>
-                <TableCell>{viaje.fecha_salida.slice(0, 10)}</TableCell>
-                <TableCell>{viaje.fecha_llegada.slice(0, 10)}</TableCell>
-                <TableCell>
-                  <span
-                    className={`text-sm font-medium ${viaje.estado_viaje
-                      ? "text-green-600"
-                      : "text-red-500"
-                      }`}
-                  >
-                    {viaje.estado_viaje ? "Activo" : "Inactivo"}
-                  </span>
-                </TableCell>
-                <TableCell className="text-center">
-                  <Button
-                    variant="secondary"
-                    onClick={() => navigate(`/viaje/${viaje.id_viaje}`)}
-                    className="text-sm"
-                  >
-                    Ver viaje
-                  </Button>
-                </TableCell>
+          <ScrollArea className="max-h-[400px]">
+            <TableHeader>
+              <TableRow>
+                <TableHead>Código</TableHead>
+                <TableHead>Cliente</TableHead>
+                <TableHead>Producto</TableHead>
+                <TableHead>Salida</TableHead>
+                <TableHead>Llegada</TableHead>
+                <TableHead>Estado</TableHead>
+                <TableHead className="text-center">Acciones</TableHead>
               </TableRow>
-            ))}
-          </TableBody>
+            </TableHeader>
+            <TableBody>
+              {viajes.map((viaje) => (
+                <TableRow key={viaje.id_viaje}>
+                  <TableCell>{viaje.codigo}</TableCell>
+                  <TableCell>{viaje.nombre_cliente}</TableCell>
+                  <TableCell>{viaje.producto}</TableCell>
+                  <TableCell>{viaje.fecha_salida.slice(0, 10)}</TableCell>
+                  <TableCell>{viaje.fecha_llegada.slice(0, 10)}</TableCell>
+                  <TableCell>
+                    <span
+                      className={`text-sm font-medium ${viaje.estado_viaje
+                        ? "text-green-600"
+                        : "text-red-500"
+                        }`}
+                    >
+                      {viaje.estado_viaje ? "Activo" : "Inactivo"}
+                    </span>
+                  </TableCell>
+                  <TableCell className="text-center">
+                    <Button
+                      variant="secondary"
+                      onClick={() => navigate(`/viaje/${viaje.id_viaje}`)}
+                      className="text-sm"
+                    >
+                      Ver viaje
+                    </Button>
+                  </TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </ScrollArea>
         </Table>
 
         <div className="flex items-center justify-between mt-4">
