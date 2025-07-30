@@ -109,11 +109,18 @@ export default function NuevoViaje() {
                 alert("Ocurrió un error al registrar el viaje.")
                 console.error(response)
               }
-            } catch (error) {
-              alert("Error de red o del servidor.")
-              console.error(error)
+            } catch (error: any) {
+              // Este error viene del interceptor → error.response?.data
+              const customError = error as { status?: number; msg?: string }
+
+              if (customError.status === 400 && customError.msg) {
+                alert(`Errores de validación:\n${customError.msg}`)
+              } else {
+                alert("Error de red o del servidor.")
+              }
             }
-          }}
+          }
+          }
           className="bg-green-600 hover:bg-green-700 text-white mt-4 ml-4"
         >
           CREAR VIAJE

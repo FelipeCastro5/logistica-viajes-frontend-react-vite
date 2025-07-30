@@ -1,7 +1,7 @@
 // src/hooks/useChat.ts
 import { useState, useEffect, useRef } from "react"
 import { getMensajesByChat } from "@/services/adapters/mensajes.adapter"
-import { iaConversacionSimple } from "@/services/adapters/ia.adapter"
+import { iaConversacionSimple, iaInteligente } from "@/services/adapters/ia.adapter"
 import { useAuth } from "../useAuth"
 
 
@@ -85,7 +85,7 @@ export const useChat = (initialChatId?: string) => {
     setMessages((prev) => [...prev, userMsg])
 
     try {
-      const res = await iaConversacionSimple(user.id_usuario, pregunta, chatId || 0)
+      const res = await iaInteligente(user.id_usuario, pregunta, chatId || 0)
 
       if (res.status === 200) {
         const { respuesta, chatId: newChatId, titulo: newTitulo } = res.data
