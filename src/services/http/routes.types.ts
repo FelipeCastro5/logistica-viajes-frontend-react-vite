@@ -34,7 +34,8 @@ export const routes = {
     getById: "/manifiestos/getById",
     create: "/manifiestos/create",
     update: "/manifiestos/update",
-    delete: "/manifiestos/delete/{id}"
+    delete: "/manifiestos/delete/{id}",
+    updateTotalGastos: "/manifiestos/updateTotalGastos" // ✅ Correcto
   },
   viajes: {
     getAll: "/viajes/getAll",
@@ -73,7 +74,8 @@ export const routes = {
   mensajes: {
     getAll: "/mensajes/getAll",
     getByChat: "/mensajes/getByChat"
-  }, ia: {
+  },
+  ia: {
     conversacionSimple: "/ia/conversacion-simple",
     generarSQL: "/ia/generar-sql",
     mixto: "/ia/mixto",

@@ -6,6 +6,7 @@ import GastoForm from "../forms/GastoForm"
 import { useGastoForm } from "@/hooks/forms/useGastoForm"
 import { createGastoPorViaje, updateGastoPorViaje } from "@/services/adapters/gastoxviaje.adapter"
 import { toast } from "sonner"
+import { updateTotalGastosByFkViaje } from "@/services/adapters/manifiestos.adapter"
 
 type Modo = "crear" | "editar"
 
@@ -54,6 +55,22 @@ export default function GastoModal({
       } else {
         response = await updateGastoPorViaje(body)
       }
+
+      if (response.status) {
+        toast.success(`✅ Gasto ${modo === "crear" ? "registrado" : "actualizado"} correctamente`)
+        // 🔄 Actualizar total_gastos del manifiesto
+        const gastosResponse = await updateTotalGastosByFkViaje(viajeId)
+        if (gastosResponse.status) {
+          const total = gastosResponse.data?.total_gastos
+          toast.info(`ℹ️ Total de gastos actualizado: $${parseFloat(total).toLocaleString()}`)
+        } else {
+          toast.warning("⚠️ No se pudo actualizar el total de gastos del manifiesto")
+        }
+        gastoHook.resetForm()
+        setOpen(false)
+        onGastoGuardado?.()
+      }
+
 
       if (response.status) {
         toast.success(`✅ Gasto ${modo === "crear" ? "registrado" : "actualizado"} correctamente`)

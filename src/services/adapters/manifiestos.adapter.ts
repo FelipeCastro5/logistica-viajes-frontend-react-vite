@@ -59,3 +59,12 @@ export const deleteManifiesto = async (id: number): Promise<ApiResponse<any>> =>
     method: "DELETE",
   }, { id })
 }
+
+// ✅ Actualizar total_gastos en el manifiesto asociado a un viaje
+export const updateTotalGastosByFkViaje = async (fk_viaje: number): Promise<ApiResponse<any>> => {
+  return await RequestHttp(null, {
+    base: "manifiestos",
+    entry: "updateTotalGastos",
+    method: "PUT",
+  }, { fk_viaje })
+}
