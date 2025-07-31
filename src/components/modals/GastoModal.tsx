@@ -69,6 +69,9 @@ export default function GastoModal({
         gastoHook.resetForm()
         setOpen(false)
         onGastoGuardado?.()
+
+
+        window.location.reload()
       }
 
 
