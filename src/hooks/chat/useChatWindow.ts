@@ -1,7 +1,7 @@
 // src/hooks/useChat.ts
 import { useState, useEffect, useRef } from "react"
 import { getMensajesByChat } from "@/services/adapters/mensajes.adapter"
-import { iaConversacionSimple, iaInteligente } from "@/services/adapters/ia.adapter"
+import { iaInteligente } from "@/services/adapters/ia.adapter"
 import { useAuth } from "../useAuth"
 
 
