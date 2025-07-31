@@ -19,7 +19,7 @@ export const useChat = (initialChatId?: string) => {
   const [input, setInput] = useState("")
   const [loading, setLoading] = useState(false)
   const [chatId, setChatId] = useState<number | null>(initialChatId ? Number(initialChatId) : null)
-  const [titulo, setTitulo] = useState("Nuevo chat")
+  //  const [titulo, setTitulo] = useState("Nuevo chat")
 
   const scrollRef = useRef<HTMLDivElement | null>(null)
 
@@ -88,15 +88,17 @@ export const useChat = (initialChatId?: string) => {
       const res = await iaInteligente(user.id_usuario, pregunta, chatId || 0)
 
       if (res.status === 200) {
-        const { respuesta, chatId: newChatId, titulo: newTitulo } = res.data
+        const { respuesta, chatId: newChatId
+          //, titulo: newTitulo 
+        } = res.data
 
         if (!chatId && newChatId) {
           setChatId(newChatId)
         }
 
-        if (newTitulo) {
-          setTitulo(newTitulo)
-        }
+        // if (newTitulo) {
+        //   setTitulo(newTitulo)
+        // }
 
         const botMsg = {
           id: Date.now() + 1,
@@ -125,7 +127,7 @@ export const useChat = (initialChatId?: string) => {
     messages,
     input,
     loading,
-    titulo,
+    //    titulo,
     scrollRef,
     setInput,
     handleSend,
