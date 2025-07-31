@@ -11,14 +11,16 @@ interface ChatWindowProps {
 }
 
 export default function ChatWindow({ chatId }: ChatWindowProps) {
-  const { messages, input, loading, titulo, scrollRef, setInput, handleSend, } = useChat(chatId)
+  const { messages, input, loading,
+    //  titulo,
+    scrollRef, setInput, handleSend, } = useChat(chatId)
 
   const navigate = useNavigate()
 
   return (
     <Card className="w-full max-w-2xl h-[600px] flex flex-col">
       <CardContent className="flex flex-col p-4 h-full">
-        <h2 className="text-lg font-semibold mb-2 text-center">{titulo}</h2>
+        {/* <h2 className="text-lg font-semibold mb-2 text-center">{titulo}</h2> */}
 
         <div className="flex-1 overflow-hidden">
           <ScrollArea className="h-full pr-2">
@@ -27,8 +29,8 @@ export default function ChatWindow({ chatId }: ChatWindowProps) {
                 <div
                   key={msg.id}
                   className={`max-w-[75%] px-4 py-2 rounded-xl text-sm ${msg.from === "user"
-                      ? "bg-blue-600 text-white self-end text-right"
-                      : "bg-gray-200 text-black self-start"
+                    ? "bg-blue-600 text-white self-end text-right"
+                    : "bg-gray-200 text-black self-start"
                     }`}
                 >
                   {msg.text}
