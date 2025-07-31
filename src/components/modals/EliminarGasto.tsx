@@ -11,13 +11,15 @@ import { Button } from "@/components/ui/button"
 import { deleteGastoPorViaje } from "@/services/adapters/gastoxviaje.adapter"
 import { toast } from "sonner"
 import { Trash2 } from "lucide-react"
+import { updateTotalGastosByFkViaje } from "@/services/adapters/manifiestos.adapter"
 
 interface Props {
   gastoId: number
+  viajeId: number
   onGastoEliminado?: () => void
 }
 
-export default function EliminarGastoModal({ gastoId, onGastoEliminado }: Props) {
+export default function EliminarGastoModal({ gastoId, viajeId, onGastoEliminado }: Props) {
   const [open, setOpen] = useState(false)
   const [loading, setLoading] = useState(false)
 
@@ -27,8 +29,17 @@ export default function EliminarGastoModal({ gastoId, onGastoEliminado }: Props)
       const response = await deleteGastoPorViaje(gastoId)
       if (response.status) {
         toast.success("🗑️ Gasto eliminado correctamente")
+        // 🔄 Actualizar el total de gastos del manifiesto
+        const gastosResponse = await updateTotalGastosByFkViaje(viajeId)
+        if (gastosResponse.status) {
+          const total = gastosResponse.data?.total_gastos
+          toast.info(`ℹ️ Total de gastos actualizado: $${parseFloat(total).toLocaleString()}`)
+        } else {
+          toast.warning("⚠️ No se pudo actualizar el total de gastos del manifiesto")
+        }
         setOpen(false) // 👈 cerrar modal primero
         onGastoEliminado?.() // 👈 actualizar la tabla
+        window.location.reload()
       } else {
         toast.error("❌ No se pudo eliminar el gasto")
       }

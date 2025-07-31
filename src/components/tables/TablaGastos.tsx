@@ -6,6 +6,7 @@ import { getGastosPorViajeByViajeId } from "@/services/adapters/gastoxviaje.adap
 import { toast } from "sonner"
 import EliminarGastoModal from "../modals/EliminarGasto"
 import GastoModal from "../modals/GastoModal"
+import { formatNumber } from "@/hooks/utils/formatNumberCOP"
 
 interface Gasto {
   id_gastoxviaje: number
@@ -62,7 +63,8 @@ export default function TablaGastosViaje({ id_viaje }: Props) {
             {gastos.map((gasto) => (
               <TableRow key={gasto.id_gastoxviaje}>
                 <TableCell>{gasto.nombre_gasto}</TableCell>
-                <TableCell>${parseFloat(gasto.valor as string).toFixed(2)}</TableCell>
+                <TableCell>{formatNumber(parseFloat(gasto.valor as string))}</TableCell>
+
                 <TableCell>{gasto.detalles}</TableCell>
                 <TableCell>
                   <GastoModal
@@ -77,7 +79,7 @@ export default function TablaGastosViaje({ id_viaje }: Props) {
                     onGastoGuardado={fetchGastos}
                   />
 
-                  <EliminarGastoModal gastoId={gasto.id_gastoxviaje} onGastoEliminado={fetchGastos} />
+                  <EliminarGastoModal viajeId={id_viaje} gastoId={gasto.id_gastoxviaje} onGastoEliminado={fetchGastos} />
                 </TableCell>
               </TableRow>
             ))}
@@ -85,7 +87,7 @@ export default function TablaGastosViaje({ id_viaje }: Props) {
         </Table>
 
         <div className="text-left mt-4 text-base font-semibold">
-          Total: <span className="text-blue-700">${total.toFixed(2)}</span>
+          Total: <span className="text-blue-700">{formatNumber(total)}</span>
         </div>
 
         <div className="text-right mt-4 text-base font-semibold">

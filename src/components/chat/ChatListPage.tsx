@@ -9,14 +9,7 @@ import { ScrollArea } from "../ui/scroll-area"
 export default function ChatListPage() {
   const navigate = useNavigate()
   const {
-    chats,
-    editChatId,
-    editChatName,
-    setEditChatId,
-    setEditChatName,
-    startEditing,
-    handleDelete,
-    handleUpdate,
+    chats, editChatId, editChatName, setEditChatId, setEditChatName, startEditing, handleDelete, handleUpdate,
   } = useChatListPage()
 
   return (
@@ -48,21 +41,19 @@ export default function ChatListPage() {
                       onKeyDown={(e) => e.key === "Enter" && handleUpdate()}
                     />
                   ) : (
-                    <span className="font-medium">{chat.nombre_chat}</span>
-                  )}
-
-                  <div className="flex gap-2 flex-wrap">
-                    <Button
-                      size="sm"
-                      variant="secondary"
+                    <div
+                      className="flex-1 cursor-pointer font-medium hover:text-blue-600 transition-colors duration-200"
                       onClick={() =>
                         navigate(`/chat-bot/${chat.id_chat}`, {
                           state: { nombre_chat: chat.nombre_chat },
                         })
                       }
                     >
-                      Entrar
-                    </Button>
+                      {chat.nombre_chat}
+                    </div>
+                  )}
+
+                  <div className="flex gap-2 flex-wrap ml-4">
 
                     {editChatId === chat.id_chat ? (
                       <>
@@ -99,6 +90,7 @@ export default function ChatListPage() {
                     </Button>
                   </div>
                 </CardContent>
+
               </Card>
             ))}
           </div>

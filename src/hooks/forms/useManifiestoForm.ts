@@ -39,7 +39,7 @@ export function useManifiestoForm(initialData?: any, onChange?: (data: any) => v
   })
 
   const initialized = useRef(false)
-  
+
   useEffect(() => {
     if (onChange) {
       onChange(form)
@@ -77,6 +77,7 @@ export function useManifiestoForm(initialData?: any, onChange?: (data: any) => v
     const valor_ica = flete * (icaPorc / 100)
     const deduccion_fiscal = valor_retencion_fuente + valor_ica
     const neto_a_pagar = flete - deduccion_fiscal
+    const total_gastos = form.total_gastos
     const saldo_a_pagar = neto_a_pagar - anticipo
     const queda_al_carro = saldo_a_pagar - gastos
     const a_favor_del_carro = anticipo - gastos
@@ -88,6 +89,7 @@ export function useManifiestoForm(initialData?: any, onChange?: (data: any) => v
       valor_ica,
       deduccion_fiscal,
       neto_a_pagar,
+      total_gastos,
       saldo_a_pagar,
       queda_al_carro,
       a_favor_del_carro,
