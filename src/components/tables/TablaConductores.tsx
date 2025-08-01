@@ -28,7 +28,11 @@ interface Conductor {
   nombre_rol: string
 }
 
-export default function TablaConductores() {
+interface TablaConductoresProps {
+  onSelectConductor?: (id: number) => void
+}
+
+export default function TablaConductores({ onSelectConductor }: TablaConductoresProps) {
   const [conductores, setConductores] = useState<Conductor[]>([])
   const [loading, setLoading] = useState(true)
 
@@ -58,6 +62,7 @@ export default function TablaConductores() {
           <Table className="min-w-[900px]">
             <TableHeader>
               <TableRow>
+                <TableHead className="text-center">Acciones</TableHead>
                 <TableHead>Tipo Doc</TableHead>
                 <TableHead>Num Doc</TableHead>
                 <TableHead>Nombre</TableHead>
@@ -65,7 +70,6 @@ export default function TablaConductores() {
                 <TableHead>Teléfono</TableHead>
                 <TableHead>Correo</TableHead>
                 <TableHead>Estado</TableHead>
-                <TableHead className="text-center">Acciones</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
@@ -84,6 +88,15 @@ export default function TablaConductores() {
               ) : (
                 conductores.map((c) => (
                   <TableRow key={c.id_usuario}>
+                    <TableCell className="text-center">
+                      <Button
+                        size="sm"
+                        variant="secondary"
+                        onClick={() => onSelectConductor?.(c.id_usuario)}
+                      >
+                        Ver
+                      </Button>
+                    </TableCell>
                     <TableCell>{c.abreviatura || "N/A"}</TableCell>
                     <TableCell>{c.num_doc}</TableCell>
                     <TableCell>{`${c.p_nombre} ${c.s_nombre || ""}`}</TableCell>
@@ -92,19 +105,12 @@ export default function TablaConductores() {
                     <TableCell>{c.correo}</TableCell>
                     <TableCell>
                       <span
-                        className={
-                          c.estado_usuario
-                            ? "text-green-600 font-medium text-sm"
-                            : "text-red-500 font-medium text-sm"
-                        }
+                        className={c.estado_usuario
+                          ? "text-green-600 font-medium text-sm"
+                          : "text-red-500 font-medium text-sm"}
                       >
                         {c.estado_usuario ? "Activo" : "Inactivo"}
                       </span>
-                    </TableCell>
-                    <TableCell className="text-center">
-                      <Button size="sm" variant="secondary">
-                        Ver
-                      </Button>
                     </TableCell>
                   </TableRow>
                 ))

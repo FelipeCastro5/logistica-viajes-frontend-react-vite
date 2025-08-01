@@ -47,18 +47,27 @@ export default function TablaViajes({ idUsuario }: Props) {
           <ScrollArea className="max-h-[400px]">
             <TableHeader>
               <TableRow>
+                <TableHead className="text-center">Acciones</TableHead>
                 <TableHead>Código</TableHead>
                 <TableHead>Cliente</TableHead>
                 <TableHead>Producto</TableHead>
                 <TableHead>Salida</TableHead>
                 <TableHead>Llegada</TableHead>
                 <TableHead>Estado</TableHead>
-                <TableHead className="text-center">Acciones</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
               {viajes.map((viaje) => (
                 <TableRow key={viaje.id_viaje}>
+                  <TableCell className="text-center">
+                    <Button
+                      variant="secondary"
+                      onClick={() => navigate(`/viaje/${viaje.id_viaje}`)}
+                      className="text-sm"
+                    >
+                      Ver viaje
+                    </Button>
+                  </TableCell>
                   <TableCell>{viaje.codigo}</TableCell>
                   <TableCell>{viaje.nombre_cliente}</TableCell>
                   <TableCell>{viaje.producto}</TableCell>
@@ -73,15 +82,6 @@ export default function TablaViajes({ idUsuario }: Props) {
                     >
                       {viaje.estado_viaje ? "Activo" : "Inactivo"}
                     </span>
-                  </TableCell>
-                  <TableCell className="text-center">
-                    <Button
-                      variant="secondary"
-                      onClick={() => navigate(`/viaje/${viaje.id_viaje}`)}
-                      className="text-sm"
-                    >
-                      Ver viaje
-                    </Button>
                   </TableCell>
                 </TableRow>
               ))}

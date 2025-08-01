@@ -105,6 +105,8 @@ export default function NuevoViaje() {
 
               if (response.status === 201) {
                 navigate("/menu-principal")
+              } else if (response.status === 409 && response.msg) {
+                alert(`${response.msg}`)
               } else {
                 alert("Ocurrió un error al registrar el viaje.")
                 console.error(response)
@@ -115,9 +117,14 @@ export default function NuevoViaje() {
 
               if (customError.status === 400 && customError.msg) {
                 alert(`Errores de validación:\n${customError.msg}`)
+              }
+              if (customError.status === 409 && customError.msg) {
+                alert(`Error de duplicado:\n${customError.msg}`)
               } else {
                 alert("Error de red o del servidor.")
+                console.error(error)
               }
+              alert(`Error lanzado:\n${customError.msg}`)
             }
           }
           }
