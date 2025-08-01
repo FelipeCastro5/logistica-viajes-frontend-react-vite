@@ -12,7 +12,11 @@ import { Card, CardContent } from "@/components/ui/card"
 import { useViajesTable } from "@/hooks/tables/useViajesTable"
 import { ScrollArea } from "@/components/ui/scroll-area"
 
-export default function TablaViajes() {
+type Props = {
+  idUsuario: number
+}
+
+export default function TablaViajes({ idUsuario }: Props) {
   const navigate = useNavigate()
   const {
     viajes,
@@ -20,7 +24,7 @@ export default function TablaViajes() {
     page,
     totalPages,
     setPage,
-  } = useViajesTable(10)
+  } = useViajesTable(idUsuario)
 
   return (
     <Card>

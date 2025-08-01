@@ -1,3 +1,6 @@
+"use client"
+
+import { useEffect, useState } from "react"
 import {
   Table,
   TableBody,
@@ -8,8 +11,42 @@ import {
 } from "@/components/ui/table"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
+import { getConductoresByFilter } from "@/services/adapters/usuario.adapter"
+
+interface Conductor {
+  id_usuario: number
+  nombre_documento: string | null
+  abreviatura: string | null
+  num_doc: string
+  p_nombre: string
+  s_nombre: string
+  p_apellido: string
+  s_apellido: string
+  telefono: string
+  correo: string
+  estado_usuario: boolean
+  nombre_rol: string
+}
 
 export default function TablaConductores() {
+  const [conductores, setConductores] = useState<Conductor[]>([])
+  const [loading, setLoading] = useState(true)
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await getConductoresByFilter("", 1, 10)
+        setConductores(response.data.logs)
+      } catch (error) {
+        console.error("Error al cargar conductores", error)
+      } finally {
+        setLoading(false)
+      }
+    }
+
+    fetchData()
+  }, [])
+
   return (
     <Card>
       <CardContent className="p-4">
@@ -32,36 +69,46 @@ export default function TablaConductores() {
               </TableRow>
             </TableHeader>
             <TableBody>
-              {/* Filas de ejemplo estáticas */}
-              <TableRow>
-                <TableCell>CC</TableCell>
-                <TableCell>123456789</TableCell>
-                <TableCell>Juan Carlos</TableCell>
-                <TableCell>Pérez Rojas</TableCell>
-                <TableCell>3001234567</TableCell>
-                <TableCell>juan@example.com</TableCell>
-                <TableCell>
-                  <span className="text-green-600 font-medium text-sm">Activo</span>
-                </TableCell>
-                <TableCell className="text-center">
-                  <Button size="sm" variant="secondary">Ver</Button>
-                </TableCell>
-              </TableRow>
-
-              <TableRow>
-                <TableCell>TI</TableCell>
-                <TableCell>987654321</TableCell>
-                <TableCell>Luisa Fernanda</TableCell>
-                <TableCell>Martínez Díaz</TableCell>
-                <TableCell>3109876543</TableCell>
-                <TableCell>luisa@example.com</TableCell>
-                <TableCell>
-                  <span className="text-red-500 font-medium text-sm">Inactivo</span>
-                </TableCell>
-                <TableCell className="text-center">
-                  <Button size="sm" variant="secondary">Ver</Button>
-                </TableCell>
-              </TableRow>
+              {loading ? (
+                <TableRow>
+                  <TableCell colSpan={8} className="text-center py-4">
+                    Cargando conductores...
+                  </TableCell>
+                </TableRow>
+              ) : conductores.length === 0 ? (
+                <TableRow>
+                  <TableCell colSpan={8} className="text-center py-4">
+                    No se encontraron conductores.
+                  </TableCell>
+                </TableRow>
+              ) : (
+                conductores.map((c) => (
+                  <TableRow key={c.id_usuario}>
+                    <TableCell>{c.abreviatura || "N/A"}</TableCell>
+                    <TableCell>{c.num_doc}</TableCell>
+                    <TableCell>{`${c.p_nombre} ${c.s_nombre || ""}`}</TableCell>
+                    <TableCell>{`${c.p_apellido} ${c.s_apellido || ""}`}</TableCell>
+                    <TableCell>{c.telefono}</TableCell>
+                    <TableCell>{c.correo}</TableCell>
+                    <TableCell>
+                      <span
+                        className={
+                          c.estado_usuario
+                            ? "text-green-600 font-medium text-sm"
+                            : "text-red-500 font-medium text-sm"
+                        }
+                      >
+                        {c.estado_usuario ? "Activo" : "Inactivo"}
+                      </span>
+                    </TableCell>
+                    <TableCell className="text-center">
+                      <Button size="sm" variant="secondary">
+                        Ver
+                      </Button>
+                    </TableCell>
+                  </TableRow>
+                ))
+              )}
             </TableBody>
           </Table>
         </div>

@@ -1,25 +1,21 @@
 // src/hooks/useViajesTable.ts
 import { useEffect, useState } from "react"
 import { getPaginatedViajesByUsuario } from "@/services/adapters/viajes.adapter"
-import { useAuth } from "@/hooks/useAuth"
 
-export const useViajesTable = (itemsPerPage = 10) => {
-  const { user } = useAuth()
-  const id_usuario = user?.id_usuario
-
+export const useViajesTable = (idUsuario: number, itemsPerPage = 10) => {
   const [viajes, setViajes] = useState<any[]>([])
   const [errorMsg, setErrorMsg] = useState("")
   const [page, setPage] = useState(1)
   const [totalPages, setTotalPages] = useState(1)
 
   useEffect(() => {
-    if (!id_usuario) return
+    if (!idUsuario) return
 
     let isMounted = true
 
     const fetchViajes = async () => {
       try {
-        const res = await getPaginatedViajesByUsuario(id_usuario, page, itemsPerPage)
+        const res = await getPaginatedViajesByUsuario(idUsuario, page, itemsPerPage)
 
         if (isMounted) {
           if (res.status === 200) {
@@ -42,7 +38,7 @@ export const useViajesTable = (itemsPerPage = 10) => {
     return () => {
       isMounted = false
     }
-  }, [page, id_usuario, itemsPerPage])
+  }, [page, idUsuario, itemsPerPage])
 
   return {
     viajes,
