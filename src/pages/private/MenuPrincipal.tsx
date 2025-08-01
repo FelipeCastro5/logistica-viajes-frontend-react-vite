@@ -3,6 +3,7 @@
 import { useEffect } from "react"
 import { useLayoutTitle } from "../../context/LayoutTitleContext"
 import TablaViajes from "../../components/tables/TablaViajes"
+import TablaConductores from "@/components/tables/TablaConductores"
 // import GraficaGastosPorTipo from "../../components/graphics/GraficaGastosPorTipo"
 // import GraficaGastosPorViaje from "../../components/graphics/GraficaGastosPorViaje"
 // import GraficaIngresosVsGastos from "../../components/graphics/GraficaIngresosVsGastos"
@@ -18,6 +19,7 @@ export default function MenuPrincipal() {
   return (
     <div className="w-full max-w-3xl mx-auto px-4">
       <div>
+        <TablaConductores /><br/>
         <TablaViajes />
       </div>
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6 p-6">
