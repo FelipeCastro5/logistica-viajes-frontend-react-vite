@@ -23,17 +23,17 @@ interface UseDetallesViajeFormProps {
   id_viaje: number
   initialData?: Partial<ViajeData>
   modo?: DetallesFormMode
-  onChange?: (newData: ViajeData) => void
+  onChange?: (newData: Partial<ViajeData>) => void
 }
 
 export const useDetallesViajeForm = ({
   initialData = {},
   id_viaje,
   modo = "crear",
-  onChange, // ← AGREGAR AQUÍ TAMBIÉN
+  onChange,
 }: UseDetallesViajeFormProps) => {
   const { user } = useAuth()
-  const userId = user?.id_usuario ?? 0
+
   const [clientes, setClientes] = useState<ClienteAdaptado[]>([])
   const [lugares, setLugares] = useState<Lugar[]>([])
   const [noClientes, setNoClientes] = useState(false)
@@ -41,7 +41,7 @@ export const useDetallesViajeForm = ({
   const [clienteSeleccionado, setClienteSeleccionado] = useState<ClienteAdaptado | null>(null)
 
   const [form, setForm] = useState<ViajeData>({
-    fk_usuario: userId,
+    fk_usuario: initialData.fk_usuario ?? 0,
     fk_cliente: initialData.fk_cliente ?? 0,
     fk_origen: initialData.fk_origen ?? 0,
     fk_destino: initialData.fk_destino ?? 0,
@@ -55,8 +55,10 @@ export const useDetallesViajeForm = ({
   })
 
   const fetchClientes = async () => {
-    if (!user?.id_usuario) return
-    const res = await getClientesByUsuario(user.id_usuario)
+    const usuarioId = form.fk_usuario ?? user?.id_usuario
+    if (!usuarioId) return
+
+    const res = await getClientesByUsuario(usuarioId)
 
     if (res.status === 200) {
       const adaptados = res.data.map((cliente: any) => ({
@@ -85,10 +87,14 @@ export const useDetallesViajeForm = ({
   }
 
   useEffect(() => {
-    fetchClientes()
-    fetchLugares()
-  }, [user?.id_usuario])
+    if (form.fk_usuario && form.fk_usuario > 0) {
+      fetchClientes()
+    }
+  }, [form.fk_usuario])
 
+  useEffect(() => {
+    fetchLugares()
+  }, [])
 
   useEffect(() => {
     if (onChange) {
@@ -99,7 +105,7 @@ export const useDetallesViajeForm = ({
   useEffect(() => {
     if (modo === "editar" && initialData && Object.keys(initialData).length > 0) {
       setForm({
-        fk_usuario: userId,
+        fk_usuario: initialData.fk_usuario ?? 0,
         fk_cliente: initialData.fk_cliente ?? 0,
         fk_origen: initialData.fk_origen ?? 0,
         fk_destino: initialData.fk_destino ?? 0,
@@ -111,14 +117,15 @@ export const useDetallesViajeForm = ({
         fecha_salida: initialData.fecha_salida?.split("T")[0] ?? "",
         fecha_llegada: initialData.fecha_llegada?.split("T")[0] ?? "",
       })
-
-      if (initialData.fk_cliente && clientes.length > 0) {
-        const cliente = clientes.find(c => c.id_cliente === initialData.fk_cliente)
-        setClienteSeleccionado(cliente ?? null)
-      }
     }
-  }, [initialData, clientes, modo])
+  }, [initialData, modo])
 
+  useEffect(() => {
+    if (initialData.fk_cliente && clientes.length > 0) {
+      const cliente = clientes.find(c => c.id_cliente === initialData.fk_cliente)
+      setClienteSeleccionado(cliente ?? null)
+    }
+  }, [clientes, initialData.fk_cliente])
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target
@@ -136,7 +143,7 @@ export const useDetallesViajeForm = ({
   const getFormattedBody = () => {
     return {
       ...form,
-      fk_usuario: userId,
+      fk_usuario: user?.id_usuario ?? 0,
       fk_manifiesto: 456,
       estado_viaje: true,
       id_viaje,
@@ -145,7 +152,6 @@ export const useDetallesViajeForm = ({
 
   const resetForm = () => {
     setForm({
-      fk_usuario: userId,
       fk_cliente: 0,
       fk_origen: 0,
       fk_destino: 0,
@@ -159,6 +165,7 @@ export const useDetallesViajeForm = ({
     })
     setClienteSeleccionado(null)
   }
+
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
     console.log("Form submitted:", getFormattedBody())
@@ -185,4 +192,4 @@ export const useDetallesViajeForm = ({
     resetForm,
     modo,
   }
-}
+} 
