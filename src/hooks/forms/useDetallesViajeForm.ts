@@ -40,6 +40,9 @@ export const useDetallesViajeForm = ({
 }: UseDetallesViajeFormProps) => {
   const { user } = useAuth()
 
+  console.log("[HOOK INIT] modo:", modo)
+  console.log("[HOOK INIT] user:", user)
+  console.log("[HOOK INIT] initialData:", initialData)
   // ================================
   // Estado general del formulario
   // ================================
@@ -70,10 +73,17 @@ export const useDetallesViajeForm = ({
   // ======================================
 
   // Cargar clientes del usuario autenticado
-  const fetchClientes = async () => {
-    if (!user?.id_usuario) return
+  // Clientes para modo CREAR
+  const fetchClientesCrear = async () => {
+    console.log("[FETCH] fetchClientesCrear called")
+    if (!user?.id_usuario) {
+      console.warn("[FETCH] No user.id_usuario")
+      return
+    }
 
     const res = await getClientesByUsuario(user.id_usuario)
+    console.log("[FETCH] fetchClientesCrear result:", res)
+
     if (res.status === 200) {
       const adaptados = res.data.map((cliente: any) => ({
         id_cliente: cliente.id_cliente,
@@ -88,6 +98,36 @@ export const useDetallesViajeForm = ({
       setNoClientes(true)
     }
   }
+
+  // Clientes para modo EDITAR
+  const fetchClientesEditar = async () => {
+    console.log("[FETCH] fetchClientesEditar called")
+
+    const idUsuario = initialData.fk_usuario ?? 5
+    if (!idUsuario) {
+      console.warn("[FETCH] No fk_usuario disponible en modo editar")
+      return
+    }
+
+    const res = await getClientesByUsuario(idUsuario)
+    console.log("[FETCH] fetchClientesEditar result:", res)
+
+    if (res.status === 200) {
+      const adaptados = res.data.map((cliente: any) => ({
+        id_cliente: cliente.id_cliente,
+        nombre_cliente: cliente.nombre_cliente,
+        nit_cliente: cliente.nit,
+        telefono_cliente: cliente.telefono,
+      }))
+      setClientes(adaptados)
+      setNoClientes(false)
+    } else {
+      setClientes([])
+      setNoClientes(true)
+    }
+  }
+
+
 
   // Cargar todos los lugares disponibles
   const fetchLugares = async () => {
@@ -107,9 +147,23 @@ export const useDetallesViajeForm = ({
 
   // Cargar clientes y lugares al inicio (cuando hay usuario)
   useEffect(() => {
-    fetchClientes()
-    fetchLugares()
-  }, [user?.id_usuario])
+    const fetchData = async () => {
+      await fetchLugares()
+
+      if (modo === "editar") {
+        if (initialData.fk_usuario) {
+          await fetchClientesEditar()
+        }
+      } else {
+        await fetchClientesCrear()
+      }
+    }
+
+    fetchData()
+  }, [user?.id_usuario, modo, initialData.fk_usuario]) // 👈 ojo: se depende de initialData.fk_usuario
+
+
+
 
   // Notificar cambios en el formulario (a componente padre)
   useEffect(() => {
@@ -123,8 +177,11 @@ export const useDetallesViajeForm = ({
   // ==================================
   useEffect(() => {
     if (modo === "editar" && initialData && Object.keys(initialData).length > 0) {
+      console.log("[FORM INIT] setForm from initialData:", initialData)
+
       // Rellenar datos iniciales del formulario
       setForm({
+        fk_usuario: initialData.fk_usuario ?? 0,
         fk_cliente: initialData.fk_cliente ?? 0,
         fk_origen: initialData.fk_origen ?? 0,
         fk_destino: initialData.fk_destino ?? 0,
@@ -136,6 +193,7 @@ export const useDetallesViajeForm = ({
         fecha_salida: initialData.fecha_salida?.split("T")[0] ?? "",
         fecha_llegada: initialData.fecha_llegada?.split("T")[0] ?? "",
       })
+
 
       // Seleccionar cliente correspondiente
       if (initialData.fk_cliente && clientes.length > 0) {
@@ -162,8 +220,13 @@ export const useDetallesViajeForm = ({
 
   // Usado después de crear un nuevo cliente para actualizar la lista
   const handleClienteCreado = async () => {
-    await fetchClientes()
+    if (modo === "editar") {
+      await fetchClientesEditar()
+    } else {
+      await fetchClientesCrear()
+    }
   }
+
 
   // =============================
   // FUNCIONES AUXILIARES
@@ -171,13 +234,16 @@ export const useDetallesViajeForm = ({
 
   // Prepara los datos listos para enviar al backend
   const getFormattedBody = () => {
-    return {
+    const body = {
       ...form,
-      fk_usuario: user?.id_usuario ?? 0,
-      fk_manifiesto: 456, // ← HARDCODED, considerar mover a constante
+      fk_usuario: modo === "editar" ? form.fk_usuario ?? 0 : user?.id_usuario ?? 0, // ⚠️ Aquí aún se pisa form.fk_usuario, lo veremos en logs
+      fk_manifiesto: 456,
       estado_viaje: true,
       id_viaje,
     }
+
+    console.log("[BODY] getFormattedBody result:", body)
+    return body
   }
 
   // Resetear campos del formulario (solo aplica a modo "crear")

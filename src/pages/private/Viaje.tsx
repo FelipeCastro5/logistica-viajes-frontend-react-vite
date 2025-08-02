@@ -131,6 +131,7 @@ export default function Viaje() {
             <DetallesViajeForm
               id_viaje={id_viaje}
               initialData={detallesViaje || undefined}
+              modo="editar"
               onChange={setViajeEditado}
             />
           </div>
