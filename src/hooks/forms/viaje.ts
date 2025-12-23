@@ -1,5 +1,8 @@
 // src/types/viajes.ts
 export type ViajeData = {
+  id_viaje?: number
+  fk_manifiesto?: number
+  estado_viaje?: boolean
   fk_usuario?: number
   fk_cliente?: number
   fk_origen?: number

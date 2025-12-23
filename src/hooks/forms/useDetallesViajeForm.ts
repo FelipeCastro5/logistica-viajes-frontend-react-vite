@@ -56,6 +56,11 @@ export const useDetallesViajeForm = ({
   // Estado del formulario (crear/editar)
   // ================================
   const [form, setForm] = useState<ViajeData>({
+    id_viaje,
+    fk_usuario: initialData.fk_usuario ?? user?.id_usuario ?? 0,
+    fk_manifiesto: initialData.fk_manifiesto ?? 0,
+    estado_viaje: initialData.estado_viaje ?? true,
+
     fk_cliente: initialData.fk_cliente ?? 0,
     fk_origen: initialData.fk_origen ?? 0,
     fk_destino: initialData.fk_destino ?? 0,
@@ -181,7 +186,11 @@ export const useDetallesViajeForm = ({
 
       // Rellenar datos iniciales del formulario
       setForm({
+        id_viaje,
         fk_usuario: initialData.fk_usuario ?? 0,
+        fk_manifiesto: initialData.fk_manifiesto ?? 0,
+        estado_viaje: initialData.estado_viaje ?? true,
+
         fk_cliente: initialData.fk_cliente ?? 0,
         fk_origen: initialData.fk_origen ?? 0,
         fk_destino: initialData.fk_destino ?? 0,
