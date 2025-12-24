@@ -7,6 +7,7 @@ import { toast } from "sonner"
 import EliminarGastoModal from "../modals/EliminarGasto"
 import GastoModal from "../modals/GastoModal"
 import { formatNumber } from "@/hooks/utils/formatNumberCOP"
+import { useAuth } from "@/hooks/useAuth"
 
 interface Gasto {
   id_gastoxviaje: number
@@ -21,6 +22,9 @@ interface Props {
 }
 
 export default function TablaGastosViaje({ id_viaje }: Props) {
+  const { user } = useAuth()
+  const isContador = user?.nombre_rol === "Contador"
+
   const [gastos, setGastos] = useState<Gasto[]>([])
   const [total, setTotal] = useState(0)
 
@@ -56,7 +60,7 @@ export default function TablaGastosViaje({ id_viaje }: Props) {
               <TableHead>Nombre del Gasto</TableHead>
               <TableHead>Valor</TableHead>
               <TableHead>Detalles</TableHead>
-              <TableHead>Acciones</TableHead>
+              {!isContador && <TableHead>Acciones</TableHead>}
             </TableRow>
           </TableHeader>
           <TableBody>
@@ -66,21 +70,23 @@ export default function TablaGastosViaje({ id_viaje }: Props) {
                 <TableCell>{formatNumber(parseFloat(gasto.valor as string))}</TableCell>
 
                 <TableCell>{gasto.detalles}</TableCell>
-                <TableCell>
-                  <GastoModal
-                    viajeId={id_viaje}
-                    modo="editar"
-                    initialData={{
-                      id_gastoxviaje: gasto.id_gastoxviaje,
-                      fk_gasto: gasto.fk_gasto.toString(), // ⚠️ Esto depende de tu backend
-                      valor: gasto.valor.toString(),
-                      detalles: gasto.detalles,
-                    }}
-                    onGastoGuardado={fetchGastos}
-                  />
+                {!isContador && (
+                  <TableCell>
+                    <GastoModal
+                      viajeId={id_viaje}
+                      modo="editar"
+                      initialData={{
+                        id_gastoxviaje: gasto.id_gastoxviaje,
+                        fk_gasto: gasto.fk_gasto.toString(), // ⚠️ Esto depende de tu backend
+                        valor: gasto.valor.toString(),
+                        detalles: gasto.detalles,
+                      }}
+                      onGastoGuardado={fetchGastos}
+                    />
 
-                  <EliminarGastoModal viajeId={id_viaje} gastoId={gasto.id_gastoxviaje} onGastoEliminado={fetchGastos} />
-                </TableCell>
+                    <EliminarGastoModal viajeId={id_viaje} gastoId={gasto.id_gastoxviaje} onGastoEliminado={fetchGastos} />
+                  </TableCell>
+                )}
               </TableRow>
             ))}
           </TableBody>

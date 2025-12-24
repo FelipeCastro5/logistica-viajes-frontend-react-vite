@@ -4,6 +4,7 @@ import { Label } from "@/components/ui/label"
 //import { Button } from "@/components/ui/button"
 import { useManifiestoForm } from "@/hooks/forms/useManifiestoForm"
 import { formatNumber } from "@/hooks/utils/formatNumberCOP"
+import { useAuth } from "@/hooks/useAuth"
 
 type ManifiestoFormProps = {
   id_viaje?: number
@@ -14,25 +15,28 @@ type ManifiestoFormProps = {
 export default function ManifiestoForm({ initialData, onChange }: ManifiestoFormProps) {
   const { form, handleChange, handleSubmit } = useManifiestoForm(initialData, onChange)
 
+  const { user } = useAuth()
+  const isContador = user?.nombre_rol === "Contador"
+
   return (
     <form onSubmit={handleSubmit} className="grid gap-4 max-w-4xl mx-auto">
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         {/* Campos de entrada */}
         <div>
           <Label>Flete Total</Label>
-          <Input name="flete_total" value={form.flete_total} onChange={handleChange} type="number" step="0.01" />
+          <Input disabled={isContador} name="flete_total" value={form.flete_total} onChange={handleChange} type="number" step="0.01" />
           <div className="text-sm text-gray-500 mt-1">{formatNumber(form.flete_total)}</div>
         </div>
 
         <div>
           <Label>Anticipo</Label>
-          <Input name="anticipo" value={form.anticipo} onChange={handleChange} type="number" step="0.01" />
+          <Input disabled={isContador} name="anticipo" value={form.anticipo} onChange={handleChange} type="number" step="0.01" />
           <div className="text-sm text-gray-500 mt-1">{formatNumber(form.anticipo)}</div>
         </div>
 
         <div>
           <Label><br />% Retención Fuente</Label>
-          <Input name="porcentaje_retencion_fuente" value={form.porcentaje_retencion_fuente} onChange={handleChange} type="number" step="0.0001" />
+          <Input disabled={isContador} name="porcentaje_retencion_fuente" value={form.porcentaje_retencion_fuente} onChange={handleChange} type="number" step="0.0001" />
           <div className="text-sm text-gray-500 mt-1">
             {form.porcentaje_retencion_fuente.toFixed(4)}%
           </div>
@@ -42,7 +46,7 @@ export default function ManifiestoForm({ initialData, onChange }: ManifiestoForm
 
         <div>
           <Label><br />% ICA</Label>
-          <Input name="porcentaje_ica" value={form.porcentaje_ica} onChange={handleChange} type="number" step="0.0001" />
+          <Input disabled={isContador} name="porcentaje_ica" value={form.porcentaje_ica} onChange={handleChange} type="number" step="0.0001" />
           <div className="text-sm text-gray-500 mt-1">{form.porcentaje_ica.toFixed(4)}%</div>
         </div>
 
@@ -50,7 +54,7 @@ export default function ManifiestoForm({ initialData, onChange }: ManifiestoForm
 
         <div>
           <Label><br />% Conductor</Label>
-          <Input name="porcentaje_conductor" value={form.porcentaje_conductor} onChange={handleChange} type="number" step="0.0001" />
+          <Input disabled={isContador} name="porcentaje_conductor" value={form.porcentaje_conductor} onChange={handleChange} type="number" step="0.0001" />
           <div className="text-sm text-gray-500 mt-1">{form.porcentaje_conductor.toFixed(4)}%</div>
         </div>
 

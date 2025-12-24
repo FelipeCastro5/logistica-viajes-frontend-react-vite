@@ -7,6 +7,7 @@ import { useGastoForm } from "@/hooks/forms/useGastoForm"
 import { createGastoPorViaje, updateGastoPorViaje } from "@/services/adapters/gastoxviaje.adapter"
 import { toast } from "sonner"
 import { updateTotalGastosByFkViaje } from "@/services/adapters/manifiestos.adapter"
+import { useAuth } from "@/hooks/useAuth"
 
 type Modo = "crear" | "editar"
 
@@ -25,6 +26,14 @@ export default function GastoModal({
   initialData,
   onGastoGuardado,
 }: Props) {
+
+  const { user } = useAuth()
+  const isContador = user?.nombre_rol === "Contador"
+  // ⛔ El contador no puede crear ni editar gastos
+  if (isContador) {
+    return null
+  }
+
   const [open, setOpen] = useState(false)
   const gastoHook = useGastoForm({ viajeId, initialData, modo })
   const [loading, setLoading] = useState(false)

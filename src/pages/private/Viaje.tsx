@@ -12,6 +12,7 @@ import { getViajeById, updateViaje } from "@/services/adapters/viajes.adapter"
 import { getManifiestoById, updateManifiesto } from "@/services/adapters/manifiestos.adapter"
 
 import { toast } from "sonner"
+import { useAuth } from "@/hooks/useAuth"
 
 export default function Viaje() {
   const { setTitle } = useLayoutTitle()
@@ -27,6 +28,9 @@ export default function Viaje() {
 
   const [viajeEditado, setViajeEditado] = useState<any>(null)
   const [manifiestoEditado, setManifiestoEditado] = useState<any>(null)
+
+  const { user } = useAuth()
+  const isContador = user?.nombre_rol === "Contador"
 
   useEffect(() => {
     setTitle("DETALLES DEL VIAJE")
@@ -159,7 +163,7 @@ export default function Viaje() {
           VOLVER
         </Button>
 
-        {viajeEditado && (
+        {viajeEditado && !isContador && (
           <Button
             onClick={handleGuardar}
             className="bg-green-600 hover:bg-green-700 text-white mt-4"

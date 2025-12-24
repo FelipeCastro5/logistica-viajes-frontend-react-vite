@@ -2,6 +2,8 @@
 import { Input } from "@/components/ui/input"
 import { Textarea } from "@/components/ui/textarea"
 import { Label } from "@/components/ui/label"
+import { useAuth } from "@/hooks/useAuth"
+
 import {
   Select,
   SelectTrigger,
@@ -39,6 +41,9 @@ export default function DetallesViajeForm({ id_viaje, initialData, modo = "crear
     handleClienteCreado,
   } = useDetallesViajeForm({ id_viaje: id_viaje ?? 0, initialData, modo, onChange })
 
+  const { user } = useAuth()
+  const isContador = user?.nombre_rol === "Contador"
+
   useEffect(() => {
     if (initialData) {
       const parsedData = {
@@ -52,7 +57,7 @@ export default function DetallesViajeForm({ id_viaje, initialData, modo = "crear
       const cliente = clientes.find((c) => c.id_cliente === initialData.fk_cliente)
       setClienteSeleccionado(cliente ?? null)
 
-      if (onChange) {
+      if (onChange && !isContador) {
         onChange(parsedData as ViajeData)
       }
     }
@@ -65,6 +70,7 @@ export default function DetallesViajeForm({ id_viaje, initialData, modo = "crear
         <div>
           <Label htmlFor="fk_cliente">Cliente</Label>
           <Select
+            disabled={isContador}
             onValueChange={(val) => {
               handleSelectChange("fk_cliente", val)
               const cliente = clientes.find((c) => c.id_cliente === parseInt(val))
@@ -92,10 +98,12 @@ export default function DetallesViajeForm({ id_viaje, initialData, modo = "crear
         </div>
 
         {/* Crear cliente */}
-        <div>
-          <Label>Crear nuevo cliente</Label>
-          <NuevoClienteModal onClienteCreado={handleClienteCreado} />
-        </div>
+        {!isContador && (
+          <div>
+            <Label>Crear nuevo cliente</Label>
+            <NuevoClienteModal onClienteCreado={handleClienteCreado} />
+          </div>
+        )}
 
         {/* Info cliente */}
         <div>
@@ -111,7 +119,8 @@ export default function DetallesViajeForm({ id_viaje, initialData, modo = "crear
         {/* Origen */}
         <div>
           <Label htmlFor="fk_origen">Origen</Label>
-          <Select onValueChange={(val) => handleSelectChange("fk_origen", val)} value={form.fk_origen?.toString() || ""}>
+          <Select
+            disabled={isContador} onValueChange={(val) => handleSelectChange("fk_origen", val)} value={form.fk_origen?.toString() || ""}>
             <SelectTrigger id="fk_origen">
               <SelectValue placeholder="Selecciona origen" />
             </SelectTrigger>
@@ -132,7 +141,8 @@ export default function DetallesViajeForm({ id_viaje, initialData, modo = "crear
         {/* Destino */}
         <div>
           <Label htmlFor="fk_destino">Destino</Label>
-          <Select onValueChange={(val) => handleSelectChange("fk_destino", val)} value={form.fk_destino?.toString() || ""}>
+          <Select
+            disabled={isContador} onValueChange={(val) => handleSelectChange("fk_destino", val)} value={form.fk_destino?.toString() || ""}>
             <SelectTrigger id="fk_destino">
               <SelectValue placeholder="Selecciona destino" />
             </SelectTrigger>
@@ -152,38 +162,38 @@ export default function DetallesViajeForm({ id_viaje, initialData, modo = "crear
 
         <div>
           <Label htmlFor="codigo">Código de viaje</Label>
-          <Input name="codigo" value={form.codigo} onChange={handleChange} />
+          <Input readOnly={isContador} name="codigo" value={form.codigo} onChange={handleChange} />
         </div>
 
         <div>
           <Label htmlFor="producto">Nombre del Producto</Label>
-          <Input name="producto" value={form.producto} onChange={handleChange} />
+          <Input readOnly={isContador} name="producto" value={form.producto} onChange={handleChange} />
         </div>
 
         <div>
           <Label htmlFor="detalle_producto">Detalle del producto</Label>
-          <Input name="detalle_producto" value={form.detalle_producto} onChange={handleChange} />
+          <Input readOnly={isContador} name="detalle_producto" value={form.detalle_producto} onChange={handleChange} />
         </div>
 
         <div>
           <Label htmlFor="direccion_llegada">Dirección de llegada</Label>
-          <Input name="direccion_llegada" value={form.direccion_llegada} onChange={handleChange} />
+          <Input readOnly={isContador} name="direccion_llegada" value={form.direccion_llegada} onChange={handleChange} />
         </div>
 
         <div>
           <Label htmlFor="fecha_salida">Fecha de salida</Label>
-          <Input type="date" name="fecha_salida" value={form.fecha_salida} onChange={handleChange} />
+          <Input readOnly={isContador} type="date" name="fecha_salida" value={form.fecha_salida} onChange={handleChange} />
         </div>
 
         <div>
           <Label htmlFor="fecha_llegada">Fecha de llegada</Label>
-          <Input type="date" name="fecha_llegada" value={form.fecha_llegada} onChange={handleChange} />
+          <Input readOnly={isContador} type="date" name="fecha_llegada" value={form.fecha_llegada} onChange={handleChange} />
         </div>
       </div>
 
       <div>
         <Label htmlFor="observaciones">Observaciones</Label>
-        <Textarea
+        <Textarea readOnly={isContador}
           name="observaciones"
           value={form.observaciones}
           onChange={handleChange}
