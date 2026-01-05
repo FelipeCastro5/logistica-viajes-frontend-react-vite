@@ -5,6 +5,7 @@ import { RequestHttp } from "../http/HttpRequest"
 
 export interface Manifiesto {
   id_manifiesto?: number
+  fk_vehiculo: number  
   fk_usuario: number
   flete_total: number
   porcentaje_retencion_fuente: number

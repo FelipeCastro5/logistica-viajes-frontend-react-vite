@@ -3,6 +3,7 @@ import { useEffect, useRef, useState } from "react"
 // 1. Define el tipo del formulario
 type ManifiestoFormData = {
   id_manifiesto: number
+  fk_vehiculo: number
   flete_total: number
   porcentaje_retencion_fuente: number
   porcentaje_ica: number
@@ -22,6 +23,7 @@ type ManifiestoFormData = {
 export function useManifiestoForm(initialData?: any, onChange?: (data: any) => void) {
   const [form, setForm] = useState<ManifiestoFormData>({
     id_manifiesto: 1,
+    fk_vehiculo: 0,
     flete_total: 0,
     porcentaje_retencion_fuente: 0,
     porcentaje_ica: 0,
@@ -114,9 +116,17 @@ export function useManifiestoForm(initialData?: any, onChange?: (data: any) => v
     console.log("Formulario enviado:", form)
   }
 
+  const setField = (name: keyof ManifiestoFormData, value: number) => {
+    setForm(prev => ({
+      ...prev,
+      [name]: value,
+    }))
+  }
+
   return {
     form,
     handleChange,
     handleSubmit,
+    setField,
   }
 }

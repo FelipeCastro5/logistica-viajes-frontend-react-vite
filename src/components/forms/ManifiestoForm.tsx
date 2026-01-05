@@ -5,6 +5,13 @@ import { Label } from "@/components/ui/label"
 import { useManifiestoForm } from "@/hooks/forms/useManifiestoForm"
 import { formatNumber } from "@/hooks/utils/formatNumberCOP"
 import { useAuth } from "@/hooks/useAuth"
+import {
+  Select,
+  SelectTrigger,
+  SelectValue,
+  SelectContent,
+  SelectItem,
+} from "@/components/ui/select"
 
 type ManifiestoFormProps = {
   id_viaje?: number
@@ -13,7 +20,7 @@ type ManifiestoFormProps = {
 }
 
 export default function ManifiestoForm({ initialData, onChange }: ManifiestoFormProps) {
-  const { form, handleChange, handleSubmit } = useManifiestoForm(initialData, onChange)
+  const { form, handleChange, handleSubmit, setField } = useManifiestoForm(initialData, onChange)
 
   const { user } = useAuth()
   const isContador = user?.nombre_rol === "Contador"
@@ -22,6 +29,26 @@ export default function ManifiestoForm({ initialData, onChange }: ManifiestoForm
     <form onSubmit={handleSubmit} className="grid gap-4 max-w-4xl mx-auto">
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         {/* Campos de entrada */}
+        <div>
+          <Label>Vehículo</Label>
+          <Select
+            disabled={isContador}
+            value={form.fk_vehiculo ? String(form.fk_vehiculo) : ""}
+            onValueChange={(value) => setField("fk_vehiculo", Number(value))}
+          >
+            <SelectTrigger>
+              <SelectValue placeholder="Selecciona un vehículo" />
+            </SelectTrigger>
+
+            <SelectContent>
+              {/* 🔥 QUEMADOS POR AHORA */}
+              <SelectItem value="3">ABC123 - Camión</SelectItem>
+              <SelectItem value="5">XYZ789 - Tractomula</SelectItem>
+              <SelectItem value="4">JKL456 - Remolque</SelectItem>
+            </SelectContent>
+          </Select>
+        </div>
+
         <div>
           <Label>Flete Total</Label>
           <Input disabled={isContador} name="flete_total" value={form.flete_total} onChange={handleChange} type="number" step="0.01" />
