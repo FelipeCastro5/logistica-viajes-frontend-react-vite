@@ -3,6 +3,8 @@ import { useLayoutTitle } from "../../context/LayoutTitleContext"
 import TablaViajes from "../../components/tables/TablaViajes"
 import TablaConductores from "@/components/tables/TablaConductores"
 import { useAuth } from "@/hooks/useAuth"
+import { Button } from "@/components/ui/button"
+import { Link } from "react-router-dom"
 
 export default function MenuPrincipal() {
   const { setTitle } = useLayoutTitle()
@@ -33,6 +35,9 @@ export default function MenuPrincipal() {
       )}
 
       {userIdToUse && <TablaViajes idUsuario={userIdToUse} />}
+      <Link to="/vehiculos">
+        <Button className="mb-4">Gestionar vehículos</Button>
+      </Link>
     </div>
   )
 }

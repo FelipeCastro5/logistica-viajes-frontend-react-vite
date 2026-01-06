@@ -14,6 +14,7 @@ import RecuperarPassword from "./pages/public/RecuperarPassword"
 import Viaje from "./pages/private/Viaje"
 import TablaDetalleViaje from "./components/tables/TablaDetalleViaje"
 import { Toaster } from "sonner"
+import Vehiculos from "./pages/private/Vehiculos"
 
 export default function App() {
   return (
@@ -34,6 +35,7 @@ export default function App() {
           <Route path="/info-cliente" element={<ClienteForm />} />
           <Route path="/manifiesto" element={<ManifiestoForm />} />
           <Route path="/tabla-viaje" element={<TablaDetalleViaje />} />
+          <Route path="/vehiculos" element={<Vehiculos />} />
 
           <Route path="/chat-bot" element={<ChatListPage />} />
           <Route path="/chat-bot/nuevo" element={<ChatPage />} />
