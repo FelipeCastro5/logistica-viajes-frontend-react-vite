@@ -2,6 +2,7 @@
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 //import { Button } from "@/components/ui/button"
+import { useEffect, useState } from "react"
 import { useManifiestoForm } from "@/hooks/forms/useManifiestoForm"
 import { formatNumber } from "@/hooks/utils/formatNumberCOP"
 import { useAuth } from "@/hooks/useAuth"
@@ -12,6 +13,7 @@ import {
   SelectContent,
   SelectItem,
 } from "@/components/ui/select"
+import { getVehiculosByUsuario } from "@/services/adapters/vehiculo.adapter"
 
 type ManifiestoFormProps = {
   id_viaje?: number
@@ -24,6 +26,20 @@ export default function ManifiestoForm({ initialData, onChange }: ManifiestoForm
 
   const { user } = useAuth()
   const isContador = user?.nombre_rol === "Contador"
+  const [vehiculos, setVehiculos] = useState<any[]>([])
+  useEffect(() => {
+    if (!user?.id_usuario) return
+
+    const fetchVehiculos = async () => {
+      const res = await getVehiculosByUsuario(user.id_usuario)
+
+      if (res.status == 200) {
+        setVehiculos(res.data)
+      }
+    }
+
+    fetchVehiculos()
+  }, [user?.id_usuario])
 
   return (
     <form onSubmit={handleSubmit} className="grid gap-4 max-w-4xl mx-auto">
@@ -41,11 +57,24 @@ export default function ManifiestoForm({ initialData, onChange }: ManifiestoForm
             </SelectTrigger>
 
             <SelectContent>
-              {/* 🔥 QUEMADOS POR AHORA */}
-              <SelectItem value="1">ABC123 - Camión</SelectItem>
-              <SelectItem value="5">XYZ789 - Tractomula</SelectItem>
-              <SelectItem value="4">JKL456 - Remolque</SelectItem>
+              {vehiculos.length === 0 && (
+                <SelectItem value="__empty" disabled>
+                  No hay vehículos registrados
+                </SelectItem>
+              )}
+
+              {vehiculos.map((v) => (
+                <SelectItem
+                  key={v.id_vehiculo}
+                  value={String(v.id_vehiculo)}
+                >
+                  {v.placa} - {v.tipo_vehiculo ?? v.marca ?? "Vehículo"}
+                </SelectItem>
+              ))}
+
             </SelectContent>
+
+
           </Select>
         </div>
 

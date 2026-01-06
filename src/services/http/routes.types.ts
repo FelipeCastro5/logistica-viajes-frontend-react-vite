@@ -82,5 +82,12 @@ export const routes = {
     mixto: "/ia/mixto",
     inteligente: "/ia/inteligente"
   },
-
+  vehiculos: {
+    getAll: "/vehiculos/getAll",
+    getByUsuario: "/vehiculos/getByUsuario",
+    getById: "/vehiculos/getById",
+    create: "/vehiculos/create",
+    update: "/vehiculos/update",
+    delete: "/vehiculos/delete"
+  },
 } as const

@@ -1,3 +1,4 @@
+//src/service/http/ApiRemote.ts
 import axios from "axios";
 import type { AxiosInstance, AxiosRequestConfig } from "axios";
 import { BASE_URL } from "./config";
