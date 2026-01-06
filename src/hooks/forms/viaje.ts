@@ -14,4 +14,17 @@ export type ViajeData = {
   fecha_salida?: string
   fecha_llegada?: string
   observaciones?: string
+  // 🆕 NUEVOS CAMPOS
+  latitud_origen?: number
+  longitud_origen?: number
+  latitud_destino?: number
+  longitud_destino?: number
+
+  hora_salida?: string   // HH:mm
+  hora_llegada?: string  // HH:mm
+
+  horas_pactadas_cargue?: number
+  horas_pactadas_descargue?: number
+
+  exoneracion_legal?: string
 }

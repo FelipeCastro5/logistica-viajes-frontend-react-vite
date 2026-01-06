@@ -42,7 +42,7 @@ export default function ManifiestoForm({ initialData, onChange }: ManifiestoForm
 
             <SelectContent>
               {/* 🔥 QUEMADOS POR AHORA */}
-              <SelectItem value="3">ABC123 - Camión</SelectItem>
+              <SelectItem value="1">ABC123 - Camión</SelectItem>
               <SelectItem value="5">XYZ789 - Tractomula</SelectItem>
               <SelectItem value="4">JKL456 - Remolque</SelectItem>
             </SelectContent>

@@ -138,6 +138,42 @@ export default function DetallesViajeForm({ id_viaje, initialData, modo = "crear
           </Select>
         </div>
 
+        <div></div>
+        
+        <div>
+          <Label htmlFor="latitud_origen">Latitud origen</Label>
+          <Input
+            type="number"
+            step="0.000001"
+            name="latitud_origen"
+            readOnly={isContador}
+            value={form.latitud_origen}
+            onChange={(e) =>
+              setForm((prev) => ({
+                ...prev,
+                latitud_origen: Number(e.target.value),
+              }))
+            }
+          />
+        </div>
+
+        <div>
+          <Label htmlFor="longitud_origen">Longitud origen</Label>
+          <Input
+            type="number"
+            step="0.000001"
+            name="longitud_origen"
+            readOnly={isContador}
+            value={form.longitud_origen}
+            onChange={(e) =>
+              setForm((prev) => ({
+                ...prev,
+                longitud_origen: Number(e.target.value),
+              }))
+            }
+          />
+        </div>
+
         {/* Destino */}
         <div>
           <Label htmlFor="fk_destino">Destino</Label>
@@ -161,9 +197,50 @@ export default function DetallesViajeForm({ id_viaje, initialData, modo = "crear
         </div>
 
         <div>
+          <Label htmlFor="direccion_llegada">Dirección de llegada</Label>
+          <Input readOnly={isContador} name="direccion_llegada" value={form.direccion_llegada} onChange={handleChange} />
+        </div>
+
+        <div>
+          <Label htmlFor="latitud_destino">Latitud destino</Label>
+          <Input
+            type="number"
+            step="0.000001"
+            name="latitud_destino"
+            readOnly={isContador}
+            value={form.latitud_destino}
+            onChange={(e) =>
+              setForm((prev) => ({
+                ...prev,
+                latitud_destino: Number(e.target.value),
+              }))
+            }
+          />
+        </div>
+
+        <div>
+          <Label htmlFor="longitud_destino">Longitud destino</Label>
+          <Input
+            type="number"
+            step="0.000001"
+            name="longitud_destino"
+            readOnly={isContador}
+            value={form.longitud_destino}
+            onChange={(e) =>
+              setForm((prev) => ({
+                ...prev,
+                longitud_destino: Number(e.target.value),
+              }))
+            }
+          />
+        </div>
+
+        <div>
           <Label htmlFor="codigo">Código de viaje</Label>
           <Input readOnly={isContador} name="codigo" value={form.codigo} onChange={handleChange} />
         </div>
+
+        <div></div>
 
         <div>
           <Label htmlFor="producto">Nombre del Producto</Label>
@@ -176,19 +253,81 @@ export default function DetallesViajeForm({ id_viaje, initialData, modo = "crear
         </div>
 
         <div>
-          <Label htmlFor="direccion_llegada">Dirección de llegada</Label>
-          <Input readOnly={isContador} name="direccion_llegada" value={form.direccion_llegada} onChange={handleChange} />
+          <Label htmlFor="fecha_salida">Fecha de salida</Label>
+          <Input readOnly={isContador} type="date" name="fecha_salida" value={form.fecha_salida} onChange={handleChange} />
         </div>
 
         <div>
-          <Label htmlFor="fecha_salida">Fecha de salida</Label>
-          <Input readOnly={isContador} type="date" name="fecha_salida" value={form.fecha_salida} onChange={handleChange} />
+          <Label htmlFor="hora_salida">Hora de salida</Label>
+          <Input
+            type="time"
+            name="hora_salida"
+            readOnly={isContador}
+            value={form.hora_salida}
+            onChange={handleChange}
+          />
         </div>
 
         <div>
           <Label htmlFor="fecha_llegada">Fecha de llegada</Label>
           <Input readOnly={isContador} type="date" name="fecha_llegada" value={form.fecha_llegada} onChange={handleChange} />
         </div>
+
+        <div>
+          <Label htmlFor="hora_llegada">Hora de llegada</Label>
+          <Input
+            type="time"
+            name="hora_llegada"
+            readOnly={isContador}
+            value={form.hora_llegada}
+            onChange={handleChange}
+          />
+        </div>
+        <div>
+          <Label htmlFor="horas_pactadas_cargue">Horas pactadas de cargue</Label>
+          <Input
+            type="number"
+            step="0.01"
+            name="horas_pactadas_cargue"
+            readOnly={isContador}
+            value={form.horas_pactadas_cargue}
+            onChange={(e) =>
+              setForm((prev) => ({
+                ...prev,
+                horas_pactadas_cargue: Number(e.target.value),
+              }))
+            }
+          />
+        </div>
+
+        <div>
+          <Label htmlFor="horas_pactadas_descargue">Horas pactadas de descargue</Label>
+          <Input
+            type="number"
+            step="0.01"
+            name="horas_pactadas_descargue"
+            readOnly={isContador}
+            value={form.horas_pactadas_descargue}
+            onChange={(e) =>
+              setForm((prev) => ({
+                ...prev,
+                horas_pactadas_descargue: Number(e.target.value),
+              }))
+            }
+          />
+        </div>
+        <div>
+          <Label htmlFor="exoneracion_legal">Exoneración legal</Label>
+          <Textarea
+            name="exoneracion_legal"
+            readOnly={isContador}
+            value={form.exoneracion_legal}
+            onChange={handleChange}
+            placeholder="Describe la exoneración legal (si aplica)"
+            className="min-h-[80px]"
+          />
+        </div>
+
       </div>
 
       <div>

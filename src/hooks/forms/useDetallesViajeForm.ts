@@ -71,6 +71,20 @@ export const useDetallesViajeForm = ({
     direccion_llegada: initialData.direccion_llegada ?? "",
     fecha_salida: initialData.fecha_salida?.split("T")[0] ?? "",
     fecha_llegada: initialData.fecha_llegada?.split("T")[0] ?? "",
+
+    // 🆕 NUEVOS CAMPOS
+    latitud_origen: initialData.latitud_origen ?? 0,
+    longitud_origen: initialData.longitud_origen ?? 0,
+    latitud_destino: initialData.latitud_destino ?? 0,
+    longitud_destino: initialData.longitud_destino ?? 0,
+
+    hora_salida: initialData.hora_salida ?? "", // ahora tipo: "2025-07-08T08:10"
+    hora_llegada: initialData.hora_llegada ?? "",
+
+    horas_pactadas_cargue: initialData.horas_pactadas_cargue ?? 0,
+    horas_pactadas_descargue: initialData.horas_pactadas_descargue ?? 0,
+
+    exoneracion_legal: initialData.exoneracion_legal ?? "",
   })
 
   // ======================================
@@ -173,7 +187,7 @@ export const useDetallesViajeForm = ({
   // Notificar cambios en el formulario (a componente padre)
   useEffect(() => {
     if (onChange) {
-      onChange(form)
+      onChange(getFormattedBody())
     }
   }, [form])
 
@@ -201,6 +215,23 @@ export const useDetallesViajeForm = ({
         direccion_llegada: initialData.direccion_llegada ?? "",
         fecha_salida: initialData.fecha_salida?.split("T")[0] ?? "",
         fecha_llegada: initialData.fecha_llegada?.split("T")[0] ?? "",
+        // 🆕 NUEVOS CAMPOS
+        latitud_origen: initialData.latitud_origen ?? 0,
+        longitud_origen: initialData.longitud_origen ?? 0,
+        latitud_destino: initialData.latitud_destino ?? 0,
+        longitud_destino: initialData.longitud_destino ?? 0,
+
+        hora_salida: initialData.hora_salida
+          ? initialData.hora_salida.slice(0, 5)
+          : "",
+        hora_llegada: initialData.hora_llegada
+          ? initialData.hora_llegada.slice(0, 5)
+          : "",
+
+        horas_pactadas_cargue: initialData.horas_pactadas_cargue ?? 0,
+        horas_pactadas_descargue: initialData.horas_pactadas_descargue ?? 0,
+
+        exoneracion_legal: initialData.exoneracion_legal ?? "",
       })
 
 
@@ -242,18 +273,57 @@ export const useDetallesViajeForm = ({
   // =============================
 
   // Prepara los datos listos para enviar al backend
+  const buildISOFromDateAndTime = (fecha?: string, hora?: string) => {
+    if (!fecha || !hora) return undefined
+
+    // hora = "08:10"
+    const [hours, minutes] = hora.split(":")
+
+    const date = new Date(fecha)
+    date.setHours(Number(hours), Number(minutes), 0, 0)
+
+    return date.toISOString()
+  }
+
+
   const getFormattedBody = () => {
+
     const body = {
-      ...form,
-      fk_usuario: modo === "editar" ? form.fk_usuario ?? 0 : user?.id_usuario ?? 0, // ⚠️ Aquí aún se pisa form.fk_usuario, lo veremos en logs
-      fk_manifiesto: 456,
-      estado_viaje: true,
       id_viaje,
+      fk_usuario: modo === "editar" ? Number(form.fk_usuario) : Number(user?.id_usuario),
+      fk_manifiesto: Number(form.fk_manifiesto ?? 0),
+      estado_viaje: true,
+      fk_cliente: Number(form.fk_cliente),
+      fk_origen: Number(form.fk_origen),
+      fk_destino: Number(form.fk_destino),
+      codigo: form.codigo,
+      observaciones: form.observaciones,
+      producto: form.producto,
+      detalle_producto: form.detalle_producto,
+      direccion_llegada: form.direccion_llegada,
+      fecha_salida: form.fecha_salida || undefined,
+      fecha_llegada: form.fecha_llegada || undefined,
+      latitud_origen: Number(form.latitud_origen),
+      longitud_origen: Number(form.longitud_origen),
+      latitud_destino: Number(form.latitud_destino),
+      longitud_destino: Number(form.longitud_destino),
+      horas_pactadas_cargue: Number(form.horas_pactadas_cargue),
+      horas_pactadas_descargue: Number(form.horas_pactadas_descargue),
+      exoneracion_legal: form.exoneracion_legal,
+      hora_salida: buildISOFromDateAndTime(
+        form.fecha_salida,
+        form.hora_salida
+      ),
+      hora_llegada: buildISOFromDateAndTime(
+        form.fecha_llegada,
+        form.hora_llegada
+      ),
     }
 
-    console.log("[BODY] getFormattedBody result:", body)
+    console.log("BODY REAL A ENVIAR:", body)
     return body
   }
+
 
   // Resetear campos del formulario (solo aplica a modo "crear")
   const resetForm = () => {
@@ -276,6 +346,8 @@ export const useDetallesViajeForm = ({
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
     console.log("Form submitted:", getFormattedBody())
+    const body = getFormattedBody()
+    console.log("FORM BODY FINAL:", body)
   }
 
   // =============================
