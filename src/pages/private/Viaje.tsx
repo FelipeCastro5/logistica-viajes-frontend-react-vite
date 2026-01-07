@@ -14,6 +14,7 @@ import { getManifiestoById, updateManifiesto } from "@/services/adapters/manifie
 import { toast } from "sonner"
 import { useAuth } from "@/hooks/useAuth"
 import RemesaForm from "@/components/forms/RemesaForm"
+import RemesasForm from "@/components/forms/RemesasForm"
 
 export default function Viaje() {
   const { setTitle } = useLayoutTitle()
@@ -132,6 +133,12 @@ export default function Viaje() {
         >
           Remesa
         </Button>
+        <Button
+          variant={componenteActivo === "Remesas" ? "default" : "outline"}
+          onClick={() => setComponenteActivo("Remesas")}
+        >
+          Remesas
+        </Button>
 
       </div>
 
@@ -159,6 +166,11 @@ export default function Viaje() {
           <div className={componenteActivo === "GastosViaje" ? "block" : "hidden"}>
             <TablaGastosViaje id_viaje={id_viaje} />
           </div>
+
+          <div className={componenteActivo === "Remesas" ? "block" : "hidden"}>
+            <RemesasForm />
+          </div>
+
 
           <div className={componenteActivo === "Remesa" ? "block" : "hidden"}>
             <RemesaForm />
