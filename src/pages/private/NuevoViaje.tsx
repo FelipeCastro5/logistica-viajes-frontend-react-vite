@@ -17,6 +17,7 @@ export default function NuevoViaje() {
 
   const [nuevoViajeBody, setNuevoViajeBody] = useState<Partial<ViajeData> | null>(null)
   const [manifiestoBody, setManifiestoBody] = useState<any>(null)
+  const [remesaBody, setRemesaBody] = useState<any>(null)
 
   const { setTitle } = useLayoutTitle()
   const [componenteActivo, setComponenteActivo] = useState("DetallesViaje")
@@ -89,8 +90,11 @@ export default function NuevoViaje() {
           </div>
 
           <div className={componenteActivo === "Remesa" ? "block" : "hidden"}>
-            <RemesaForm />
+            <RemesaForm
+              onChange={(data) => setRemesaBody(data)}
+            />
           </div>
+
 
         </div>
 
@@ -102,7 +106,7 @@ export default function NuevoViaje() {
         </Button>
         <Button
           onClick={async () => {
-            if (!nuevoViajeBody || !manifiestoBody) {
+            if (!nuevoViajeBody || !manifiestoBody || !remesaBody) {
               alert("Por favor, completa ambos formularios antes de continuar.")
               return
             }
@@ -112,6 +116,8 @@ export default function NuevoViaje() {
               fk_usuario: id_usuario,
               ...nuevoViajeBody,
               ...manifiestoBody,
+              ...remesaBody,
+              tiene_mercancia_peligrosa: remesaBody.mercancia_peligrosa ?? false,
             }
 
             try {
