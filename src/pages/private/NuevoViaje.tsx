@@ -8,6 +8,7 @@ import { useNavigate } from "react-router-dom"
 import type { ViajeData } from "@/hooks/forms/viaje"
 import { createNewViaje } from "@/services/adapters/viajes.adapter"
 import { useAuth } from "@/hooks/useAuth"
+import RemesaForm from "@/components/forms/RemesaForm"
 
 export default function NuevoViaje() {
 
@@ -58,6 +59,15 @@ export default function NuevoViaje() {
         >
           Manifiesto
         </button>
+        <button
+          onClick={() => setComponenteActivo("Remesa")}
+          className={`px-4 py-2 rounded-md font-semibold ${componenteActivo === "Remesa"
+            ? "bg-blue-600 text-white"
+            : "bg-gray-200 text-gray-800 hover:bg-blue-900 hover:text-gray-200"
+            }`}
+        >
+          Remesa
+        </button>
       </div>
 
       {/* Render persistente */}
@@ -76,6 +86,10 @@ export default function NuevoViaje() {
             <ManifiestoForm
               onChange={(data) => setManifiestoBody(data)} // ← así capturas el body
             />
+          </div>
+
+          <div className={componenteActivo === "Remesa" ? "block" : "hidden"}>
+            <RemesaForm />
           </div>
 
         </div>
