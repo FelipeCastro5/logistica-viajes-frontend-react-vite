@@ -1,0 +1,36 @@
+// data/remesas.mock.ts
+
+export const REMESAS_MOCK = [
+  {
+    id: "1",
+    nombre: "REM-001 · Carga general",
+    numero_remesa: "REM-001",
+    numero_autorizacion: "AUT-123",
+    tipo_empaque: "Caja",
+    naturaleza_carga: "General",
+    codigo_armonizado: "100190",
+    cantidad: "120",
+    unidad_medida: "cajas",
+    peso_total: "2400",
+    mercancia_peligrosa: false,
+    observaciones: "Carga seca",
+  },
+  {
+    id: "2",
+    nombre: "REM-002 · Carga peligrosa",
+    numero_remesa: "REM-002",
+    numero_autorizacion: "AUT-999",
+    tipo_empaque: "Cisterna",
+    naturaleza_carga: "Peligrosa",
+    codigo_armonizado: "271019",
+    cantidad: "18",
+    unidad_medida: "ton",
+    peso_total: "18000",
+    mercancia_peligrosa: true,
+    codigo_un: "UN1203",
+    grupo_riesgo: "Clase 3",
+    caracteristica_peligrosidad: "Inflamable",
+    embalaje_envase: "Tanque certificado",
+    observaciones: "Gasolina",
+  },
+]
