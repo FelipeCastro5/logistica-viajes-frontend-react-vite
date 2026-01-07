@@ -14,6 +14,7 @@ import { getManifiestoById, updateManifiesto } from "@/services/adapters/manifie
 import { toast } from "sonner"
 import { useAuth } from "@/hooks/useAuth"
 import RemesaForm from "@/components/forms/RemesaForm"
+import { getRemesasByViaje } from "@/services/adapters/remesas.adapter"
 // import RemesasForm from "@/components/forms/RemesasForm"
 
 export default function Viaje() {
@@ -27,6 +28,7 @@ export default function Viaje() {
 
   const [detallesViaje, setDetallesViaje] = useState<any>(null)
   const [manifiesto, setManifiesto] = useState<any>(null)
+  const [remesa, setRemesa] = useState<any>(null)
 
   const [viajeEditado, setViajeEditado] = useState<any>(null)
   const [manifiestoEditado, setManifiestoEditado] = useState<any>(null)
@@ -46,12 +48,20 @@ export default function Viaje() {
     try {
       const detalles = await getViajeById(id)
       const manifiestoRes = await getManifiestoById(id)
+      const remesaRes = await getRemesasByViaje(id)
 
-      console.log("📦 Detalles del viaje:", detalles?.data)
-      console.log("📦 Manifiesto:", manifiestoRes?.data)
+      // console.log("📦 Detalles del viaje:", detalles?.data)
+      // console.log("📦 Manifiesto:", manifiestoRes?.data)
+      // console.log("📦 Remesa:", remesaRes?.data)
 
       setDetallesViaje(detalles?.data)
       setManifiesto(manifiestoRes?.data)
+      // ⚠️ si backend devuelve array
+      if (Array.isArray(remesaRes?.data)) {
+        setRemesa(remesaRes.data[0] ?? null)
+      } else {
+        setRemesa(remesaRes?.data ?? null)
+      }
 
     } catch (error) {
       console.error("Error al cargar datos del viaje:", error)
@@ -172,7 +182,8 @@ export default function Viaje() {
           </div> */}
 
           <div className={componenteActivo === "Remesa" ? "block" : "hidden"}>
-            <RemesaForm />
+            <RemesaForm
+              initialData={remesa} />
           </div>
 
         </div>

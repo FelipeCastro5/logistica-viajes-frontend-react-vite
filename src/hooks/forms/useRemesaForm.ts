@@ -1,4 +1,5 @@
 // hooks/forms/useRemesaForm.ts
+import { useEffect, useRef, useState } from "react"
 
 export type RemesaFormData = {
   numero_remesa: string
@@ -12,15 +13,11 @@ export type RemesaFormData = {
   mercancia_peligrosa: boolean
   observaciones_remesa: string
 
-  // mercancía peligrosa
   codigo_un: string
   grupo_riesgo: string
   caracteristica_peligrosidad: string
   embalaje_envase: string
 }
-
-// hooks/forms/useRemesaForm.ts
-import { useEffect, useRef, useState } from "react"
 
 export function useRemesaForm(
   initialData?: Partial<RemesaFormData>,
@@ -46,20 +43,34 @@ export function useRemesaForm(
 
   const initialized = useRef(false)
 
-  // Emitir siempre el body al padre
+  // Emitir siempre cambios
   useEffect(() => {
     onChange?.(form)
   }, [form])
 
-  // Cargar initialData una sola vez
+  // Cargar initialData UNA sola vez
   useEffect(() => {
     if (initialData && !initialized.current) {
       setForm(prev => ({
         ...prev,
-        ...initialData,
+
+        numero_remesa: initialData.numero_remesa ?? "",
+        numero_autorizacion: initialData.numero_autorizacion ?? "",
+        tipo_empaque: initialData.tipo_empaque ?? "",
+        naturaleza_carga: initialData.naturaleza_carga ?? "",
+        codigo_armonizado: initialData.codigo_armonizado ?? "",
+
         cantidad: Number(initialData.cantidad) || 0,
+        unidad_medida: initialData.unidad_medida ?? "",
         peso_total: Number(initialData.peso_total) || 0,
+
         mercancia_peligrosa: Boolean(initialData.mercancia_peligrosa),
+        observaciones_remesa: initialData.observaciones_remesa ?? "",
+
+        codigo_un: initialData.codigo_un ?? "",
+        grupo_riesgo: initialData.grupo_riesgo ?? "",
+        caracteristica_peligrosidad: initialData.caracteristica_peligrosidad ?? "",
+        embalaje_envase: initialData.embalaje_envase ?? "",
       }))
 
       initialized.current = true
