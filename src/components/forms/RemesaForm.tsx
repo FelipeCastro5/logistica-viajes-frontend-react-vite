@@ -17,7 +17,7 @@ type RemesaFormProps = {
     onChange?: (data: any) => void
 }
 
-export default function RemesaForm({ initialData, onChange }: RemesaFormProps) {
+export default function RemesaForm({ initialData }: RemesaFormProps) {
     const { user } = useAuth()
     const isContador = user?.nombre_rol === "Contador"
 
