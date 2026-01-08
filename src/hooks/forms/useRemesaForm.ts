@@ -1,6 +1,10 @@
 import { useEffect, useRef, useState } from "react"
 
 export type RemesaFormData = {
+  // 🔑 IDs (NO renderizados)
+  id_remesa?: number
+  fk_viaje?: number
+  // 🧾 Remesa
   numero_remesa: string
   numero_autorizacion: string
   tipo_empaque: string
@@ -11,7 +15,8 @@ export type RemesaFormData = {
   peso_total: number
   mercancia_peligrosa: boolean
   observaciones_remesa: string
-
+  // ☢️ Mercancía peligrosa
+  id_mercancia?: number
   codigo_un: string
   grupo_riesgo: string
   caracteristica_peligrosidad: string
@@ -23,6 +28,8 @@ export function useRemesaForm(
   onChange?: (data: RemesaFormData) => void
 ) {
   const [form, setForm] = useState<RemesaFormData>({
+    id_remesa: undefined,
+    fk_viaje: undefined,
     numero_remesa: "",
     numero_autorizacion: "",
     tipo_empaque: "",
@@ -33,7 +40,8 @@ export function useRemesaForm(
     peso_total: 0,
     mercancia_peligrosa: false,
     observaciones_remesa: "",
-
+    // Mercancia Peligrosa
+    id_mercancia: undefined,
     codigo_un: "",
     grupo_riesgo: "",
     caracteristica_peligrosidad: "",
@@ -52,6 +60,10 @@ export function useRemesaForm(
     if (initialData && !initialized.current) {
       setForm(prev => ({
         ...prev,
+        // 🔑 IDs
+        id_remesa: (initialData as any).id_remesa,
+        fk_viaje: (initialData as any).fk_viaje,
+        id_mercancia: (initialData as any).id_mercancia,
 
         numero_remesa: initialData.numero_remesa ?? "",
         numero_autorizacion: initialData.numero_autorizacion ?? "",
@@ -73,8 +85,7 @@ export function useRemesaForm(
 
         codigo_un: initialData.codigo_un ?? "",
         grupo_riesgo: initialData.grupo_riesgo ?? "",
-        caracteristica_peligrosidad:
-          initialData.caracteristica_peligrosidad ?? "",
+        caracteristica_peligrosidad: initialData.caracteristica_peligrosidad ?? "",
         embalaje_envase: initialData.embalaje_envase ?? "",
       }))
 

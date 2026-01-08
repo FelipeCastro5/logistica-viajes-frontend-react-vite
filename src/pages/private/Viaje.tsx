@@ -14,7 +14,7 @@ import { getManifiestoById, updateManifiesto } from "@/services/adapters/manifie
 import { toast } from "sonner"
 import { useAuth } from "@/hooks/useAuth"
 import RemesaForm from "@/components/forms/RemesaForm"
-import { getRemesasByViaje } from "@/services/adapters/remesas.adapter"
+import { getRemesasByViaje, updateRemesa } from "@/services/adapters/remesas.adapter"
 // import RemesasForm from "@/components/forms/RemesasForm"
 
 export default function Viaje() {
@@ -32,6 +32,7 @@ export default function Viaje() {
 
   const [viajeEditado, setViajeEditado] = useState<any>(null)
   const [manifiestoEditado, setManifiestoEditado] = useState<any>(null)
+  const [remesaEditada, setRemesaEditada] = useState<any>(null);
 
   const { user } = useAuth()
   const isContador = user?.nombre_rol === "Contador"
@@ -69,9 +70,9 @@ export default function Viaje() {
   }
 
   const handleGuardar = async () => {
-    if (!viajeEditado && !manifiestoEditado) {
-      toast.warning("No hay cambios para guardar")
-      return
+    if (!viajeEditado && !manifiestoEditado && !remesaEditada) {
+      toast.warning("No hay cambios para guardar");
+      return;
     }
 
     try {
@@ -79,7 +80,7 @@ export default function Viaje() {
         await updateViaje({
           ...viajeEditado,
           id_viaje,
-        })
+        });
       }
 
       if (manifiestoEditado) {
@@ -87,18 +88,37 @@ export default function Viaje() {
           ...manifiestoEditado,
           id_manifiesto: manifiestoEditado.id_manifiesto,
           id_viaje,
-        })
+        });
       }
 
-      toast.success("Datos actualizados correctamente ✅")
-      fetchData(id_viaje)
-      setViajeEditado(null)
-      setManifiestoEditado(null)
+      if (remesaEditada) {
+        // 🔹 Preparar body según mercancia peligrosa
+        const payload = { ...remesaEditada };
+
+        if (!payload.mercancia_peligrosa) {
+          payload.id_mercancia = null;
+          payload.codigo_un = null;
+          payload.grupo_riesgo = null;
+          payload.caracteristica_peligrosidad = null;
+          payload.embalaje_envase = null;
+        }
+
+        // 🔹 Llamada al backend
+        await updateRemesa(payload);
+      }
+
+      toast.success("Datos actualizados correctamente ✅");
+      fetchData(id_viaje);
+
+      setViajeEditado(null);
+      setManifiestoEditado(null);
+      setRemesaEditada(null);
     } catch (error) {
-      console.error("Error al guardar:", error)
-      toast.error("Error al guardar los datos ❌")
+      console.error("Error al guardar:", error);
+      toast.error("Error al guardar los datos ❌");
     }
-  }
+  };
+
 
   // const renderizarComponente = () => {
   //   switch (componenteActivo) {
@@ -183,7 +203,9 @@ export default function Viaje() {
 
           <div className={componenteActivo === "Remesa" ? "block" : "hidden"}>
             <RemesaForm
-              initialData={remesa} />
+              initialData={remesa}
+              onChange={setRemesaEditada}
+            />
           </div>
 
         </div>
