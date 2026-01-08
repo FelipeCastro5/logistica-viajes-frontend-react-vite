@@ -1,4 +1,3 @@
-// hooks/forms/useRemesaForm.ts
 import { useEffect, useRef, useState } from "react"
 
 export type RemesaFormData = {
@@ -65,11 +64,17 @@ export function useRemesaForm(
         peso_total: Number(initialData.peso_total) || 0,
 
         mercancia_peligrosa: Boolean(initialData.mercancia_peligrosa),
-        observaciones_remesa: initialData.observaciones_remesa ?? "",
+
+        // backend usa "observaciones"
+        observaciones_remesa:
+          (initialData as any).observaciones ??
+          initialData.observaciones_remesa ??
+          "",
 
         codigo_un: initialData.codigo_un ?? "",
         grupo_riesgo: initialData.grupo_riesgo ?? "",
-        caracteristica_peligrosidad: initialData.caracteristica_peligrosidad ?? "",
+        caracteristica_peligrosidad:
+          initialData.caracteristica_peligrosidad ?? "",
         embalaje_envase: initialData.embalaje_envase ?? "",
       }))
 
@@ -84,10 +89,7 @@ export function useRemesaForm(
 
     setForm(prev => ({
       ...prev,
-      [name]:
-        type === "number"
-          ? Number(value) || 0
-          : value,
+      [name]: type === "number" ? Number(value) || 0 : value,
     }))
   }
 
@@ -95,12 +97,13 @@ export function useRemesaForm(
     name: keyof RemesaFormData,
     value: string | number | boolean
   ) => {
-    setForm(prev => ({
-      ...prev,
-      [name]: value,
-    }))
+    setForm(prev => {
+      return {
+        ...prev,
+        [name]: value,
+      }
+    })
   }
-
   return {
     form,
     handleChange,
