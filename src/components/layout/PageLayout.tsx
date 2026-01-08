@@ -23,7 +23,8 @@ function LayoutContent() {
 
             <main className="flex justify-center items-start p-6 min-h-[calc(100vh-80px)] bg-gray-100 dark:bg-gray-900 dark:text-white">
 
-                <div className="w-full max-w-4xl border border-red-500">
+                <div className="w-full max-w-4xl ">
+                {/* <div className="w-full max-w-4xl border border-red-500"> */}
                     <div className="w-full max-w-2xl mx-auto">
                         <Outlet />
                     </div>
