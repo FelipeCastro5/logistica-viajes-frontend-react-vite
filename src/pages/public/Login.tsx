@@ -38,8 +38,8 @@ export default function Login() {
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-100 dark:bg-blue-900 dark:text-white">
       <div className="bg-white p-8 rounded shadow-md w-full max-w-sm dark:bg-gray-900 dark:text-white">
+        <h3 className="text-2xl font-bold mb-4 text-center">Version 0.2.0</h3>
         <h1 className="text-2xl font-bold mb-4 text-center">Iniciar sesión</h1>
-        <h2>Version 2</h2>
         <form onSubmit={handleLogin} className="space-y-4">
           <Input
             type="email"
