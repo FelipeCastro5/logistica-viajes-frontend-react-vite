@@ -99,12 +99,10 @@ export default function VerVehiculoModal({
     useEffect(() => {
         if (!open) return
 
-        // 🆕 CREAR
         if (isCreate) {
-            const primerSeguro = emptySeguro()
             setVehiculo(emptyVehiculo())
-            setSeguros([primerSeguro])
-            setSeguroActivo(primerSeguro)
+            setSeguros([])
+            setSeguroActivo(null)
             return
         }
 
@@ -166,8 +164,8 @@ export default function VerVehiculoModal({
                         </CardContent>
                     </Card>
 
-                    {/* Seguros */}
-                    {seguroActivo && (
+                    {/* Seguros (solo si existen) */}
+                    {seguros.length > 0 && seguroActivo && (
                         <Card>
                             <CardContent className="grid gap-4 pt-6">
                                 <h3 className="text-lg font-semibold">Seguro</h3>
@@ -231,7 +229,6 @@ export default function VerVehiculoModal({
                                 </div>
                             </CardContent>
                         </Card>
-
                     )}
 
                     {/* Acciones */}
