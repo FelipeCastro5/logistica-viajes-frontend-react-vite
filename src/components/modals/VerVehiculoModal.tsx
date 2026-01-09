@@ -132,16 +132,21 @@ export default function VerVehiculoModal({ idVehiculo, open, onOpenChange, mode 
             const body = { ...vehiculo, fk_usuario: idUsuario }
             const res = await createVehiculo(body)
 
+            // 🔹 Revisamos status
             if (res.status === 200 || res.status === 201) {
                 toast.success(res.msg || "Vehículo creado correctamente ✅")
                 onOpenChange(false)
             } else {
-                toast.error(res.msg || "Error al crear el vehículo ❌")
+                // ⚡ Aquí capturamos todos los mensajes de error que retorne el backend
+                const mensaje = res.msg || res.data?.message || "Error al crear el vehículo ❌"
+                toast.error(mensaje)
                 console.error("Error creando vehículo:", res)
             }
         } catch (error: any) {
-            console.error("Error creando vehículo:", error)
-            toast.error(error?.message || "Error inesperado al crear el vehículo ❌")
+            // Error de red o excepción inesperada
+            console.error("Error inesperado creando vehículo:", error)
+            const mensaje = error?.response?.data?.msg || error?.message || "Error inesperado al crear el vehículo ❌"
+            toast.error(mensaje)
         } finally {
             setSaving(false)
         }
