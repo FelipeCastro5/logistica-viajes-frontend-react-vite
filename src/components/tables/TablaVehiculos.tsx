@@ -1,13 +1,6 @@
 import { useState } from "react"
 import { useNavigate } from "react-router-dom"
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table"
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow, } from "@/components/ui/table"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
 import { ScrollArea } from "@/components/ui/scroll-area"
@@ -21,16 +14,24 @@ type Props = {
   titulo?: string
 }
 
+type ModalMode = "ver" | "crear" | "editar"
+
 export default function TablaVehiculos({ idUsuario, titulo }: Props) {
   const navigate = useNavigate()
   const [page, setPage] = useState(1)
 
-  // 🔹 MODAL STATE (AQUÍ ESTÁ LA CLAVE)
+  // =====================
+  // Modal state
+  // =====================
   const [openModal, setOpenModal] = useState(false)
-  const [idVehiculoActivo, setIdVehiculoActivo] = useState<number | null>(null)
+  const [vehiculoId, setVehiculoId] = useState<number | null>(null)
+  const [mode, setMode] = useState<ModalMode>("ver")
 
   const itemsPerPage = 5
 
+  // =====================
+  // Data
+  // =====================
   const vehiculosUsuario = VEHICULOS.filter(
     (v) => v.fk_usuario === idUsuario
   )
@@ -42,11 +43,21 @@ export default function TablaVehiculos({ idUsuario, titulo }: Props) {
     page * itemsPerPage
   )
 
-  const verVehiculo = (idVehiculo: number) => {
-    setIdVehiculoActivo(idVehiculo)
+  // =====================
+  // Handlers
+  // =====================
+  const abrirModalVehiculo = (
+    modo: ModalMode,
+    id: number | null = null
+  ) => {
+    setMode(modo)
+    setVehiculoId(id)
     setOpenModal(true)
   }
 
+  // =====================
+  // Render
+  // =====================
   return (
     <Card>
       <CardContent className="p-4">
@@ -55,14 +66,19 @@ export default function TablaVehiculos({ idUsuario, titulo }: Props) {
             {titulo || "Lista de Vehículos"}
           </h2>
 
+          {/* ➕ Nuevo vehículo */}
           <Button
-            onClick={() => navigate("/nuevo-vehiculo")}
             className="text-sm px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-md shadow-sm"
+            size="sm"
+            onClick={() => abrirModalVehiculo("crear")}
           >
             + Nuevo vehículo
           </Button>
         </div>
 
+        {/* ===================== */}
+        {/* Tabla */}
+        {/* ===================== */}
         <Table>
           <ScrollArea className="max-h-[400px]">
             <TableHeader>
@@ -84,7 +100,9 @@ export default function TablaVehiculos({ idUsuario, titulo }: Props) {
                     <Button
                       size="sm"
                       variant="secondary"
-                      onClick={() => verVehiculo(vehiculo.id_vehiculo)}
+                      onClick={() =>
+                        abrirModalVehiculo("ver", vehiculo.id_vehiculo)
+                      }
                     >
                       Ver
                     </Button>
@@ -102,6 +120,9 @@ export default function TablaVehiculos({ idUsuario, titulo }: Props) {
           </ScrollArea>
         </Table>
 
+        {/* ===================== */}
+        {/* Paginación */}
+        {/* ===================== */}
         <div className="flex items-center justify-between mt-4">
           <Button
             variant="outline"
@@ -124,14 +145,15 @@ export default function TablaVehiculos({ idUsuario, titulo }: Props) {
           </Button>
         </div>
 
-        {/* 🔥 MODAL ÚNICO */}
-        {idVehiculoActivo !== null && (
-          <VerVehiculoModal
-            idVehiculo={idVehiculoActivo}
-            open={openModal}
-            onOpenChange={setOpenModal}
-          />
-        )}
+        {/* ===================== */}
+        {/* Modal único */}
+        {/* ===================== */}
+        <VerVehiculoModal
+          open={openModal}
+          onOpenChange={setOpenModal}
+          idVehiculo={vehiculoId}
+          mode={mode}
+        />
       </CardContent>
     </Card>
   )
