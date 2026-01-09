@@ -4,12 +4,12 @@ import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
 import VehiculoForm from "../forms/VehiculoForm"
 import SeguroForm from "../forms/SeguroForm"
-import { getVehiculoById } from "@/services/adapters/vehiculo.adapter"
+import { getVehiculoById, createVehiculo } from "@/services/adapters/vehiculo.adapter"
 import { getSegurosByVehiculo } from "@/services/adapters/seguros.adapter"
+import { toast } from "sonner"
 
 type Mode = "ver" | "crear" | "editar"
 
-// ✅ Incluimos fk_usuario
 type Vehiculo = {
   id_vehiculo: number
   fk_usuario: number
@@ -52,18 +52,22 @@ export default function VerVehiculoModal({ idVehiculo, open, onOpenChange, mode 
   const [seguros, setSeguros] = useState<Seguro[]>([])
   const [seguroActivo, setSeguroActivo] = useState<Seguro | null>(null)
   const [loading, setLoading] = useState(false)
+  const [saving, setSaving] = useState(false)
 
   const isReadOnly = mode === "ver"
   const isCreate = mode === "crear"
+
+  // ⚡ Obtenemos idUsuario desde localStorage
+  const user = JSON.parse(localStorage.getItem("user") || "{}")
+  const idUsuario = user.id_usuario ?? 0
 
   useEffect(() => {
     if (!open) return
 
     if (isCreate) {
-      // Limpiamos los forms
       setVehiculo({
         id_vehiculo: 0,
-        fk_usuario: 0,
+        fk_usuario: idUsuario,
         placa: "",
         marca: "",
         configuracion: "",
@@ -81,7 +85,6 @@ export default function VerVehiculoModal({ idVehiculo, open, onOpenChange, mode 
     const fetchVehiculo = async () => {
       setLoading(true)
       try {
-        // 🔹 Obtener vehículo por ID
         const resVehiculo = await getVehiculoById(idVehiculo)
         if (resVehiculo.status === 200 && resVehiculo.data) {
           const v = resVehiculo.data
@@ -93,7 +96,6 @@ export default function VerVehiculoModal({ idVehiculo, open, onOpenChange, mode 
           }
           setVehiculo(vehiculoData)
 
-          // 🔹 Obtener seguros por vehículo
           const resSeguros = await getSegurosByVehiculo(idVehiculo)
           if (resSeguros.status === 200 && resSeguros.data) {
             const segurosData: Seguro[] = resSeguros.data.map((s: any) => ({
@@ -109,13 +111,44 @@ export default function VerVehiculoModal({ idVehiculo, open, onOpenChange, mode 
         }
       } catch (error) {
         console.error("Error al cargar vehículo o seguros:", error)
+        toast.error("Error al cargar los datos del vehículo ❌")
       } finally {
         setLoading(false)
       }
     }
 
     fetchVehiculo()
-  }, [idVehiculo, open, mode, isCreate])
+  }, [idVehiculo, open, mode, isCreate, idUsuario])
+
+  // =====================
+  // Crear vehículo
+  // =====================
+  const handleCreateVehiculo = async () => {
+    // ⚡ Validación mínima
+    if (!vehiculo.placa || !vehiculo.marca || !vehiculo.tipo_vehiculo) {
+      toast.warning("Completa los campos obligatorios del vehículo ⚠️")
+      return
+    }
+
+    setSaving(true)
+    try {
+      const body = { ...vehiculo, fk_usuario: idUsuario }
+      const res = await createVehiculo(body)
+
+      if (res.status === 200 || res.status === 201) {
+        toast.success(res.msg || "Vehículo creado correctamente ✅")
+        onOpenChange(false)
+      } else {
+        toast.error(res.msg || "Error al crear el vehículo ❌")
+        console.error("Error creando vehículo:", res)
+      }
+    } catch (error: any) {
+      console.error("Error creando vehículo:", error)
+      toast.error(error?.message || "Error inesperado al crear el vehículo ❌")
+    } finally {
+      setSaving(false)
+    }
+  }
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
@@ -143,7 +176,6 @@ export default function VerVehiculoModal({ idVehiculo, open, onOpenChange, mode 
                 </CardContent>
               </Card>
 
-              {/* Mostramos SeguroForm siempre que haya al menos un seguro */}
               {seguros.length > 0 && (
                 <Card>
                   <CardContent>
@@ -164,9 +196,20 @@ export default function VerVehiculoModal({ idVehiculo, open, onOpenChange, mode 
             <Button variant="outline" onClick={() => onOpenChange(false)}>
               Cerrar
             </Button>
-            {mode !== "ver" && (
+
+            {mode === "crear" && (
+              <Button
+                className="bg-blue-600 text-white"
+                onClick={handleCreateVehiculo}
+                disabled={saving}
+              >
+                {saving ? "Registrando..." : "Registrar vehículo"}
+              </Button>
+            )}
+
+            {mode === "editar" && (
               <Button className="bg-blue-600 text-white">
-                {mode === "crear" ? "Registrar vehículo" : "Guardar cambios"}
+                Guardar cambios
               </Button>
             )}
           </div>

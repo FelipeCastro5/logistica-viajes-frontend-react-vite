@@ -90,15 +90,18 @@ export default function TablaVehiculos({ idUsuario, titulo }: Props) {
         <div className="flex items-center justify-between mb-4">
           <h2 className="text-lg font-semibold">{titulo || "Lista de Vehículos"}</h2>
 
-          {/* Nuevo vehículo */}
-          <Button
-            className="text-sm px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-md shadow-sm"
-            size="sm"
-            onClick={() => abrirModalVehiculo("crear")}
-          >
-            + Nuevo vehículo
-          </Button>
+          {/* Nuevo vehículo solo si el título es "Mis Vehículos" */}
+          {titulo === "Mis Vehículos" && (
+            <Button
+              className="text-sm px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-md shadow-sm"
+              size="sm"
+              onClick={() => abrirModalVehiculo("crear")}
+            >
+              + Nuevo vehículo
+            </Button>
+          )}
         </div>
+
 
         {loading ? (
           <p className="text-center text-gray-500">Cargando vehículos...</p>
