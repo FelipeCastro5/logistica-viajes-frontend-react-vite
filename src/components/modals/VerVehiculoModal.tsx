@@ -207,9 +207,9 @@ export default function VerVehiculoModal({ idVehiculo, open, onOpenChange, mode 
                         )}
 
                         <div className="flex justify-end gap-2">
-                            <Button variant="outline" onClick={() => onOpenChange(false)}>
+                            {/* <Button variant="outline" onClick={() => onOpenChange(false)}>
                                 Cerrar
-                            </Button>
+                            </Button> */}
 
                             {mode === "crear" && (
                                 <Button
@@ -221,11 +221,11 @@ export default function VerVehiculoModal({ idVehiculo, open, onOpenChange, mode 
                                 </Button>
                             )}
 
-                            {mode === "editar" && (
+                            {/* {mode === "editar" && (
                                 <Button className="bg-blue-600 text-white">
                                     Guardar cambios
                                 </Button>
-                            )}
+                            )} */}
                         </div>
                     </div>
                 </DialogContent>
