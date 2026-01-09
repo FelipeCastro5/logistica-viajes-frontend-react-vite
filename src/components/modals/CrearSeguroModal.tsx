@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
+import { Select, SelectTrigger, SelectValue, SelectContent, SelectItem } from "@/components/ui/select"
 import { createSeguro } from "@/services/adapters/seguros.adapter"
 import { toast } from "sonner"
 
@@ -22,10 +23,18 @@ type Props = {
   onOpenChange: (open: boolean) => void
 }
 
+const TIPOS_SEGURO_COLOMBIA = [
+  "SOAT",
+  "Todo Riesgo",
+  "Responsabilidad Civil",
+  "Póliza Voluntaria de Daños a Terceros",
+  "Póliza de Accidentes Personales"
+]
+
 export default function CrearSeguroModal({ idVehiculo, open, onOpenChange }: Props) {
   const [seguro, setSeguro] = useState<Seguro>({
     fk_vehiculo: idVehiculo,
-    tipo_seguro: "SOAT", // 🔹 Tipo quemado
+    tipo_seguro: "SOAT",
     numero_poliza: "",
     aseguradora: "",
     fecha_vencimiento: "",
@@ -34,7 +43,6 @@ export default function CrearSeguroModal({ idVehiculo, open, onOpenChange }: Pro
   const [saving, setSaving] = useState(false)
 
   const handleCreateSeguro = async () => {
-    // Validación simple
     if (!seguro.numero_poliza || !seguro.aseguradora || !seguro.fecha_vencimiento || !seguro.valor) {
       toast.warning("Completa todos los campos obligatorios ⚠️")
       return
@@ -70,7 +78,21 @@ export default function CrearSeguroModal({ idVehiculo, open, onOpenChange }: Pro
               <div className="grid gap-4">
                 <div>
                   <Label>Tipo de seguro</Label>
-                  <Input value={seguro.tipo_seguro} readOnly />
+                  <Select
+                    value={seguro.tipo_seguro}
+                    onValueChange={(val) => setSeguro({ ...seguro, tipo_seguro: val })}
+                  >
+                    <SelectTrigger>
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {TIPOS_SEGURO_COLOMBIA.map((tipo) => (
+                        <SelectItem key={tipo} value={tipo}>
+                          {tipo}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
                 </div>
 
                 <div>

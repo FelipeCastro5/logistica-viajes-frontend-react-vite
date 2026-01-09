@@ -78,7 +78,11 @@ export default function TablaVehiculos({ idUsuario, titulo }: Props) {
   // =====================
   // Handlers
   // =====================
-  const abrirModalVehiculo = (modo: ModalMode, id: number | null = null) => {
+  const abrirModalVehiculo = (id: number | null = null) => {
+    // ⚡ Determinar el modo según el título
+    const modo: ModalMode =
+      titulo === "Mis Vehículos" ? "editar" : "ver"
+
     setMode(modo)
     setVehiculoId(id)
     setOpenModal(true)
@@ -95,12 +99,17 @@ export default function TablaVehiculos({ idUsuario, titulo }: Props) {
             <Button
               className="text-sm px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-md shadow-sm"
               size="sm"
-              onClick={() => abrirModalVehiculo("crear")}
+              onClick={() => {
+                setMode("crear")      // ⚡ modo crear explícito
+                setVehiculoId(null)   // ⚡ no hay vehículo seleccionado
+                setOpenModal(true)
+              }}
             >
               + Nuevo vehículo
             </Button>
           )}
         </div>
+
 
 
         {loading ? (
@@ -127,10 +136,11 @@ export default function TablaVehiculos({ idUsuario, titulo }: Props) {
                       <Button
                         size="sm"
                         variant="secondary"
-                        onClick={() => abrirModalVehiculo("ver", vehiculo.id_vehiculo)}
+                        onClick={() => abrirModalVehiculo(vehiculo.id_vehiculo)}
                       >
-                        Ver
+                        {titulo === "Mis Vehículos" ? "Editar" : "Ver"}
                       </Button>
+
                     </TableCell>
 
                     <TableCell>{vehiculo.placa}</TableCell>
