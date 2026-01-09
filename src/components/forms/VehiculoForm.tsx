@@ -3,6 +3,7 @@ import { Label } from "@/components/ui/label"
 
 type Vehiculo = {
   id_vehiculo: number
+  fk_usuario: number // ⚡ importante mantenerlo
   placa: string
   marca: string
   configuracion: string
@@ -23,7 +24,7 @@ export default function VehiculoForm({ vehiculo, editable, onChange }: Props) {
       <h3 className="md:col-span-2 text-lg font-semibold">Información del vehículo</h3>
 
       {Object.entries(vehiculo).map(([key, value]) =>
-        key !== "id_vehiculo" ? (
+        key !== "id_vehiculo" && key !== "fk_usuario" ? ( // 🔹 ocultamos fk_usuario
           <div key={key}>
             <Label>{key.replace("_", " ")}</Label>
             <Input

@@ -89,7 +89,8 @@ export const routes = {
     create: "/vehiculos/create",
     update: "/vehiculos/update",
     delete: "/vehiculos/delete"
-  }, remesas: {
+  },
+  remesas: {
     getAll: "/remesas/getAll",
     getById: "/remesas/getById",
     getByViaje: "/remesas/getByViaje",
@@ -105,5 +106,13 @@ export const routes = {
     update: "/mercancia-peligrosa/update",
     delete: "/mercancia-peligrosa/delete"
   },
+  seguros: {
+    getAll: "/seguros/getAll",
+    getById: "/seguros/getById",
+    getByVehiculo: "/seguros/getByVehiculo",
+    create: "/seguros/create",
+    update: "/seguros/update",
+    delete: "/seguros/delete",
+  }
 
 } as const

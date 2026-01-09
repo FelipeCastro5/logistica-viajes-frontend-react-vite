@@ -31,31 +31,28 @@ export default function SeguroForm({ seguros, activo, editable, onChange, onSele
 
   return (
     <div className="grid gap-4 pt-6">
-      <h3 className="text-lg font-semibold">Seguro</h3>
+<div>
+  <Label>Seleccionar seguro</Label>
+  <Select
+    value={activo.id_seguro.toString()}
+    onValueChange={(val) => {
+      const seguro = seguros.find(s => s.id_seguro === Number(val))
+      if (seguro && onSelect) onSelect(seguro)
+    }}
+  >
+    <SelectTrigger>
+      <SelectValue />
+    </SelectTrigger>
+    <SelectContent>
+      {seguros.map(s => (
+        <SelectItem key={s.id_seguro} value={s.id_seguro.toString()}>
+          {s.tipo_seguro || "Seguro sin tipo"}
+        </SelectItem>
+      ))}
+    </SelectContent>
+  </Select>
+</div>
 
-      {seguros.length > 1 && (
-        <div>
-          <Label>Seleccionar seguro</Label>
-          <Select
-            value={activo.id_seguro.toString()}
-            onValueChange={(val) => {
-              const seguro = seguros.find(s => s.id_seguro === Number(val))
-              if (seguro && onSelect) onSelect(seguro)
-            }}
-          >
-            <SelectTrigger>
-              <SelectValue />
-            </SelectTrigger>
-            <SelectContent>
-              {seguros.map(s => (
-                <SelectItem key={s.id_seguro} value={s.id_seguro.toString()}>
-                  {s.tipo_seguro || "Seguro sin tipo"}
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
-        </div>
-      )}
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         <div>

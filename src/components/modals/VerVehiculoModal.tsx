@@ -2,14 +2,17 @@ import { useEffect, useState } from "react"
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
-import { VEHICULOS, SEGUROS } from "@/mocks/vehiculos.mock"
-import SeguroForm from "../forms/SeguroForm"
 import VehiculoForm from "../forms/VehiculoForm"
+import SeguroForm from "../forms/SeguroForm"
+import { getVehiculoById } from "@/services/adapters/vehiculo.adapter"
+import { getSegurosByVehiculo } from "@/services/adapters/seguros.adapter"
 
 type Mode = "ver" | "crear" | "editar"
 
+// ✅ Incluimos fk_usuario
 type Vehiculo = {
   id_vehiculo: number
+  fk_usuario: number
   placa: string
   marca: string
   configuracion: string
@@ -36,9 +39,19 @@ type Props = {
 }
 
 export default function VerVehiculoModal({ idVehiculo, open, onOpenChange, mode = "ver" }: Props) {
-  const [vehiculo, setVehiculo] = useState<Vehiculo>({} as Vehiculo)
+  const [vehiculo, setVehiculo] = useState<Vehiculo>({
+    id_vehiculo: 0,
+    fk_usuario: 0,
+    placa: "",
+    marca: "",
+    configuracion: "",
+    tipo_vehiculo: "",
+    peso_vacio: 0,
+    peso_remolque: 0,
+  })
   const [seguros, setSeguros] = useState<Seguro[]>([])
   const [seguroActivo, setSeguroActivo] = useState<Seguro | null>(null)
+  const [loading, setLoading] = useState(false)
 
   const isReadOnly = mode === "ver"
   const isCreate = mode === "crear"
@@ -47,7 +60,17 @@ export default function VerVehiculoModal({ idVehiculo, open, onOpenChange, mode 
     if (!open) return
 
     if (isCreate) {
-      setVehiculo({ id_vehiculo: 0, placa: "", marca: "", configuracion: "", tipo_vehiculo: "", peso_vacio: 0, peso_remolque: 0 })
+      // Limpiamos los forms
+      setVehiculo({
+        id_vehiculo: 0,
+        fk_usuario: 0,
+        placa: "",
+        marca: "",
+        configuracion: "",
+        tipo_vehiculo: "",
+        peso_vacio: 0,
+        peso_remolque: 0,
+      })
       setSeguros([])
       setSeguroActivo(null)
       return
@@ -55,15 +78,44 @@ export default function VerVehiculoModal({ idVehiculo, open, onOpenChange, mode 
 
     if (idVehiculo === null) return
 
-    const v = VEHICULOS.find(v => v.id_vehiculo === idVehiculo)
-    const s = SEGUROS.filter(s => s.fk_vehiculo === idVehiculo)
+    const fetchVehiculo = async () => {
+      setLoading(true)
+      try {
+        // 🔹 Obtener vehículo por ID
+        const resVehiculo = await getVehiculoById(idVehiculo)
+        if (resVehiculo.status === 200 && resVehiculo.data) {
+          const v = resVehiculo.data
+          const vehiculoData: Vehiculo = {
+            ...v,
+            fk_usuario: v.fk_usuario ?? 0,
+            peso_vacio: Number(v.peso_vacio),
+            peso_remolque: Number(v.peso_remolque),
+          }
+          setVehiculo(vehiculoData)
 
-    if (v) {
-      setVehiculo({ ...v })
-      setSeguros(s)
-      setSeguroActivo(s[0] ?? null)
+          // 🔹 Obtener seguros por vehículo
+          const resSeguros = await getSegurosByVehiculo(idVehiculo)
+          if (resSeguros.status === 200 && resSeguros.data) {
+            const segurosData: Seguro[] = resSeguros.data.map((s: any) => ({
+              ...s,
+              valor: Number(s.valor),
+            }))
+            setSeguros(segurosData)
+            setSeguroActivo(segurosData[0] ?? null)
+          } else {
+            setSeguros([])
+            setSeguroActivo(null)
+          }
+        }
+      } catch (error) {
+        console.error("Error al cargar vehículo o seguros:", error)
+      } finally {
+        setLoading(false)
+      }
     }
-  }, [idVehiculo, open, mode])
+
+    fetchVehiculo()
+  }, [idVehiculo, open, mode, isCreate])
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
@@ -77,24 +129,35 @@ export default function VerVehiculoModal({ idVehiculo, open, onOpenChange, mode 
         </DialogHeader>
 
         <div className="grid gap-6">
-          <Card>
-            <CardContent>
-              <VehiculoForm vehiculo={vehiculo} editable={!isReadOnly} onChange={setVehiculo} />
-            </CardContent>
-          </Card>
+          {loading ? (
+            <p className="text-center text-gray-500">Cargando vehículo...</p>
+          ) : (
+            <>
+              <Card>
+                <CardContent>
+                  <VehiculoForm
+                    vehiculo={vehiculo}
+                    editable={!isReadOnly}
+                    onChange={setVehiculo}
+                  />
+                </CardContent>
+              </Card>
 
-          {seguros.length > 0 && seguroActivo && (
-            <Card>
-              <CardContent>
-                <SeguroForm
-                  seguros={seguros}
-                  activo={seguroActivo}
-                  editable={!isReadOnly}
-                  onChange={setSeguroActivo}
-                  onSelect={setSeguroActivo}
-                />
-              </CardContent>
-            </Card>
+              {/* Mostramos SeguroForm siempre que haya al menos un seguro */}
+              {seguros.length > 0 && (
+                <Card>
+                  <CardContent>
+                    <SeguroForm
+                      seguros={seguros}
+                      activo={seguroActivo}
+                      editable={!isReadOnly}
+                      onChange={setSeguroActivo}
+                      onSelect={setSeguroActivo}
+                    />
+                  </CardContent>
+                </Card>
+              )}
+            </>
           )}
 
           <div className="flex justify-end gap-2">
