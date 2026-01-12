@@ -19,6 +19,7 @@ Este proyecto es una aplicación **React + TypeScript** construida con **Vite** 
 
 ## 📁 Estructura del Proyecto
 
+```text
 ├── App.tsx # Configuración de rutas y layout principal
 ├── main.tsx # Punto de entrada
 ├── index.css # Estilos globales
@@ -45,10 +46,11 @@ Este proyecto es una aplicación **React + TypeScript** construida con **Vite** 
 │ ├── private/ # Menú, viajes, dashboard
 │ └── routes/ # Lógica de rutas privadas
 │
-├── services/ # Lógica de conexión API
-│ ├── adapters/ # Lógica de negocio conectada a servicios externos
-│ └── http/ # Abstracción de llamadas HTTP
+└── services/ # Lógica de conexión API
+  ├── adapters/ # Lógica de negocio conectada a servicios externos
+  └── http/ # Abstracción de llamadas HTTP
 
+```
 
 ---
 
