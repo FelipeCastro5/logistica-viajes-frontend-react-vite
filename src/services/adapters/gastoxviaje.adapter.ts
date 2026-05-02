@@ -70,7 +70,11 @@ export const updateFacturaGastoPorViaje = async (
 ): Promise<ApiResponse<any>> => {
   const formData = new FormData()
   formData.append("id_gastoxviaje", String(id_gastoxviaje))
-  formData.append("file", file)
+  formData.append(
+    "file",
+    file,
+    file instanceof File ? file.name : "factura"
+  )
 
   return await RequestHttp(formData, {
     base: "gastoxviaje",

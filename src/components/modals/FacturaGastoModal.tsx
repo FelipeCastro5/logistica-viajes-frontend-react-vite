@@ -13,6 +13,17 @@ import {
   updateFacturaGastoPorViaje,
 } from "@/services/adapters/gastoxviaje.adapter"
 
+const extractGoogleDriveFileId = (url: string) => {
+  const match = url.match(/\/d\/([^/]+)/) || url.match(/[?&]id=([^&]+)/)
+  return match?.[1] ?? null
+}
+
+const getFacturaPreviewUrl = (url: string) => {
+  const fileId = extractGoogleDriveFileId(url)
+  if (!fileId) return url
+  return `https://drive.google.com/uc?export=view&id=${fileId}`
+}
+
 type GastoFactura = {
   id_gastoxviaje: number
   nombre_gasto?: string
@@ -29,10 +40,23 @@ export default function FacturaGastoModal({ gasto, onFacturaActualizada }: Props
   const [open, setOpen] = useState(false)
   const [loading, setLoading] = useState(false)
   const [file, setFile] = useState<File | null>(null)
+  const [previewMode, setPreviewMode] = useState<"img" | "iframe" | "link">("img")
+  const facturaPreviewUrl = gasto.url_factura ? getFacturaPreviewUrl(gasto.url_factura) : ""
+  const facturaDrivePreviewUrl = gasto.url_factura
+    ? (() => {
+        const fileId = extractGoogleDriveFileId(gasto.url_factura)
+        return fileId ? `https://drive.google.com/file/d/${fileId}/preview` : gasto.url_factura
+      })()
+    : ""
+  const openFacturaEnNuevaPestana = () => {
+    if (!gasto.url_factura) return
+    window.open(gasto.url_factura, "_blank", "noopener,noreferrer")
+  }
 
   useEffect(() => {
     if (!open) {
       setFile(null)
+      setPreviewMode("img")
     }
   }, [open])
 
@@ -91,7 +115,7 @@ export default function FacturaGastoModal({ gasto, onFacturaActualizada }: Props
         </Button>
       </DialogTrigger>
 
-      <DialogContent className="max-w-lg">
+      <DialogContent className="max-w-2xl">
         <DialogHeader>
           <DialogTitle>Factura del gasto</DialogTitle>
         </DialogHeader>
@@ -131,8 +155,50 @@ export default function FacturaGastoModal({ gasto, onFacturaActualizada }: Props
             </div>
           ) : (
             <div className="space-y-3">
+              <div className="rounded-md border bg-white p-3 space-y-3">
+                <div className="flex items-center justify-between gap-2 flex-wrap">
+                  <p className="text-sm font-medium">Vista previa</p>
+                  <Button variant="outline" size="sm" onClick={openFacturaEnNuevaPestana}>
+                    Abrir en Drive
+                  </Button>
+                </div>
+
+                <div className="overflow-hidden rounded-md border bg-muted/20 min-h-[360px]">
+                  {previewMode === "img" && (
+                    <img
+                      src={facturaPreviewUrl}
+                      alt={`Factura de ${gasto.nombre_gasto ?? "gasto por viaje"}`}
+                      className="max-h-[65vh] w-full object-contain"
+                      onError={() => setPreviewMode("iframe")}
+                    />
+                  )}
+
+                  {previewMode === "iframe" && (
+                    <iframe
+                      title={`Factura de ${gasto.nombre_gasto ?? "gasto por viaje"}`}
+                      src={facturaDrivePreviewUrl}
+                      className="h-[65vh] w-full"
+                      onError={() => setPreviewMode("link")}
+                    />
+                  )}
+
+                  {previewMode === "link" && (
+                    <div className="flex h-[360px] items-center justify-center p-6 text-center">
+                      <div className="space-y-3">
+                        <p className="text-sm text-muted-foreground">
+                          No fue posible mostrar la factura embebida.
+                        </p>
+                        <Button variant="outline" onClick={openFacturaEnNuevaPestana}>
+                          Abrir factura en una pestaña nueva
+                        </Button>
+                      </div>
+                    </div>
+                  )}
+                </div>
+              </div>
+
               <p className="text-sm text-muted-foreground">
-                Esta factura ya está asociada al gasto. Por ahora solo puedes eliminarla desde aquí.
+                Esta factura ya está asociada al gasto. Si la vista previa no carga, ábrela en Drive o elimina la factura desde aquí.
               </p>
 
               <div className="flex justify-end gap-2">

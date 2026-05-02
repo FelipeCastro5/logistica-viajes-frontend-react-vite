@@ -42,7 +42,7 @@ export class AxiosRequest {
     const isFormData = data instanceof FormData;
 
     const finalHeaders = isFormData
-      ? { ...headers }
+      ? { "Content-Type": "multipart/form-data", ...headers }
       : { "Content-Type": "application/json", ...headers };
 
     const axiosConfig: AxiosRequestConfig = {
