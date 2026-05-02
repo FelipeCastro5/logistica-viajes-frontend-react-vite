@@ -60,7 +60,9 @@ export const routes = {
     create: "/gastoxviaje/create",
     update: "/gastoxviaje/update",
     delete: "/gastoxviaje/delete",
-    getByViaje: "/gastoxviaje/getGastosByViaje"
+    getByViaje: "/gastoxviaje/getGastosByViaje",
+    updateFactura: "/gastoxviaje/update-factura",
+    deleteFactura: "/gastoxviaje/delete-factura"
   },
   auth: {
     login: "/Auth/login",

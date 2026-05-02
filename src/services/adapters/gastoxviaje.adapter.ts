@@ -62,3 +62,30 @@ export const getGastosPorViajeByViajeId = async (fk_viaje: number): Promise<ApiR
     method: "GET",
   }, { fk_viaje }) // 🔍 Lo enviás como query param
 }
+
+// ✅ Subir factura asociada a un gasto por viaje
+export const updateFacturaGastoPorViaje = async (
+  id_gastoxviaje: number,
+  file: File | Blob
+): Promise<ApiResponse<any>> => {
+  const formData = new FormData()
+  formData.append("id_gastoxviaje", String(id_gastoxviaje))
+  formData.append("file", file)
+
+  return await RequestHttp(formData, {
+    base: "gastoxviaje",
+    entry: "updateFactura",
+    method: "PUT",
+  })
+}
+
+// ✅ Eliminar factura asociada a un gasto por viaje
+export const deleteFacturaGastoPorViaje = async (
+  id_gastoxviaje: number
+): Promise<ApiResponse<any>> => {
+  return await RequestHttp(null, {
+    base: "gastoxviaje",
+    entry: "deleteFactura",
+    method: "DELETE",
+  }, { id_gastoxviaje })
+}

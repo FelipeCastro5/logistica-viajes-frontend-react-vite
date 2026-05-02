@@ -6,6 +6,7 @@ import { getGastosPorViajeByViajeId } from "@/services/adapters/gastoxviaje.adap
 import { toast } from "sonner"
 import EliminarGastoModal from "../modals/EliminarGasto"
 import GastoModal from "../modals/GastoModal"
+import FacturaGastoModal from "../modals/FacturaGastoModal"
 import { formatNumber } from "@/hooks/utils/formatNumberCOP"
 import { useAuth } from "@/hooks/useAuth"
 
@@ -15,6 +16,8 @@ interface Gasto {
   nombre_gasto: string
   valor: number | string
   detalles: string
+  url_factura?: string | null
+  id_factura?: string | null
 }
 
 interface Props {
@@ -82,6 +85,11 @@ export default function TablaGastosViaje({ id_viaje }: Props) {
                         detalles: gasto.detalles,
                       }}
                       onGastoGuardado={fetchGastos}
+                    />
+
+                    <FacturaGastoModal
+                      gasto={gasto}
+                      onFacturaActualizada={fetchGastos}
                     />
 
                     <EliminarGastoModal viajeId={id_viaje} gastoId={gasto.id_gastoxviaje} onGastoEliminado={fetchGastos} />

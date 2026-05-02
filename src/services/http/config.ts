@@ -2,7 +2,7 @@ const ENV = import.meta.env.VITE_ENV || "dev"
 
 const API_BASE_URLS: Record<string, string> = {
   local: import.meta.env.VITE_API_LOCAL || "",
-  dev: import.meta.env.VITE_API_DEV || "https://logistica-viajes-backend-nest-remesa.onrender.com/",
+  dev: import.meta.env.VITE_API_DEV || "http://localhost:3000",
   prod: import.meta.env.VITE_API_PROD || ""
 }
 
