@@ -1,4 +1,5 @@
 import type { ApiResponse } from "../http/ApiRemote"
+import { BASE_URL } from "../http/config"
 import { RequestHttp } from "../http/HttpRequest"
 
 export interface GastoPorViaje {
@@ -92,4 +93,36 @@ export const deleteFacturaGastoPorViaje = async (
     entry: "deleteFactura",
     method: "DELETE",
   }, { id_gastoxviaje })
+}
+
+// ✅ Descargar factura asociada a un gasto por viaje o referencia de Drive
+export const downloadFacturaGastoPorViaje = async (reference: string) => {
+  const endpoint = `${BASE_URL.replace(/\/$/, "")}/gastoxviaje/download-factura?reference=${encodeURIComponent(reference)}`
+
+  const response = await fetch(endpoint, {
+    method: "GET",
+    headers: {
+      accept: "*/*",
+    },
+  })
+
+  if (!response.ok) {
+    const errorText = await response.text()
+    throw new Error(errorText || "No se pudo descargar la factura")
+  }
+
+  const blob = await response.blob()
+  const contentDisposition = response.headers.get("content-disposition") || ""
+  const fileNameMatch = contentDisposition.match(/filename=\"?([^\";]+)\"?/i)
+  const fileName = fileNameMatch?.[1] ? decodeURIComponent(fileNameMatch[1]) : "factura"
+
+  const objectUrl = URL.createObjectURL(blob)
+  const anchor = document.createElement("a")
+  anchor.href = objectUrl
+  anchor.download = fileName
+  anchor.rel = "noopener noreferrer"
+  document.body.appendChild(anchor)
+  anchor.click()
+  anchor.remove()
+  URL.revokeObjectURL(objectUrl)
 }

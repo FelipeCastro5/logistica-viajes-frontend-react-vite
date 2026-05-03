@@ -10,6 +10,7 @@ import {
 import { toast } from "sonner"
 import {
   deleteFacturaGastoPorViaje,
+  downloadFacturaGastoPorViaje,
   updateFacturaGastoPorViaje,
 } from "@/services/adapters/gastoxviaje.adapter"
 
@@ -105,6 +106,24 @@ export default function FacturaGastoModal({ gasto, onFacturaActualizada }: Props
     }
   }
 
+  const handleDescargarFactura = async () => {
+    if (!gasto.url_factura) {
+      toast.warning("No hay referencia de factura para descargar")
+      return
+    }
+
+    try {
+      setLoading(true)
+      await downloadFacturaGastoPorViaje(gasto.url_factura)
+      toast.success("Descarga iniciada correctamente")
+    } catch (error) {
+      console.error("Error al descargar la factura:", error)
+      toast.error("No se pudo descargar la factura")
+    } finally {
+      setLoading(false)
+    }
+  }
+
   const hasFactura = Boolean(gasto.url_factura)
 
   return (
@@ -115,20 +134,34 @@ export default function FacturaGastoModal({ gasto, onFacturaActualizada }: Props
         </Button>
       </DialogTrigger>
 
-      <DialogContent className="max-w-2xl">
+      <DialogContent className="max-w-2xl max-h-[85vh] overflow-hidden p-0">
         <DialogHeader>
-          <DialogTitle>Factura del gasto</DialogTitle>
+          <DialogTitle className="px-6 pt-6">Factura del gasto</DialogTitle>
         </DialogHeader>
 
-        <div className="space-y-4">
+        <div className="max-h-[calc(85vh-4.5rem)] overflow-y-auto px-6 pb-6 pt-4 space-y-4">
           <div className="rounded-md border p-3 text-sm bg-muted/30">
-            <p className="font-medium">Gasto: {gasto.nombre_gasto ?? "Sin nombre"}</p>
-            <p className="text-muted-foreground">ID gasto por viaje: {gasto.id_gastoxviaje}</p>
-            {gasto.id_factura && (
+            {/* <p className="font-medium">Gasto: {gasto.nombre_gasto ?? "Sin nombre"}</p> */}
+            {/* <p className="text-muted-foreground">ID gasto por viaje: {gasto.id_gastoxviaje}</p> */}
+            {/* {gasto.id_factura && (
               <p className="text-muted-foreground break-all">ID factura: {gasto.id_factura}</p>
-            )}
+            )} */}
             {gasto.url_factura && (
-              <p className="text-muted-foreground break-all">URL factura: {gasto.url_factura}</p>
+                <p className="text-muted-foreground break-all">
+                URL factura: 
+                {gasto.url_factura ? (
+                    <a 
+                    href={gasto.url_factura} 
+                    target="_blank" 
+                    rel="noopener noreferrer"
+                    className="text-blue-600 hover:text-blue-800 underline ml-1"
+                    >
+                    {gasto.url_factura}
+                    </a>
+                ) : (
+                    <span className="text-gray-400 ml-1">No disponible</span>
+                )}
+                </p>
             )}
           </div>
 
@@ -204,6 +237,9 @@ export default function FacturaGastoModal({ gasto, onFacturaActualizada }: Props
               <div className="flex justify-end gap-2">
                 <Button variant="outline" onClick={() => setOpen(false)}>
                   Cerrar
+                </Button>
+                <Button variant="secondary" onClick={handleDescargarFactura} disabled={loading}>
+                  Descargar factura
                 </Button>
                 <Button variant="destructive" onClick={handleEliminarFactura} disabled={loading}>
                   {loading ? "Eliminando..." : "Eliminar factura"}
