@@ -140,12 +140,12 @@ export default function FacturaGastoModal({ gasto, onFacturaActualizada }: Props
         </DialogHeader>
 
         <div className="max-h-[calc(85vh-4.5rem)] overflow-y-auto px-6 pb-6 pt-4 space-y-4">
-          <div className="rounded-md border p-3 text-sm bg-muted/30">
-            {/* <p className="font-medium">Gasto: {gasto.nombre_gasto ?? "Sin nombre"}</p> */}
-            {/* <p className="text-muted-foreground">ID gasto por viaje: {gasto.id_gastoxviaje}</p> */}
-            {/* {gasto.id_factura && (
+          {/* <div className="rounded-md border p-3 text-sm bg-muted/30">
+            <p className="font-medium">Gasto: {gasto.nombre_gasto ?? "Sin nombre"}</p>
+            <p className="text-muted-foreground">ID gasto por viaje: {gasto.id_gastoxviaje}</p>
+            {gasto.id_factura && (
               <p className="text-muted-foreground break-all">ID factura: {gasto.id_factura}</p>
-            )} */}
+            )}
             {gasto.url_factura && (
                 <p className="text-muted-foreground break-all">
                 URL factura: 
@@ -163,7 +163,7 @@ export default function FacturaGastoModal({ gasto, onFacturaActualizada }: Props
                 )}
                 </p>
             )}
-          </div>
+          </div> */}
 
           {!hasFactura ? (
             <div className="space-y-3">
@@ -189,12 +189,12 @@ export default function FacturaGastoModal({ gasto, onFacturaActualizada }: Props
           ) : (
             <div className="space-y-3">
               <div className="rounded-md border bg-white p-3 space-y-3">
-                <div className="flex items-center justify-between gap-2 flex-wrap">
+                {/* <div className="flex items-center justify-between gap-2 flex-wrap">
                   <p className="text-sm font-medium">Vista previa</p>
                   <Button variant="outline" size="sm" onClick={openFacturaEnNuevaPestana}>
                     Abrir en Drive
                   </Button>
-                </div>
+                </div> */}
 
                 <div className="overflow-hidden rounded-md border bg-muted/20 min-h-[360px]">
                   {previewMode === "img" && (
@@ -230,14 +230,17 @@ export default function FacturaGastoModal({ gasto, onFacturaActualizada }: Props
                 </div>
               </div>
 
-              <p className="text-sm text-muted-foreground">
+              {/* <p className="text-sm text-muted-foreground">
                 Esta factura ya está asociada al gasto. Si la vista previa no carga, ábrela en Drive o elimina la factura desde aquí.
-              </p>
+              </p> */}
 
               <div className="flex justify-end gap-2">
-                <Button variant="outline" onClick={() => setOpen(false)}>
+                <Button variant="outline" size="sm" onClick={openFacturaEnNuevaPestana}>
+                    Abrir en Drive
+                  </Button>
+                {/* <Button variant="outline" onClick={() => setOpen(false)}>
                   Cerrar
-                </Button>
+                </Button> */}
                 <Button variant="secondary" onClick={handleDescargarFactura} disabled={loading}>
                   Descargar factura
                 </Button>
